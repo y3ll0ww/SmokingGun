@@ -2,9 +2,9 @@ import { useCallback, useState, useContext } from "react";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
-import formatHttpApiError from "src/helpers/formatHttpApiError";
-import { LoadingOverlayResourceContext } from "src/components/LoadingOverlayResource";
-import getCommonOptions from "src/helpers/axios/getCommonOptions";
+import formatHttpApiError from "../helpers/formatHttpApiError";
+import { LoadingOverlayResourceContext } from "../components/LoadingOverlayResource";
+import getCommonOptions from "../helpers/axios/getCommonOptions";
 
 export default function useRequestResource({ endpoint, resourceLabel }) {
     const [resourceList, setResourceList] = useState({

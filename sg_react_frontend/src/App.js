@@ -13,6 +13,7 @@ import SideMenu from "./components/layout";
 
 import logo from './logo.svg';
 import './App.css';
+import DetailView from "./components/layout/DetailView/DetailView";
 
 export default function App() {
   return (
@@ -28,7 +29,7 @@ export default function App() {
               <Routes>
 
                 <Route element={<BaseLayout />}>
-                  <Route path={`/test`} element={<SideMenu />} />
+                  <Route path={`/test`} element={<DetailView />} />
                 </Route>
 
                 <Route element={<RequireAuth />}>

@@ -15,7 +15,7 @@ class Reference(models.Model):
     url = models.URLField()
 
 class TestCase(models.Model):
-    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='testcases')
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='testcases', null=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=500)
 

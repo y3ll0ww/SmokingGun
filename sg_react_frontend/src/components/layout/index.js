@@ -1,7 +1,7 @@
 import React from "react";
 import Toolbar from "@mui/material/Toolbar";
 
-import SideMenu from "./SideMenu";
+import SideMenu from "./SideMenu/SideMenu";
 import AppHeader from "./AppHeader";
 import { Box } from "@mui/system";
 import { Outlet } from "react-router-dom";

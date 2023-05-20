@@ -35,6 +35,16 @@ class FolderCreateView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class FolderUpdateView(generics.UpdateAPIView):
+    queryset = Folder.objects.all()
+    serializer_class = FolderSerializer
+
+
+class FolderDeleteView(generics.DestroyAPIView):
+    queryset = Folder.objects.all()
+    serializer_class = FolderSerializer
+
+
 class FolderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Folder.objects.all()
     serializer_class = FolderSerializer
@@ -85,6 +95,40 @@ class TestCaseDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(data)
 
 
+class TestCaseCreateView(generics.CreateAPIView):
+    serializer_class = TestCaseSerializer
+
+    def create(self, request, *args, **kwargs):
+        name = request.data.get('name')
+        parent_folder_id = request.data.get('folder')
+
+        # Check if the parent folder exists
+        parent_folder = None
+        if parent_folder_id:
+            try:
+                parent_folder = Folder.objects.get(id=parent_folder_id)
+            except Folder.DoesNotExist:
+                return Response({'error': 'Parent folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the testcase
+        testcase = TestCase(name=name, folder=parent_folder)
+        testcase.save()
+
+        # Serialize the created folder
+        serializer = self.get_serializer(testcase)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class TestCaseUpdateView(generics.UpdateAPIView):
+    queryset = TestCase.objects.all()
+    serializer_class = TestCaseSerializer
+
+
+class TestCaseDeleteView(generics.DestroyAPIView):
+    queryset = TestCase.objects.all()
+    serializer_class = TestCaseSerializer
+
+
 class TestRunListCreateView(generics.ListCreateAPIView):
     serializer_class = TestRunSerializer
 
@@ -113,7 +157,7 @@ class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
         return TestStep.objects.all()
 
 
-class FolderTreeView(generics.RetrieveAPIView):
+class TreeView(generics.RetrieveAPIView):
     queryset = Folder.objects.all()
     serializer_class = FolderSerializer
 
@@ -127,8 +171,8 @@ class FolderTreeView(generics.RetrieveAPIView):
             serializer = self.get_serializer(root_folders, many=True)
             data = serializer.data
 
-        # Get child folders and testcases for each folder
-        for folder_data in data:
+        # Recursive function to get child folders and test cases
+        def get_children(folder_data):
             folder_id = folder_data['id']
             child_folders = Folder.objects.filter(parent_folder_id=folder_id)
             child_folder_serializer = self.get_serializer(child_folders, many=True)
@@ -139,10 +183,29 @@ class FolderTreeView(generics.RetrieveAPIView):
             folder_data['testcases'] = testcase_serializer.data
 
             folder_data['type'] = 'folder'
-            folder_data['collapsed'] = True
+
+            if folder_data['child_folders']:
+                for child_folder_data in folder_data['child_folders']:
+                    get_children(child_folder_data)
 
             if folder_data['testcases']:
                 for testcase_data in folder_data['testcases']:
                     testcase_data['type'] = 'testcase'
+
+        # Get child folders and test cases for each root folder
+        for folder_data in data:
+            get_children(folder_data)
+
+        # Retrieve test cases from root level
+        testcases = TestCase.objects.filter(folder=None)
+        testcase_serializer = TestCaseSerializer(testcases, many=True)
+        root_testcases = testcase_serializer.data
+
+        if root_testcases:
+            for testcase_data in root_testcases:
+                testcase_data['type'] = 'testcase'
+
+        # Append root level test cases to the response data
+        data.extend(root_testcases)
 
         return Response(data)
