@@ -15,6 +15,9 @@ urlpatterns = [
     path('tree/root/', views.TreeView.as_view(), name='tree-root'),
     path('folder/<int:id>/', views.FolderDetailView.as_view(), name='folder-detail'),
     path('testcase/<int:id>/', views.TestCaseDetailView.as_view(), name='testcase-detail'),
+    path('folder/<int:id>/', views.FolderDetailView.as_view(), name='folder-detail'),
+    path('testcase/<int:id>/', views.TestCaseDetailView.as_view(), name='testcase-detail'),
+
 
     # Create
     path('folder/create/', views.FolderCreateView.as_view(), name='folder-create'),
