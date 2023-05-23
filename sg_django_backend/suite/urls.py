@@ -12,9 +12,9 @@ urlpatterns = [
     path('teststeps/<int:pk>/', views.TestStepDetailView.as_view(), name='teststep-detail'),
 
     # Get
-    path('tree/root/', views.TreeView.as_view(), name='tree-root'),
-    path('folder/<int:id>/', views.FolderDetailView.as_view(), name='folder-detail'),
-    path('testcase/<int:id>/', views.TestCaseDetailView.as_view(), name='testcase-detail'),
+    path('root/tree/', views.TreeView.as_view(), name='tree-root'),
+    path('breadcrumbs/<str:item_type>/<int:item_id>/', views.BreadcrumbTrailView.as_view(), name='breadcrumbs'),
+    path('root/', views.RootFolderDetailView.as_view(), name='root'),
     path('folder/<int:id>/', views.FolderDetailView.as_view(), name='folder-detail'),
     path('testcase/<int:id>/', views.TestCaseDetailView.as_view(), name='testcase-detail'),
 

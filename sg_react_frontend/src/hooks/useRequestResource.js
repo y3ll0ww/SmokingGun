@@ -56,15 +56,18 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
           .catch(handleRequestResourceError);
       }, [endpoint, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading]);
 
-    const getResource = useCallback((id) => {
+      const getResource = useCallback((id = '') => {
         setLoading(true);
-        axios.get(`/api/${endpoint}/${id}/`, getCommonOptions())
+        const url = id ? `/api/${endpoint}/${id}/` : `/api/${endpoint}/`;
+    
+        axios.get(url, getCommonOptions())
             .then((res) => {
                 setLoading(false);
                 const { data } = res;
                 setResource(data);
-            }).catch(handleRequestResourceError)
-    }, [endpoint, handleRequestResourceError, setLoading])
+            })
+            .catch(handleRequestResourceError);
+    }, [endpoint, handleRequestResourceError, setLoading]);
 
     const updateResource = useCallback((id, values, successCallback) => {
         setLoading(true);

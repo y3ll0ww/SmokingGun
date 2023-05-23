@@ -12,6 +12,7 @@ import ModalDelete from "./ModalDelete";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
+import { FOLDER, TESTCASE } from "../../constants";
 
 
 const modalStyle = {
@@ -27,13 +28,14 @@ const modalStyle = {
 
 export default function DirectoryNode(props) {
   const padding = props.padding + 'px';
+  const type = props.item.type != null ? props.item.type : props.type != null ? props.type : 'typeless';
 
   const item = {
-      key: props.item.type === "folder" ? 'F' + props.item.id : 'T' + props.item.id,
+      key: type === "folder" ? 'F' + props.item.id : 'T' + props.item.id,
       to: `/folder/${props.item.id}`,
-      name: props.item.type === "folder"? 'F' + props.item.id + ': ' + props.item.name : 'T' + props.item.id + ' ' + props.item.name,
-      type: props.item.type,
-      icon: props.item.type === "folder" ? <FolderIcon /> : <ListIcon />,
+      name: type === "folder"? 'F' + props.item.id + ': ' + props.item.name : 'T' + props.item.id + ' ' + props.item.name,
+      type: type,
+      icon: type === "folder" ? <FolderIcon /> : type === "testcase" ? <ListIcon /> : <FolderIcon />,
       child_folders: props.item.child_folders || [],
       testcases: props.item.testcases
     };
@@ -95,20 +97,20 @@ export default function DirectoryNode(props) {
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/${item.type}` });
 
   const handleClick = () => {
-    if (item.type === 'folder') {
+    if (item.type === FOLDER) {
         const id = item.key.replace('F', '');
         getResource(id);
-    } else if (item.type === 'testcase') {
+    } else if (item.type === TESTCASE) {
         const id = item.key.replace('T', '');
-        getResource(id); 
+        getResource(id);
     }
   }
 
   useEffect(() => {
       if (resource) {
-          if (item.type === 'folder') {
+          if (item.type === FOLDER) {
             store.dispatch({ type: actions.GET_FOLDER, payload: resource })
-          } else if (item.type === 'testcase') {
+          } else if (item.type === TESTCASE) {
             store.dispatch({ type: actions.GET_TESTCASE, payload: resource })
           }
           

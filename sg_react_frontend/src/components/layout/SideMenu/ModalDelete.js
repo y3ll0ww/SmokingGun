@@ -1,42 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Card, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { FOLDER } from "../../constants";
 
 export default function ModalDelete(props) {
-    //const [folderName, setFolderName] = useState(""); // State to hold the folder name
-    //const [error, setError] = useState(""); // State to hold the validation error message
-
-    //const handleCreateFolder = () => {
-//
-    //    // Make an API request to create the folder
-    //    const apiUrl = "api/suite/folders/create/"; // Replace with your actual API endpoint
-    //    const data = {
-    //        name: folderName,
-    //        parent_folder: null, // Default parent_folder value
-    //    };
-//
-    //    fetch(apiUrl, {
-    //        method: "POST",
-    //        headers: {
-    //        "Content-Type": "application/json",
-    //        },
-    //        body: JSON.stringify(data),
-    //    })
-    //    .then((response) => response.json())
-    //    .then((responseData) => {
-    //        // Handle the API response if needed
-    //        console.log(responseData);
-    //    })
-    //    .catch((error) => {
-    //        // Handle errors
-    //        console.error("Error:", error);
-    //    });
-//
-    //    // Close the modal or perform other necessary actions
-    //    props.handleCloseModal();
-    //};
 
     const handleKeyDown = (event) => {
         if (event.key === "Escape") {
@@ -44,7 +13,7 @@ export default function ModalDelete(props) {
         }
     };
 
-    const isFolder = props.type === 'folder';
+    const isFolder = props.type === FOLDER;
 
     return (
         <Box>

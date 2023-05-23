@@ -209,3 +209,69 @@ class TreeView(generics.RetrieveAPIView):
         data.extend(root_testcases)
 
         return Response(data)
+
+
+class BreadcrumbTrailView(generics.RetrieveAPIView):
+    def get(self, request, *args, **kwargs):
+        item_type = kwargs.get('item_type')
+        item_id = kwargs.get('item_id')
+        breadcrumb_trail = self.generate_breadcrumb_trail(item_type, item_id)
+        return Response(breadcrumb_trail)
+
+    def generate_breadcrumb_trail(self, item_type, item_id):
+        item = None
+        breadcrumb_trail = []
+
+        if item_type == 'folder':
+            try:
+                # Find the folder by its ID
+                item = Folder.objects.get(id=item_id)
+                breadcrumb_trail.append({'id': item.id, 'name': item.name})  # Add the folder to the breadcrumb trail
+
+                # Traverse the folder hierarchy using the parent_folder field
+                while item.parent_folder:
+                    item = item.parent_folder
+                    breadcrumb_trail.insert(0, {'id': item.id, 'name': item.name})  # Insert each parent folder at the beginning of the trail
+
+            except Folder.DoesNotExist:
+                pass  # Handle the case where the item is not a folder
+
+        elif item_type == 'testcase':
+            try:
+                # Find the test case by its ID
+                item = TestCase.objects.get(id=item_id)
+                folder = item.folder
+
+                if folder:
+                    breadcrumb_trail.append({'id': folder.id, 'name': folder.name})  # Add the folder to the breadcrumb trail
+
+                    # Traverse the folder hierarchy using the parent_folder field
+                    while folder.parent_folder:
+                        folder = folder.parent_folder
+                        breadcrumb_trail.insert(0, {'id': folder.id, 'name': folder.name})  # Insert each parent folder at the beginning of the trail
+
+                breadcrumb_trail.append({'id': item.id, 'name': item.name})  # Add the test case to the breadcrumb trail
+
+            except TestCase.DoesNotExist:
+                pass  # Handle the case where the item is not a test case
+
+        return breadcrumb_trail
+
+
+class RootFolderDetailView(generics.RetrieveAPIView):
+    def get(self, request, *args, **kwargs):
+        # Retrieve all folders with parent_folder=None
+        folders = Folder.objects.filter(parent_folder=None)
+        folders_serializer = FolderSerializer(folders, many=True)
+
+        # Retrieve all test cases with folder=None
+        test_cases = TestCase.objects.filter(folder=None)
+        test_cases_serializer = TestCaseSerializer(test_cases, many=True)
+
+        # Prepare the response data
+        data = {
+            'child_folders': folders_serializer.data,
+            'test_cases': test_cases_serializer.data
+        }
+
+        return Response(data)

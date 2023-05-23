@@ -6,7 +6,7 @@ export default function Directory() {
   const [treeItems, setTreeItems] = useState([]);
 
   useEffect(() => {
-    fetch("/api/suite/tree/root/")
+    fetch("/api/suite/root/tree/")
       .then(response => response.json())
       .then(data => {
         setTreeItems(data);

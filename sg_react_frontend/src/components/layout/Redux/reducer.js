@@ -1,19 +1,28 @@
+import { ROOT, FOLDER, TESTCASE } from "../../constants";
 import * as actions from "./actionTypes";
 
 
 const initialState = {
-    type: '',
+    type: ROOT,
     object: []
 };
 
 
 export default function reducer (state = initialState, action) {
     switch (action.type) {
+        case actions.GET_ROOT: {
+            console.log(action.payload);
+            return {
+                ...state,
+                type: ROOT,
+                object: action.payload
+            }
+        }
         case actions.GET_FOLDER: {
             console.log(action.payload);
             return {
                 ...state,
-                type: 'folder',
+                type: FOLDER,
                 object: action.payload
             }
         }
@@ -21,7 +30,7 @@ export default function reducer (state = initialState, action) {
             console.log(action.payload)
             return {
                 ...state,
-                type: 'testcase',
+                type: TESTCASE,
                 object: action.payload
             }
         }
