@@ -1,5 +1,6 @@
 import { ROOT, FOLDER, TESTCASE } from "../../constants";
 import * as actions from "./actionTypes";
+import { KEY_FOLDER } from "../../constants";
 
 
 const initialState = {
@@ -61,13 +62,23 @@ export default function reducer (state = initialState, action) {
             }
         }
         case actions.CREATE_FOLDER: {
+            const name = action.payload.name;
+            return {
+                ...state,
+                tree: {
+                    ...state.tree,
+                    treeUpdate: `[${Date.now()}]: Added folder "${name}"`
+                }
+            }
+        }
+        case actions.DELETE_FOLDER: {
             const id = action.payload.id;
             const name = action.payload.name;
             return {
                 ...state,
                 tree: {
                     ...state.tree,
-                    treeUpdate: `Added folder "F${id}: ${name}"`
+                    treeUpdate: `[${Date.now()}]: Deleted folder "${KEY_FOLDER(id)} ${name}"`
                 }
             }
         }

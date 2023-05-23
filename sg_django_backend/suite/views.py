@@ -20,7 +20,7 @@ class FolderCreateView(generics.CreateAPIView):
 
         # Check if the parent folder exists
         parent_folder = None
-        if parent_folder_id:
+        if parent_folder_id is not None:
             try:
                 parent_folder = Folder.objects.get(id=parent_folder_id)
             except Folder.DoesNotExist:

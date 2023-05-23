@@ -7,23 +7,16 @@ import DirectoryNode from '../SideMenu/DirectoryNode';
 import { FOLDER, TESTCASE } from '../../constants';
 
 export default function FolderView(props) {
-    const type = useSelector((state) => state.type);
     const object = useSelector((state) => state.object);
-    const dispatch = useDispatch();
-
-    //console.log("OBJECT:");
-    //console.log(object);
-  
-    
-  
+     
     return (
       <Card>
         <List>
           {object?.child_folders?.map((folder) => (
-            <DirectoryNode key={folder.id} item={folder} padding={20} type={FOLDER} />
+            <DirectoryNode key={folder.id} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} />
           ))}
           {object?.test_cases?.map((testcase) => (
-            <DirectoryNode key={testcase.id} item={testcase} padding={20} type={TESTCASE} />
+            <DirectoryNode key={testcase.id} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} />
           ))}
         </List>
       </Card>

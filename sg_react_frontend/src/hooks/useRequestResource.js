@@ -39,22 +39,15 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
 
     const addResource = useCallback((values, successCallback) => {
         setLoading(true);
-      
-        const formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("parent_folder", values.parent_folder);
-      
-        axios
-          .post(`/api/${endpoint}/`, formData, getCommonOptions())
-          .then(() => {
-            setLoading(false);
-            enqueueSnackbar(`${resourceLabel} added`);
-            if (successCallback) {
-              successCallback();
-            }
-          })
-          .catch(handleRequestResourceError);
-      }, [endpoint, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading]);
+        axios.post(`/api/${endpoint}/`, values, getCommonOptions())
+            .then(() => {
+                setLoading(false);
+                enqueueSnackbar(`${resourceLabel} is added`)
+                if (successCallback) {
+                    successCallback();
+                }
+            }).catch(handleRequestResourceError)
+    }, [endpoint, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading])
 
       const getResource = useCallback((id = '') => {
         setLoading(true);
@@ -86,7 +79,7 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         axios.delete(`/api/${endpoint}/${id}/`, getCommonOptions())
             .then(() => {
                 setLoading(false);
-                enqueueSnackbar(`${resourceLabel} deleted`)
+                enqueueSnackbar(`"${resourceLabel}" is deleted`)
                 const newResourceList = {
                     results: resourceList.results.filter((r) => {
                         return r.id !== id

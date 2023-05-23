@@ -90,7 +90,7 @@ export default function DirectoryNode(props) {
                     display: none;
                 }`}
             </style>
-            <ModalDelete handleCloseModal={handleCloseModal} name={item.name} type={props.item.type} id={item.key} />
+            <ModalDelete handleCloseModal={handleCloseModal} name={item.name} type={props.item.type} id={item.id} />
         </Paper>
     </Modal>
   )
@@ -109,11 +109,7 @@ export default function DirectoryNode(props) {
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/${item.type}` });
 
   const handleClick = () => {
-    if (item.type === FOLDER) {
-        getResource(item.id);
-    } else if (item.type === TESTCASE) {
-        getResource(item.id);
-    }
+    getResource(item.id);
   }
 
   useEffect(() => {

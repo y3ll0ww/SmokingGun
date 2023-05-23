@@ -12,6 +12,7 @@ import { Box } from "@mui/system";
 import { GlobalStyles, useTheme, Paper, Modal, Card } from "@mui/material";
 import Directory from "./Directory";
 import ModalAddFolder from "./ModalAddFolder";
+import { FOLDER } from "../../constants";
 
 const SidebarGlobalStyles = () => {
   const theme = useTheme();
@@ -59,12 +60,15 @@ export function SideMenu(props) {
   };
 
   const [modalAddFolder, setModalAddFolder] = useState(false);
+  const [type, setType] = useState(undefined);
 
   const handleOpenModalAddFolder = () => {
+    setType(FOLDER);
     setModalAddFolder(true);
   };
 
   const handleCloseModalAddFolder = () => {
+    setType(undefined);
     setModalAddFolder(false);
   };
 
@@ -78,7 +82,7 @@ export function SideMenu(props) {
         <style>{`::-webkit-scrollbar {
           display: none;
         }`}</style>
-        <ModalAddFolder handleCloseModal={handleCloseModalAddFolder} />
+        <ModalAddFolder handleCloseModal={handleCloseModalAddFolder} type={type} />
       </Paper>
     </Modal>
   );

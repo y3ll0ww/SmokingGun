@@ -4,3 +4,6 @@ export const GET_TESTCASE = "testcaseFound";
 export const TREE_EXPAND_NODE = "folderExpanded";
 export const TREE_COLLAPSE_NODE = "folderCollapsed";
 export const CREATE_FOLDER = "folderAdded";
+export const CREATE_TESTCASE = "testcaseAdded";
+export const DELETE_FOLDER = "folderDeleted";
+export const DELETE_TESTCASE = "testcaseDeleted";
