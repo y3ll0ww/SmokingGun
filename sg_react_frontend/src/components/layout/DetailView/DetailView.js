@@ -4,7 +4,7 @@ import FolderView from './FolderView';
 import TestCaseView from './TestCaseView';
 import { Provider, useSelector } from 'react-redux';
 import store from '../Redux/store';
-import { FOLDER, TESTCASE, ROOT } from '../../constants';
+import { FOLDER, TESTCASE, ROOT, KEY_FOLDER, KEY_TESTCASE } from '../../constants';
 import BreadcrumbsTrail from './BreadcrumbsTrail';
 import Directory from '../SideMenu/Directory';
 
@@ -30,8 +30,13 @@ function DetailView() {
   return (
     <Card sx={{ paddingTop: padY, paddingLeft: padX, paddingRight: padX, paddingBottom: padY }}>
         <BreadcrumbsTrail type={type} object={object} />
-        <h1>{type === FOLDER ? 'F:' : type === TESTCASE ? 'T:' : ''}{object.id} {object.name}</h1>
-        {object.description}
+        <h1><span style={{ color: 'gray', fontSize: '22px' }}>
+            {type === FOLDER ? KEY_FOLDER(object.id) + ' ' : 
+             type === TESTCASE ? KEY_TESTCASE(object.id) + ' ' : 
+             ''}
+            </span>{object.name}
+        </h1>
+        <p>{object.description}</p>
         {viewType()}
     </Card>
   );

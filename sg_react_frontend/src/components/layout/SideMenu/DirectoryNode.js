@@ -7,12 +7,14 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BuildIcon from '@mui/icons-material/Build';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import ModalDelete from "./ModalDelete";
+import PestControlIcon from '@mui/icons-material/PestControl';
 
+import ModalDelete from "./ModalDelete";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
-import { FOLDER, TESTCASE } from "../../constants";
+import { FOLDER, KEY_FOLDER, KEY_TESTCASE, TESTCASE } from "../../constants";
+import { useSelector } from "react-redux";
 
 
 const modalStyle = {
@@ -31,21 +33,31 @@ export default function DirectoryNode(props) {
   const type = props.item.type != null ? props.item.type : props.type != null ? props.type : 'typeless';
 
   const item = {
-      key: type === "folder" ? 'F' + props.item.id : 'T' + props.item.id,
-      to: `/folder/${props.item.id}`,
-      name: type === "folder"? 'F' + props.item.id + ': ' + props.item.name : 'T' + props.item.id + ' ' + props.item.name,
+      id: props.item.id,
+      key: type === FOLDER ? KEY_FOLDER(props.item.id) : 
+           type === TESTCASE ? KEY_TESTCASE(props.item.id) :
+           props.item.id,
+      name: props.item.name,
       type: type,
-      icon: type === "folder" ? <FolderIcon /> : type === "testcase" ? <ListIcon /> : <FolderIcon />,
-      child_folders: props.item.child_folders || [],
+      icon: type === FOLDER ? <FolderIcon /> : 
+            type === TESTCASE ? <ListIcon /> :
+            <PestControlIcon />,
+      child_folders: props.item.child_folders,
       testcases: props.item.testcases
     };
 
   // Handling the opening and closing of the folders
-  const [open, setOpen] = useState(false);
+  const openNodes = useSelector((state) => state.tree.openNodes);
+  const [open, setOpen] = useState(openNodes.includes(props.item.id));
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleExpandCollapse = (event) => {
     event.stopPropagation();
+    if (open) {
+      store.dispatch({ type: actions.TREE_COLLAPSE_NODE, payload: { nodeId: props.item.id } })
+    } else {
+      store.dispatch({ type: actions.TREE_EXPAND_NODE, payload: { nodeId: props.item.id } })
+    }
     setOpen(!open);
   };
 
@@ -83,7 +95,7 @@ export default function DirectoryNode(props) {
     </Modal>
   )
 
-  // Opening items and dispatching to store
+  // Opening items in the detail viewand dispatching to store
   const [state, setState] = useState({
     type: item.type,
     object: []
@@ -98,11 +110,9 @@ export default function DirectoryNode(props) {
 
   const handleClick = () => {
     if (item.type === FOLDER) {
-        const id = item.key.replace('F', '');
-        getResource(id);
+        getResource(item.id);
     } else if (item.type === TESTCASE) {
-        const id = item.key.replace('T', '');
-        getResource(id);
+        getResource(item.id);
     }
   }
 
@@ -121,7 +131,7 @@ export default function DirectoryNode(props) {
     <div>
       <ListItem button onClick={handleClick} style={{ paddingLeft: padding, fontSize: "8px" }}>
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-        <ListItemText primary={item.name} />
+        <ListItemText primary={<span><span style={{ color: 'gray', fontSize: '12px' }}>{item.key} </span>{item.name}</span>} />
         {((item.child_folders && item.child_folders.length > 0) || (item.testcases && item.testcases.length > 0)) && (
             <IconButton onClick={handleExpandCollapse} sx={{ padding: "3px", margin: "-2px" }}>
               <ChevronRightIcon

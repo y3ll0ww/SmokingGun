@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { List } from "@mui/material";
 import DirectoryNode from "./DirectoryNode";
+import { Provider, useSelector } from "react-redux";
+import store from "../Redux/store";
 
-export default function Directory() {
+function Directory() {
   const [treeItems, setTreeItems] = useState([]);
+  const treeUpdate = useSelector((state) => state.tree.treeUpdate);
 
   useEffect(() => {
     fetch("/api/suite/root/tree/")
@@ -14,7 +17,7 @@ export default function Directory() {
       .catch(error => {
         console.error("Error:", error);
       });
-  }, []);
+  }, [treeUpdate]);
 
   return (
     <List style={{ fontSize: "8px" }}>
@@ -26,3 +29,13 @@ export default function Directory() {
     </List>
   );
 }
+
+function View() {
+  return (
+    <Provider store={store}>
+      <Directory />
+    </Provider>
+  );
+}
+
+export default View;

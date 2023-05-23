@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Box, TextField, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import store from "../Redux/store";
+import * as actions from "../Redux/actionTypes";
 
 export default function ModalAddFolder(props) {
     const [folderName, setFolderName] = useState(""); // State to hold the folder name
@@ -12,6 +14,8 @@ export default function ModalAddFolder(props) {
             setError("Use at least 5 to 150 characters.");
             return;
         }
+
+        store.dispatch({ type: actions.CREATE_FOLDER, payload: { id: 123, name: 'hello-world' } })
 
         // Make an API request to create the folder
         const apiUrl = "api/suite/folders/create/"; // Replace with your actual API endpoint
