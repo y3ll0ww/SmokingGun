@@ -9,10 +9,10 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { NavLink } from "react-router-dom";
 import { Box } from "@mui/system";
-import { GlobalStyles, useTheme, Paper, Modal, Card } from "@mui/material";
+import { GlobalStyles, useTheme, Paper, Modal, Button, Card, IconButton } from "@mui/material";
 import Directory from "./Directory";
-import ModalAddFolder from "./ModalAddFolder";
-import { FOLDER } from "../../constants";
+import ModalAdd from "./ModalAdd";
+import { FOLDER, TESTCASE } from "../../constants";
 
 const SidebarGlobalStyles = () => {
   const theme = useTheme();
@@ -62,18 +62,19 @@ export function SideMenu(props) {
   const [modalAddFolder, setModalAddFolder] = useState(false);
   const [type, setType] = useState(undefined);
 
-  const handleOpenModalAddFolder = () => {
-    setType(FOLDER);
+  const handleOpenModal = (newType) => {
+    console.log(newType);
+    setType(newType);
     setModalAddFolder(true);
   };
 
-  const handleCloseModalAddFolder = () => {
+  const handleCloseModal = () => {
     setType(undefined);
     setModalAddFolder(false);
   };
 
   const addFolderModal = (
-    <Modal open={modalAddFolder} onClose={handleCloseModalAddFolder}>
+    <Modal open={modalAddFolder} onClose={handleCloseModal}>
       <Paper
         sx={modalStyle}
         disableEqualOverflow
@@ -82,7 +83,7 @@ export function SideMenu(props) {
         <style>{`::-webkit-scrollbar {
           display: none;
         }`}</style>
-        <ModalAddFolder handleCloseModal={handleCloseModalAddFolder} type={type} />
+        <ModalAdd handleCloseModal={handleCloseModal} type={type} />
       </Paper>
     </Modal>
   );
@@ -108,12 +109,13 @@ export function SideMenu(props) {
         >
           <List
             sx={{ display: "flex", flexDirection: "row", alignItems: "flex-end" }}
+            style={{ paddingRight: 8 }}
           >
-            <ListItem onClick={handleOpenModalAddFolder}>
-              <CreateNewFolderIcon />
+            <ListItem onClick={() => handleOpenModal(FOLDER)} style={{ padding: 1 }}>
+              <IconButton><CreateNewFolderIcon /></IconButton>
             </ListItem>
-            <ListItem>
-              <PlaylistAddIcon />
+            <ListItem onClick={() => handleOpenModal(TESTCASE)} style={{ padding: 1 }}>
+            <IconButton><PlaylistAddIcon /></IconButton>
             </ListItem>
           </List>
         </NavLink>

@@ -82,6 +82,27 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
+        case actions.CREATE_TESTCASE: {
+            const name = action.payload.name;
+            return {
+                ...state,
+                tree: {
+                    ...state.tree,
+                    treeUpdate: `[${Date.now()}]: Added testcase "${name}"`
+                }
+            }
+        }
+        case actions.DELETE_TESTCASE: {
+            const id = action.payload.id;
+            const name = action.payload.name;
+            return {
+                ...state,
+                tree: {
+                    ...state.tree,
+                    treeUpdate: `[${Date.now()}]: Deleted testcase "${KEY_FOLDER(id)} ${name}"`
+                }
+            }
+        }
         default:
             return state;
     }
