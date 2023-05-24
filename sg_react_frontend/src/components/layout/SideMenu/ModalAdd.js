@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, TextField, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
@@ -12,6 +12,8 @@ import { FOLDER, TESTCASE } from "../../constants";
 export default function ModalAdd(props) {
     const [name, setName] = useState("");
     const [error, setError] = useState("");
+    const [values, setValues] = useState({});
+    const [isMounted, setIsMounted] = useState(false);
 
     const resourceLabel = `New ${props.type}`;
     const { addResource } = useRequestResource({ endpoint: `/suite/${props.type}/create/`, resourceLabel: resourceLabel });
@@ -22,13 +24,18 @@ export default function ModalAdd(props) {
             return;
         }
 
-        const values = {
-            name: name,
-            parent_folder: undefined,
-            folder: undefined
-        };
+        if (props.parent_folder != undefined) {
+            if (props.type === FOLDER) {
+                setValues({ name: name, parent_folder: props.parent_folder })
+            } else if (props.type === TESTCASE) {
+                setValues({ name: name, folder: props.parent_folder })
+            }
+        }        
+    };
 
-        addResource(values, () => {
+    useEffect(() => {
+        if (isMounted) {
+            addResource(values, () => {
                 if (props.type === FOLDER) {
                     store.dispatch({ type: actions.CREATE_FOLDER, payload: { name: name } });
                 } else if (props.type === TESTCASE) {
@@ -38,8 +45,11 @@ export default function ModalAdd(props) {
             },
             () => {
             setError("Something went wrong...")
-        });        
-    };
+            }); 
+        } else {
+            setIsMounted(true);
+        }
+    }, [values]);
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {

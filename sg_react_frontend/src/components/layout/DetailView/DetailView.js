@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Card } from '@mui/material';
 import FolderView from './FolderView';
 import TestCaseView from './TestCaseView';
 import { Provider, useSelector } from 'react-redux';
 import store from '../Redux/store';
-import { FOLDER, TESTCASE, ROOT, KEY_FOLDER, KEY_TESTCASE } from '../../constants';
+import { FOLDER, TESTCASE, ROOT, KEY_FOLDER, KEY_TESTCASE, modalStyle } from '../../constants';
 import BreadcrumbsTrail from './BreadcrumbsTrail';
 import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from "../Redux/actionTypes";
+import Title from './Title';
+
 
 function DetailView() {
   const type = useSelector(state => state.type);
   const object = useSelector(state => state.object);
   const padX = '30px';
   const padY = '25px';
-
 
   const viewType = () => {
     if (type === FOLDER) {
@@ -28,19 +29,14 @@ function DetailView() {
     }
   };
 
-  const [isInitialMount, setIsInitialMount] = useState(true);
   const treeUpdate = useSelector((state) => state.tree.treeUpdate);
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/${type}` });
 
   useEffect(() => {
-    if (!isInitialMount) {
-        if (type != ROOT) {
-            getResource(object.id);
-        } else {
-            getResource();
-        }
+    if (type != ROOT) {
+        getResource(object.id);
     } else {
-        setIsInitialMount(false);
+        getResource();
     }
   }, [treeUpdate]);
 
@@ -52,20 +48,14 @@ function DetailView() {
           store.dispatch({ type: actions.GET_TESTCASE, payload: resource })
         } else if (type === ROOT) {
           store.dispatch({ type: actions.GET_ROOT, payload: resource })
-        }
-        
+        }   
     }
   }, [resource])
 
   return (
     <Card sx={{ paddingTop: padY, paddingLeft: padX, paddingRight: padX, paddingBottom: padY }}>
         <BreadcrumbsTrail type={type} object={object} />
-        <h1><span style={{ color: 'gray', fontSize: '22px' }}>
-            {type === FOLDER ? KEY_FOLDER(object.id) + ' ' : 
-             type === TESTCASE ? KEY_TESTCASE(object.id) + ' ' : 
-             ''}
-            </span>{object.name}
-        </h1>
+        <Title />
         <p>{object.description}</p>
         {viewType()}
     </Card>

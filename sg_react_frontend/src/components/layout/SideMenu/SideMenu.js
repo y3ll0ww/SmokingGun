@@ -12,7 +12,7 @@ import { Box } from "@mui/system";
 import { GlobalStyles, useTheme, Paper, Modal, Button, Card, IconButton } from "@mui/material";
 import Directory from "./Directory";
 import ModalAdd from "./ModalAdd";
-import { FOLDER, TESTCASE } from "../../constants";
+import { FOLDER, TESTCASE, modalStyle } from "../../constants";
 
 const SidebarGlobalStyles = () => {
   const theme = useTheme();
@@ -41,17 +41,6 @@ const SidebarGlobalStyles = () => {
 
 const SidebarGlobalStylesMemo = React.memo(SidebarGlobalStyles);
 
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
-
 export function SideMenu(props) {
   const { mobileOpen, setMobileOpen } = props;
 
@@ -59,22 +48,21 @@ export function SideMenu(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const [modalAddFolder, setModalAddFolder] = useState(false);
+  const [modalAdd, setModalAdd] = useState(false);
   const [type, setType] = useState(undefined);
 
   const handleOpenModal = (newType) => {
-    console.log(newType);
     setType(newType);
-    setModalAddFolder(true);
+    setModalAdd(true);
   };
 
   const handleCloseModal = () => {
     setType(undefined);
-    setModalAddFolder(false);
+    setModalAdd(false);
   };
 
-  const addFolderModal = (
-    <Modal open={modalAddFolder} onClose={handleCloseModal}>
+  const addModal = (
+    <Modal open={modalAdd} onClose={handleCloseModal}>
       <Paper
         sx={modalStyle}
         disableEqualOverflow
@@ -161,7 +149,7 @@ export function SideMenu(props) {
       component="nav"
       sx={{ width: { md: `${currentDrawerWidth}%` }, flexShrink: { sm: 0 } }}
     >
-      {addFolderModal}
+      {addModal}
       <SidebarGlobalStylesMemo />
 
       <Drawer
