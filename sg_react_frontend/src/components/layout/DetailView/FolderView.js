@@ -82,10 +82,10 @@ export default function FolderView(props) {
             <Card>
               <List>
                 {object?.child_folders?.map((folder) => (
-                  <DirectoryNode key={folder.id} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} />
+                  <DirectoryNode key={folder.id} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} display={false} />
                 ))}
                 {object?.test_cases?.map((testcase) => (
-                  <DirectoryNode key={testcase.id} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} />
+                  <DirectoryNode key={testcase.id} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} display={false} />
                 ))}
               </List>
             </Card>

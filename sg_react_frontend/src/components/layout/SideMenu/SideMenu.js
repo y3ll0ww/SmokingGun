@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,10 +8,11 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { NavLink } from "react-router-dom";
 import { Box } from "@mui/system";
-import { GlobalStyles, useTheme, Paper, Modal, Button, Card, IconButton } from "@mui/material";
-import Directory from "./Directory";
+import { GlobalStyles, useTheme, Paper, Modal, IconButton } from "@mui/material";
+import DirectoryNode from "./DirectoryNode";
 import ModalAdd from "./ModalAdd";
 import { FOLDER, TESTCASE, modalStyle } from "../../constants";
 
@@ -40,6 +42,32 @@ const SidebarGlobalStyles = () => {
 };
 
 const SidebarGlobalStylesMemo = React.memo(SidebarGlobalStyles);
+
+function Directory(props) {
+    const [treeItems, setTreeItems] = useState([]);
+    const treeUpdate = useSelector((state) => state.tree.treeUpdate);
+  
+    useEffect(() => {
+      fetch("/api/suite/root/tree/")
+        .then(response => response.json())
+        .then(data => {
+          setTreeItems(data);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    }, [treeUpdate]);
+  
+    return (
+      <List style={{ fontSize: "8px" }}>
+        {treeItems.map((item) => (
+          <div key={item.key}>
+            <DirectoryNode key={item.id} item={item} padding={10} />
+          </div>
+        ))}
+      </List>
+    );
+}
 
 export function SideMenu(props) {
   const { mobileOpen, setMobileOpen } = props;
@@ -85,7 +113,7 @@ export function SideMenu(props) {
           display: "flex",
           flexDirection: "row",
           justifyContent: "end",
-          marginTop: 1,
+          marginTop: 1
         }}
       >
         <NavLink
@@ -104,6 +132,9 @@ export function SideMenu(props) {
             </ListItem>
             <ListItem onClick={() => handleOpenModal(TESTCASE)} style={{ padding: 1 }}>
             <IconButton><PlaylistAddIcon /></IconButton>
+            </ListItem>
+            <ListItem style={{ padding: 1 }}>
+                <IconButton><UnfoldMoreIcon /></IconButton>
             </ListItem>
           </List>
         </NavLink>

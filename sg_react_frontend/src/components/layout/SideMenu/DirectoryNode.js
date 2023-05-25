@@ -31,6 +31,7 @@ const modalStyle = {
 export default function DirectoryNode(props) {
   const padding = props.padding + 'px';
   const type = props.item.type != null ? props.item.type : props.type != null ? props.type : 'typeless';
+  const display = props.display != null ? props.display : true; // Prevents weird padding in FolderView
 
   const item = {
       id: props.item.id,
@@ -142,7 +143,7 @@ export default function DirectoryNode(props) {
           <MoreVertIcon sx={{ fontSize: "18px" }} />
         </IconButton>
       </ListItem>
-      {open && (
+      {open && display && (
         <List>
           {item.child_folders &&
             item.child_folders.map((child) => (
