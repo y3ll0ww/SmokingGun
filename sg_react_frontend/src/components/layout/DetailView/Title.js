@@ -5,6 +5,8 @@ import { FOLDER, TESTCASE, ROOT, KEY_FOLDER, KEY_TESTCASE } from '../../constant
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import EditIcon from '@mui/icons-material/Edit';
 import store from "../Redux/store";
+import * as actions from "../Redux/actionTypes";
+import useRequestResource from "../../../hooks/useRequestResource";
 
 
 export default function Title() {
@@ -12,11 +14,15 @@ export default function Title() {
     const object = useSelector(state => state.object);
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState("");
-    const [isModified, setIsModified] = useState(false);
+    //const [isModified, setIsModified] = useState(false);
     const [error, setError] = useState("");
+    const resourceLabel = `${type} ${object.name}`;
+    const { updateResource } = useRequestResource({ endpoint: `/suite/${type}/update`, resourceLabel: resourceLabel });
+    
 
-    const created = new Date(object.created_on).toLocaleString();
-    const edited = new Date(object.edited_on).toLocaleString();
+    const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    const created = new Date(object.created_on).toLocaleString(undefined, dateOptions);
+    const edited = new Date(object.edited_on).toLocaleString(undefined, dateOptions);
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -25,8 +31,7 @@ export default function Title() {
     const handleTitleChange = (event) => {
         const updatedTitle = event.target.value;
         setNewTitle(updatedTitle);
-        console.log(newTitle);
-        setIsModified(true);
+        //setIsModified(true);
     };
 
     const handleSaveClick = () => {
@@ -39,7 +44,7 @@ export default function Title() {
         // ...
 
         setIsEditing(false);
-        setIsModified(false);
+        //setIsModified(false);
     };
 
     const handleClickOutside = () => {
@@ -59,8 +64,20 @@ export default function Title() {
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
             if (newTitle.length < 5 || newTitle.length > 150) {
+                event.preventDefault();
+                console.log(newTitle);
                 setError("Use at least 5 to 150 characters.");
-                return;
+                //setIsModified(false);
+            } else {
+                updateResource(object.id, { name: newTitle });
+                setError("");
+                setIsEditing(false);
+                if (type === FOLDER) {
+                    store.dispatch({ type: actions.UPDATE_FOLDER, payload: { name: newTitle } });
+                } else if (type === TESTCASE) {
+                    store.dispatch({ type: actions.UPDATE_TESTCASE, payload: { name: newTitle } });
+                }
+                
             }
         }
         if (event.key === "Escape") {
@@ -95,7 +112,6 @@ export default function Title() {
                 <h1 style={{ marginBottom: '-1px' }}>
                     {key}
                     <TextField
-                        key={newTitle}
                         value={newTitle}
                         onChange={handleTitleChange}
                         onKeyDown={handleKeyDown}

@@ -3,6 +3,8 @@ from .models import Folder, TestCase, TestRun, TestStep
 
 
 class FolderSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = Folder
         fields = '__all__'

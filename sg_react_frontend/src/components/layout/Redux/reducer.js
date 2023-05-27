@@ -70,6 +70,16 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
+        case actions.UPDATE_FOLDER: {
+            const name = action.payload.name;
+            return {
+                ...state,
+                tree: {
+                    ...state.tree,
+                    treeUpdate: `[${Date.now()}]: Updated folder "${name}"`
+                }
+            }
+        }
         case actions.DELETE_FOLDER: {
             const id = action.payload.id;
             const name = action.payload.name;
@@ -88,6 +98,16 @@ export default function reducer (state = initialState, action) {
                 tree: {
                     ...state.tree,
                     treeUpdate: `[${Date.now()}]: Added testcase "${name}"`
+                }
+            }
+        }
+        case actions.UPDATE_TESTCASE: {
+            const name = action.payload.name;
+            return {
+                ...state,
+                tree: {
+                    ...state.tree,
+                    treeUpdate: `[${Date.now()}]: Updated testcase "${name}"`
                 }
             }
         }
