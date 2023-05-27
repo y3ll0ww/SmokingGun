@@ -4,7 +4,6 @@ import { Box, IconButton, TextField } from "@mui/material";
 import { FOLDER, TESTCASE, ROOT, KEY_FOLDER, KEY_TESTCASE } from '../../constants';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
 import store from "../Redux/store";
 
 
@@ -14,6 +13,7 @@ export default function Title() {
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState("");
     const [isModified, setIsModified] = useState(false);
+    const [error, setError] = useState("");
 
     const created = new Date(object.created_on).toLocaleString();
     const edited = new Date(object.edited_on).toLocaleString();
@@ -24,7 +24,6 @@ export default function Title() {
 
     const handleTitleChange = (event) => {
         const updatedTitle = event.target.value;
-        console.log(newTitle);
         setNewTitle(updatedTitle);
         console.log(newTitle);
         setIsModified(true);
@@ -44,12 +43,9 @@ export default function Title() {
     };
 
     const handleClickOutside = () => {
-        if (isModified) {
-            handleSaveClick();
-        } else {
-            setIsEditing(false);
-            setNewTitle(object.name ? object.name : 'Project name');
-        }
+        setError("");
+        setIsEditing(false);
+        setNewTitle(object.name ? object.name : 'Project name');
     };
 
     useEffect(() => {
@@ -61,7 +57,14 @@ export default function Title() {
     }, [newTitle]);
 
     const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            if (newTitle.length < 5 || newTitle.length > 150) {
+                setError("Use at least 5 to 150 characters.");
+                return;
+            }
+        }
         if (event.key === "Escape") {
+            setError("");
             setIsEditing(false);
         }
     };
@@ -79,10 +82,14 @@ export default function Title() {
         <Box>
             {!isEditing ? (
                 <h1 style={{ marginBottom: 0 }}>
-                    {key} {object.name}
-                    <IconButton style={{ marginLeft: '5px' }} onClick={handleEditClick}>
-                        <EditIcon />
-                    </IconButton>
+                    {key} {object.name != undefined ? (
+                        <React.Fragment>
+                            {object.name}
+                            <IconButton style={{ marginLeft: '5px' }} onClick={handleEditClick}>
+                                <EditIcon />
+                            </IconButton>
+                        </React.Fragment>
+                    ) : 'Project name'}
                 </h1>
             ) : (
                 <h1 style={{ marginBottom: '-1px' }}>
@@ -96,7 +103,8 @@ export default function Title() {
                         variant="standard"
                         size="small"
                         autoFocus
-                        style={{ width: '80%', marginLeft: '5px' }}
+                        error={!!error}
+                        style={{ width: '55%', marginLeft: '5px' }}
                         inputProps={{
                             maxLength: 50,
                             style: {
@@ -114,7 +122,9 @@ export default function Title() {
                     />
                 </h1>
             )}
-            <span style={{ color: 'gray', fontSize: '12px' }}>Created on <b>{created}</b> - Last edited on <b>{edited}</b></span>
+            <span style={{ color: 'gray', fontSize: '12px' }}>
+                Created on <b>{created}</b> {created !== edited && `- Last edited on `}{created !== edited && <b>{edited}</b>}
+            </span>
         </Box>
     );
 }
