@@ -15,7 +15,7 @@ export default function Title() {
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState("");
     const [error, setError] = useState("");
-    const resourceLabel = `${type} ${object.name}`;
+    const resourceLabel = `${type.charAt(0).toUpperCase() + type.slice(1)} ${object.name}`;
     const { updateResource } = useRequestResource({ endpoint: `/suite/${type}/update`, resourceLabel: resourceLabel });
     
 
