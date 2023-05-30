@@ -9,6 +9,7 @@ import BreadcrumbsTrail from './BreadcrumbsTrail';
 import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from "../Redux/actionTypes";
 import Title from './Title';
+import Description from './Description';
 
 
 function DetailView() {
@@ -56,7 +57,7 @@ function DetailView() {
     <Card sx={{ paddingTop: padY, paddingLeft: padX, paddingRight: padX, paddingBottom: padY }}>
         <BreadcrumbsTrail type={type} object={object} />
         <Title />
-        <p>{object.description}</p>
+        <Description />
         {viewType()}
     </Card>
   );

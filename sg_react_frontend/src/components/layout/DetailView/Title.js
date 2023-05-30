@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, IconButton, TextField } from "@mui/material";
 import { FOLDER, TESTCASE, ROOT, KEY_FOLDER, KEY_TESTCASE } from '../../constants';
-import DataObjectIcon from '@mui/icons-material/DataObject';
+import TagIcon from '@mui/icons-material/Tag';
 import EditIcon from '@mui/icons-material/Edit';
 import store from "../Redux/store";
 import * as actions from "../Redux/actionTypes";
@@ -14,7 +14,6 @@ export default function Title() {
     const object = useSelector(state => state.object);
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState("");
-    //const [isModified, setIsModified] = useState(false);
     const [error, setError] = useState("");
     const resourceLabel = `${type} ${object.name}`;
     const { updateResource } = useRequestResource({ endpoint: `/suite/${type}/update`, resourceLabel: resourceLabel });
@@ -31,20 +30,6 @@ export default function Title() {
     const handleTitleChange = (event) => {
         const updatedTitle = event.target.value;
         setNewTitle(updatedTitle);
-        //setIsModified(true);
-    };
-
-    const handleSaveClick = () => {
-        if (newTitle.length < 5 || newTitle.length > 50) {
-            // Display an error message or handle the error appropriately
-            return;
-        }
-
-        // Make the update call to the backend with the newTitle
-        // ...
-
-        setIsEditing(false);
-        //setIsModified(false);
     };
 
     const handleClickOutside = () => {
@@ -65,9 +50,7 @@ export default function Title() {
         if (event.key === "Enter") {
             if (newTitle.length < 5 || newTitle.length > 150) {
                 event.preventDefault();
-                console.log(newTitle);
                 setError("Use at least 5 to 150 characters.");
-                //setIsModified(false);
             } else {
                 updateResource(object.id, { name: newTitle });
                 setError("");
@@ -90,7 +73,7 @@ export default function Title() {
         <span style={{ color: 'gray', fontSize: '22px' }}>
             {type === FOLDER ? KEY_FOLDER(object.id) :
              type === TESTCASE ? KEY_TESTCASE(object.id) :
-             type === ROOT ? <DataObjectIcon /> :
+             type === ROOT ? <TagIcon /> :
              ''}
         </span>
     )
