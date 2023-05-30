@@ -3,10 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 urlpatterns = [
-    path('folders/', views.FolderListCreateView.as_view(), name='folder-list'),
     path('folders/tree/<int:pk>/', views.TreeView.as_view(), name='folder-tree-id'),
-    path('testcases/', views.TestCaseListCreateView.as_view(), name='testcase-list'),
-    path('testruns/', views.TestRunListCreateView.as_view(), name='testrun-list'),
     path('testruns/<int:pk>/', views.TestRunDetailView.as_view(), name='testrun-detail'),
     path('teststeps/', views.TestStepListCreateView.as_view(), name='teststep-list'),
     path('teststeps/<int:pk>/', views.TestStepDetailView.as_view(), name='teststep-detail'),

@@ -4,13 +4,6 @@ from .serializers import FolderSerializer, TestCaseSerializer, TestRunSerializer
 from .models import Folder, TestCase, TestRun, TestStep
 
 
-class FolderListCreateView(generics.ListCreateAPIView):
-    serializer_class = FolderSerializer
-
-    def get_queryset(self):
-        return Folder.objects.all()
-
-
 class FolderCreateView(generics.CreateAPIView):
     serializer_class = FolderSerializer
 
@@ -68,13 +61,6 @@ class FolderDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(data)
 
 
-class TestCaseListCreateView(generics.ListCreateAPIView):
-    serializer_class = TestCaseSerializer
-
-    def get_queryset(self):
-        return TestCase.objects.all()
-
-
 class TestCaseDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = TestCase.objects.all()
     serializer_class = TestCaseSerializer
@@ -127,13 +113,6 @@ class TestCaseUpdateView(generics.UpdateAPIView):
 class TestCaseDeleteView(generics.DestroyAPIView):
     queryset = TestCase.objects.all()
     serializer_class = TestCaseSerializer
-
-
-class TestRunListCreateView(generics.ListCreateAPIView):
-    serializer_class = TestRunSerializer
-
-    def get_queryset(self):
-        return TestRun.objects.all()
 
 
 class TestRunDetailView(generics.RetrieveUpdateDestroyAPIView):
