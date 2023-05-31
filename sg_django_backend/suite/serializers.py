@@ -3,7 +3,9 @@ from .models import Folder, TestCase, TestRun, TestStep
 
 
 class FolderSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=False, allow_blank=True)
     description = serializers.CharField(required=False, allow_blank=True)
+    order = serializers.IntegerField(required=False)
 
     class Meta:
         model = Folder

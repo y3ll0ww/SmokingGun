@@ -10,6 +10,7 @@ class Folder(models.Model):
                                       blank=True,
                                       related_name='child_folders',
                                       on_delete=models.CASCADE)
+    order = models.IntegerField(null=False)
     created_on = models.DateTimeField(auto_now_add=True)
     edited_on = models.DateTimeField(auto_now=True)
 
@@ -21,6 +22,7 @@ class Reference(models.Model):
 
 class TestCase(models.Model):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='testcases', null=True)
+    order = models.IntegerField(null=False)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=500)
     created_on = models.DateTimeField(auto_now_add=True)
