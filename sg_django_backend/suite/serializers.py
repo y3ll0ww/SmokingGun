@@ -13,6 +13,10 @@ class FolderSerializer(serializers.ModelSerializer):
 
 
 class TestCaseSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=False, allow_blank=True)
+    description = serializers.CharField(required=False, allow_blank=True)
+    order = serializers.IntegerField(required=False)
+
     class Meta:
         model = TestCase
         fields = '__all__'
