@@ -48,9 +48,9 @@ class FolderDetailView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(folder)
 
         # Get the child folders and test cases
-        child_folders = Folder.objects.filter(parent_folder=folder)
+        child_folders = Folder.objects.filter(parent_folder=folder).order_by('order')
         child_folders_serializer = FolderSerializer(child_folders, many=True)
-        test_cases = TestCase.objects.filter(folder=folder)
+        test_cases = TestCase.objects.filter(folder=folder).order_by('order')
         test_cases_serializer = TestCaseSerializer(test_cases, many=True)
 
         # Add the child folders and test cases to the serialized data
@@ -146,18 +146,18 @@ class TreeView(generics.RetrieveAPIView):
             serializer = self.get_serializer(folder)
             data = serializer.data
         else:
-            root_folders = Folder.objects.filter(parent_folder=None)
+            root_folders = Folder.objects.filter(parent_folder=None).order_by('order')
             serializer = self.get_serializer(root_folders, many=True)
             data = serializer.data
 
         # Recursive function to get child folders and test cases
         def get_children(folder_data):
             folder_id = folder_data['id']
-            child_folders = Folder.objects.filter(parent_folder_id=folder_id)
+            child_folders = Folder.objects.filter(parent_folder_id=folder_id).order_by('order')
             child_folder_serializer = self.get_serializer(child_folders, many=True)
             folder_data['child_folders'] = child_folder_serializer.data
 
-            testcases = TestCase.objects.filter(folder_id=folder_id)
+            testcases = TestCase.objects.filter(folder_id=folder_id).order_by('order')
             testcase_serializer = TestCaseSerializer(testcases, many=True)
             folder_data['testcases'] = testcase_serializer.data
 
@@ -176,7 +176,7 @@ class TreeView(generics.RetrieveAPIView):
             get_children(folder_data)
 
         # Retrieve test cases from root level
-        testcases = TestCase.objects.filter(folder=None)
+        testcases = TestCase.objects.filter(folder=None).order_by('order')
         testcase_serializer = TestCaseSerializer(testcases, many=True)
         root_testcases = testcase_serializer.data
 
@@ -240,11 +240,11 @@ class BreadcrumbTrailView(generics.RetrieveAPIView):
 class RootFolderDetailView(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         # Retrieve all folders with parent_folder=None
-        folders = Folder.objects.filter(parent_folder=None)
+        folders = Folder.objects.filter(parent_folder=None).order_by('order')
         folders_serializer = FolderSerializer(folders, many=True)
 
         # Retrieve all test cases with folder=None
-        test_cases = TestCase.objects.filter(folder=None)
+        test_cases = TestCase.objects.filter(folder=None).order_by('order')
         test_cases_serializer = TestCaseSerializer(test_cases, many=True)
 
         # Prepare the response data
