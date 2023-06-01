@@ -5,7 +5,6 @@ from . import views
 urlpatterns = [
     path('folders/tree/<int:pk>/', views.TreeView.as_view(), name='folder-tree-id'),
     path('testruns/<int:pk>/', views.TestRunDetailView.as_view(), name='testrun-detail'),
-    path('teststeps/', views.TestStepListView.as_view(), name='teststep-list'),
     path('teststeps/<int:pk>/', views.TestStepDetailView.as_view(), name='teststep-detail'),
 
     # Get
