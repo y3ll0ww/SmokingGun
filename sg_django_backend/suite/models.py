@@ -30,7 +30,7 @@ class TestCase(models.Model):
 
 
 class TestStep(models.Model):
-    testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE, related_name='teststeps')
+    testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE, related_name='teststeps', null=False)
     order = models.IntegerField()
     action = models.CharField(max_length=500)
     result = models.CharField(max_length=500)

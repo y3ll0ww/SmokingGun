@@ -122,11 +122,12 @@ class TestRunDetailView(generics.RetrieveUpdateDestroyAPIView):
         return TestRun.objects.all()
 
 
-class TestStepListCreateView(generics.ListCreateAPIView):
+class TestStepListView(generics.ListCreateAPIView):
     serializer_class = TestStepSerializer
 
     def get_queryset(self):
-        return TestStep.objects.all()
+        testcase_id = self.kwargs['testcase_id']
+        return TestStep.objects.filter(testcase=testcase_id)
 
 
 class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -134,6 +135,45 @@ class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return TestStep.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        test_step = self.get_object()
+        self.perform_destroy(test_step)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class TestStepCreateView(generics.CreateAPIView):
+    serializer_class = TestStepSerializer
+
+    def create(self, request, *args, **kwargs):
+        testcase_id = request.data.get('testcase')
+        action = request.data.get('action')
+        result = request.data.get('result')
+
+        if not testcase_id:
+            return Response({'error': 'Test case ID is missing.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if the testcase exists
+        try:
+            testcase = TestCase.objects.get(id=testcase_id)
+        except (TestCase.DoesNotExist, ValueError):
+            return Response({'error': 'Test case does not exist or invalid testcase ID.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Determine the order value for the new test step
+        existing_teststeps = TestStep.objects.filter(testcase=testcase_id)
+        if existing_teststeps.exists():
+            highest_order = existing_teststeps.order_by('-order').first().order
+            order = highest_order + 1
+        else:
+            order = 0
+
+        # Create the test step
+        teststep = TestStep(testcase=testcase, order=order, action=action, result=result)
+        teststep.save()
+
+        # Serialize the created test step
+        serializer = self.get_serializer(teststep)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class TreeView(generics.RetrieveAPIView):
