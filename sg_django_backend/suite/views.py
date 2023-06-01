@@ -122,14 +122,6 @@ class TestRunDetailView(generics.RetrieveUpdateDestroyAPIView):
         return TestRun.objects.all()
 
 
-class TestStepListView(generics.ListCreateAPIView):
-    serializer_class = TestStepSerializer
-
-    def get_queryset(self):
-        testcase_id = self.kwargs['testcase_id']
-        return TestStep.objects.filter(testcase=testcase_id)
-
-
 class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TestStepSerializer
 

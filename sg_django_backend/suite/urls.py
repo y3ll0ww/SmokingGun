@@ -14,7 +14,6 @@ urlpatterns = [
     path('root/', views.RootFolderDetailView.as_view(), name='root'),
     path('folder/<int:id>/', views.FolderDetailView.as_view(), name='folder-detail'),
     path('testcase/<int:id>/', views.TestCaseDetailView.as_view(), name='testcase-detail'),
-    path('teststeps/<int:testcase_id>/', views.TestStepListView.as_view(), name='teststeps-by-testcase'),
 
     # Create
     path('folder/create/', views.FolderCreateView.as_view(), name='folder-create'),
