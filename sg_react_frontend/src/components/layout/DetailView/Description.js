@@ -64,6 +64,7 @@ export default function Description() {
         <Box>
             { isEditing ?
                 <TextField
+                  multiline
                   autoFocus
                   value={newText}
                   onChange={handleChange}

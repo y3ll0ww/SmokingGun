@@ -7,6 +7,7 @@ import ModalAddAny from './ModalAddAny';
 import InputIcon from '@mui/icons-material/Input';
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ModalAdd from '../../SideMenu/ModalAdd';
 
 
@@ -72,6 +73,9 @@ export default function FolderView(props) {
         <Box>
             {modal}
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
+                <IconButton>
+                    <UploadFileIcon />
+                </IconButton>
                 <IconButton>
                     <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
                 </IconButton>
