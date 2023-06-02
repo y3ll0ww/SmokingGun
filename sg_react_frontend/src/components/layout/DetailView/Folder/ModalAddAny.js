@@ -3,8 +3,8 @@ import { Box, IconButton, Modal, Paper } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import { FOLDER, TESTCASE, modalStyle } from "../../constants";
-import ModalAdd from "../SideMenu/ModalAdd";
+import { FOLDER, TESTCASE, modalStyle } from "../../../constants";
+import ModalAdd from "../../SideMenu/ModalAdd";
 
 export default function ModalAddAny(props) {
     const [type, setType] = useState(undefined);

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Card, List, IconButton, Modal, Paper } from '@mui/material';
-import DirectoryNode from '../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, modalStyle } from '../../constants';
+import DirectoryNode from '../../SideMenu/DirectoryNode';
+import { FOLDER, TESTCASE, modalStyle } from '../../../constants';
 import ModalAddAny from './ModalAddAny';
 import InputIcon from '@mui/icons-material/Input';
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import ModalAdd from '../SideMenu/ModalAdd';
+import ModalAdd from '../../SideMenu/ModalAdd';
 
 
 export default function FolderView(props) {
