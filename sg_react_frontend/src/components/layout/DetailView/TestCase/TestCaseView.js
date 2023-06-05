@@ -42,16 +42,16 @@ export default function TestCaseView() {
   return (
     <Box>
       <DragDropContext onDragEnd={onDragEnd}>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
+            <IconButton>
+                <AddLinkIcon />
+            </IconButton>
+            <IconButton>
+                <AddIcon />
+            </IconButton>
+        </div>
         {steps.length > 0 ?
           <Box>
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
-                <IconButton>
-                    <AddLinkIcon />
-                </IconButton>
-                <IconButton>
-                    <AddIcon />
-                </IconButton>
-            </div>
             <Droppable droppableId={object.id.toString()}>
               {(provided, snapshot) => (
                 <TableContainer component={Card}
@@ -107,7 +107,34 @@ export default function TestCaseView() {
             </Droppable>
           </Box>
         : 
-        "Nothing"
+        <TableContainer component={Card} style={{ padding: 4 }}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: 'bold' }}>Step</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>Expected Result</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>Resource</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    height="100%"
+                  >
+                    <IconButton style={{ margin: 10 }}>
+                      <AddIcon style={{ fontSize: 36 }} />
+                    </IconButton>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
         }
       </DragDropContext>
     </Box>
