@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics, status
 from rest_framework.response import Response
+from django.http import QueryDict
 from .serializers import FolderSerializer, TestCaseSerializer, TestRunSerializer, TestStepSerializer
 from .models import Folder, TestCase, TestRun, TestStep
 
@@ -72,7 +73,7 @@ class TestCaseDetailView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(testcase)
 
         # Get the test steps for the test case
-        test_steps = TestStep.objects.filter(testcase=testcase)
+        test_steps = TestStep.objects.filter(testcase=testcase).order_by("order")
         test_steps_serializer = TestStepSerializer(test_steps, many=True)
 
         # Add the test steps to the serialized data
@@ -171,8 +172,9 @@ class TestStepCreateView(generics.CreateAPIView):
 
 class TestStepOrderUpdateView(generics.UpdateAPIView):
     def put(self, request):
-        ids = request.data.getlist('ids[]')
-        orders = request.data.getlist('orders[]')
+        data = request.data
+        ids = data.get('ids')
+        orders = data.get('orders')
 
         if len(ids) != len(orders):
             return Response({"error": "Invalid input. The number of IDs and orders should be the same."}, status=400)
@@ -181,7 +183,6 @@ class TestStepOrderUpdateView(generics.UpdateAPIView):
             try:
                 teststeps = TestStep.objects.filter(id=id)
                 for teststep in teststeps:
-                    print(teststep)
                     teststep.order = order
                     teststep.save()
             except ObjectDoesNotExist:

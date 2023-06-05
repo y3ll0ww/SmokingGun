@@ -7,10 +7,13 @@ import AddIcon from '@mui/icons-material/Add';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { STEP_ACTION, STEP_RESULT } from '../../../constants';
+import useRequestResource from '../../../../hooks/useRequestResource';
 
 export default function TestCaseView() {
   const object = useSelector(state => state.object);
   const [steps, setSteps] = useState([]);
+  const resourceLabel = "teststeps"
+  const { updateOrder } = useRequestResource({ endpoint: "/suite/teststeps/update-order/", resourceLabel: resourceLabel });
 
   useEffect(() => {
     setSteps(object.test_steps);
@@ -18,12 +21,22 @@ export default function TestCaseView() {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-
+  
     const reorderedSteps = Array.from(steps);
     const [movedStep] = reorderedSteps.splice(result.source.index, 1);
     reorderedSteps.splice(result.destination.index, 0, movedStep);
-
+  
     setSteps(reorderedSteps);
+  
+    const ids = reorderedSteps.map((step) => step.id);
+    const orders = reorderedSteps.map((step, index) => index);
+  
+    console.log(ids);
+    console.log(orders);
+  
+    updateOrder(ids, orders, () => {
+      // Optional: Perform any additional actions after the order is updated
+    });
   };
 
   return (

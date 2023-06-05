@@ -89,6 +89,24 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
             }).catch(handleRequestResourceError)
     }, [endpoint, resourceList, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading])
 
+    const updateOrder = useCallback((ids, orders, successCallback) => {
+        setLoading(true);
+        const data = {
+          ids: ids,
+          orders: orders
+        };
+        console.log(data);
+        axios.put(`/api/${endpoint}`, data, getCommonOptions())
+          .then(() => {
+            setLoading(false);
+            enqueueSnackbar(`Order of ${resourceLabel} updated`);
+            if (successCallback) {
+              successCallback();
+            }
+          })
+          .catch(handleRequestResourceError);
+      }, [endpoint, enqueueSnackbar, handleRequestResourceError, setLoading]);
+
     return {
         resourceList,
         getResourceList,
@@ -97,6 +115,7 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         getResource,
         updateResource,
         deleteResource,
+        updateOrder,
         error
     }
 }
