@@ -77,10 +77,10 @@ export default function FolderView(props) {
                     <UploadFileIcon />
                 </IconButton>
                 <IconButton>
-                    <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
+                    <PlaylistAddIcon onClick={() => handleOpenModal(true, TESTCASE)}/>
                 </IconButton>
                 <IconButton>
-                    <PlaylistAddIcon onClick={() => handleOpenModal(true, TESTCASE)}/>
+                    <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
                 </IconButton>
             </div>
             <Card>

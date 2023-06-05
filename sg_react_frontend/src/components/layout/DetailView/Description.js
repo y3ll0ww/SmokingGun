@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, TextField, Card, IconButton, Button } from '@mui/material';
 import { useSelector } from "react-redux";
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,8 +15,9 @@ export default function Description() {
     const [newText, setNewText] = useState(description);
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState("");
-    const resourceLabel = `${type.charAt(0).toUpperCase() + type.slice(1)} ${object.name}`;
+    const resourceLabel = `${type.charAt(0).toUpperCase() + type.slice(1)} "${object.name}"`;
     const { updateResource } = useRequestResource({ endpoint: `/suite/${type}/update`, resourceLabel: resourceLabel });
+    const inputRef = useRef(null);
 
     const handleClick = () => {
         if (newText !== description) {
@@ -60,6 +61,14 @@ export default function Description() {
         setNewText(description);
     };
 
+    useEffect(() => {
+        if (isEditing && inputRef.current) {
+          inputRef.current.selectionStart = inputRef.current.value.length;
+          inputRef.current.selectionEnd = inputRef.current.value.length;
+          inputRef.current.focus();
+        }
+    }, [isEditing]);
+
     return (
         <Box>
             { isEditing ?
@@ -71,6 +80,7 @@ export default function Description() {
                   onBlur={handleCancel}
                   onKeyDown={handleKeyDown}
                   error={!!error}
+                  inputRef={inputRef}
                   style={{ marginTop: 5, marginBottom: 5, width: '100%' }} />            
             : description !== undefined && description.length > 0 ?
                 <Card variant="outlined" style={{ padding: 15, marginTop: 5, marginBottom: 5 }}>

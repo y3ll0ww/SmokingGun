@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { Box, Card, IconButton, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import TestStepText from './TestStepText';
 import AddIcon from '@mui/icons-material/Add';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { STEP_ACTION, STEP_RESULT } from '../../../constants';
 
 export default function TestCaseView() {
   const object = useSelector(state => state.object);
@@ -72,8 +74,8 @@ export default function TestCaseView() {
                               }}
                             >
                                 <TableCell>{index+1}.</TableCell>
-                                <TableCell>{step.action}</TableCell>
-                                <TableCell>{step.result}</TableCell>
+                                <TableCell><TestStepText id={step.id} text={step.action} step={STEP_ACTION}/></TableCell>
+                                <TableCell><TestStepText id={step.id} text={step.result} step={STEP_RESULT}/></TableCell>
                                 <TableCell><IconButton>{!step.file ? <AddIcon /> : <AttachFileIcon />}</IconButton></TableCell>
                             </TableRow>
                           )}
