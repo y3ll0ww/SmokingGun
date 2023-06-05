@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .serializers import FolderSerializer, TestCaseSerializer, TestRunSerializer, TestStepSerializer
@@ -166,6 +167,27 @@ class TestStepCreateView(generics.CreateAPIView):
         # Serialize the created test step
         serializer = self.get_serializer(teststep)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class TestStepOrderUpdateView(generics.UpdateAPIView):
+    def put(self, request):
+        ids = request.data.getlist('ids[]')
+        orders = request.data.getlist('orders[]')
+
+        if len(ids) != len(orders):
+            return Response({"error": "Invalid input. The number of IDs and orders should be the same."}, status=400)
+
+        for id, order in zip(ids, orders):
+            try:
+                teststeps = TestStep.objects.filter(id=id)
+                for teststep in teststeps:
+                    print(teststep)
+                    teststep.order = order
+                    teststep.save()
+            except ObjectDoesNotExist:
+                return Response({"error": f"Test step with ID {id} does not exist."}, status=400)
+
+        return Response({"success": "Test step orders updated."})
 
 
 class TreeView(generics.RetrieveAPIView):
