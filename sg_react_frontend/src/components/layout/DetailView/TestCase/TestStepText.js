@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { Box, TextField } from '@mui/material';
 import useRequestResource from "../../../../hooks/useRequestResource";
 
@@ -6,6 +7,8 @@ export default function TestStepText(props) {
     const [text, setText] = useState(props.text);
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState(false);
+    const databaseIds = useSelector(state => state.testStepIds);
+    const steps = useSelector(state => state.object.test_steps);
     const inputRef = useRef(null);
     const resourceLabel = "Teststep";
     const { updateResource } = useRequestResource({ endpoint: `/suite/teststep/update`, resourceLabel: resourceLabel });
@@ -19,7 +22,9 @@ export default function TestStepText(props) {
                 handleCancel();
             }
             else {
-                updateResource(props.id, { [props.step]: text });
+                if (databaseIds.length < steps) {
+                    updateResource(props.id, { [props.step]: text });
+                }
                 setIsEditing(false);
                 setError("");
             }
