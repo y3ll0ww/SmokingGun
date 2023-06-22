@@ -99,7 +99,7 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         axios.put(`/api/${endpoint}`, data, getCommonOptions())
           .then(() => {
             setLoading(false);
-            enqueueSnackbar(`Order of ${resourceLabel} updated`);
+            //enqueueSnackbar(`Order of ${resourceLabel} updated`);
             if (successCallback) {
               successCallback();
             }

@@ -38,9 +38,8 @@ export default function TestCaseView() {
     const ids = updatedSteps.map(step => step.id);
     const orders = updatedSteps.map(step => step.order);
 
-    updateOrder(ids, orders, () => {
-      store.dispatch({ type: actions.TESTSTEPS_REORDER_STEPS, payload: updatedSteps });
-    });
+    updateOrder(ids, orders, () => {});
+    store.dispatch({ type: actions.TESTSTEPS_REORDER_STEPS, payload: updatedSteps });
   }
 
   const onDragEnd = (result) => {

@@ -66,7 +66,7 @@ export default function BreadcrumbsTrail(props) {
             );
             setTrail(trail);
         }
-    }, [type, object]);
+    }, [type, object.id]);
 
     const { getResource: getFolderResource, resource: folderResource } = useRequestResource({ endpoint: '/suite/folder' });
 
