@@ -9,7 +9,8 @@ const initialState = {
     tree: {
         openNodes: [],
         treeUpdate: ''
-    }
+    },
+    newStepIds: []
 };
 
 export default function reducer (state = initialState, action) {
@@ -123,8 +124,9 @@ export default function reducer (state = initialState, action) {
             }
         }
         case actions.TESTSTEPS_ADD_NEW_LINE: {
+            const id = Date.now();
             const data = {
-                id: Date.now(),
+                id: id,
                 order: action.payload.order,
                 action: action.payload.action,
                 result: action.payload.result
@@ -137,7 +139,11 @@ export default function reducer (state = initialState, action) {
                 object: {
                     ...state.object,
                     test_steps: newSteps
-                }
+                },
+                newStepIds: [
+                    ...state.newStepIds,
+                    id
+                ]
             }
         }
         case actions.TESTSTEPS_REORDER_STEPS: {
@@ -150,12 +156,14 @@ export default function reducer (state = initialState, action) {
             }
         }
         case actions.TESTSTEPS_DELETE_STEP: {
+            const newStepIds = state.newStepIds.filter(stepId => stepId !== action.payload.id);
             return {
                 ...state,
                 object: {
                     ...state.object,
-                    test_steps: action.payload
-                }
+                    test_steps: action.payload.steps
+                },
+                newStepIds: newStepIds
             }
         }
 

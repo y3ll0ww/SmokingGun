@@ -17,11 +17,12 @@ export default function TestCaseView() {
   const object = useSelector(state => state.object);
   const [steps, setSteps] = useState([]);
   const storeSteps = useSelector(state => state.object.test_steps);
+  const newStepIds = useSelector(state => state.newStepIds);
   const { updateOrder } = useRequestResource({ endpoint: '/suite/teststeps/update-order/', resourceLabel: 'teststeps' });
   const { addResource } = useRequestResource({ endpoint: '/suite/teststep/create/' });
   const { deleteResource } = useRequestResource({ endpoint: '/suite/teststep/delete', resourceLabel: 'Teststep' });
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/testcase` });
-  const databaseIds = storeSteps.map(step => step.id);
+  const [dragResult, setDragResult] = useState();
 
   useEffect(() => {
     setSteps(storeSteps);
@@ -49,47 +50,53 @@ export default function TestCaseView() {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-
-    if (storeSteps.length > databaseIds.length) {
+  
+    if (newStepIds.length > 0) {
       let promises = [];
-
+  
       for (const step of storeSteps) {
-        if (databaseIds.includes(step.id)) {
-          continue;
-        } else {
+        if (newStepIds.includes(step.id)) {
           const values = {
             action: step.action,
             result: step.result,
-            testcase: object.id,
+            testcase: object.id
           };
-
+  
           const promise = addResource(values);
           promises.push(promise);
+        } else {
+          continue;
         }
       }
-
+  
       Promise.all(promises)
         .then(() => getResource(object.id))
-        .then((res) => {
-          reOrderSteps(result, res.test_steps);
-        });
+        .then(() => setDragResult(result))
     } else {
       reOrderSteps(result, storeSteps);
     }
   };
 
+  useEffect(() => {
+    try {
+      reOrderSteps(dragResult, resource.test_steps);
+    } catch (ignore) { }
+  }, [resource]);
+
   const handleAddNewLine = () => {
     const order = storeSteps.length;
     store.dispatch({ type: actions.TESTSTEPS_ADD_NEW_LINE, payload: { action: '\u200B', result: '\u200B', order: order } });
     setSteps([...storeSteps]);
+    console.log(store.getState().newStepIds);
   };
 
   const handleDelete = (id) => {
-    if (id in databaseIds) {
+    if (!newStepIds.includes(id)) {
       deleteResource(id);
-    }
+    } else { console.log(storeSteps);};
     const stepsMinusDeleted = steps.filter(step => step.id !== id);
-    store.dispatch({ type: actions.TESTSTEPS_DELETE_STEP, payload: stepsMinusDeleted });
+    store.dispatch({ type: actions.TESTSTEPS_DELETE_STEP, payload: { steps: stepsMinusDeleted, id: id } });
+    console.log(store.getState().newStepIds);
   }
 
   const TableHead = () => {
