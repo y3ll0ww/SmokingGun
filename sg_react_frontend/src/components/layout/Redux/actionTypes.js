@@ -15,3 +15,4 @@ export const TESTSTEPS_ADD_NEW_LINE = "newLineAdded";
 export const TESTSTEPS_ABORT_NEW_LINE = "newLineAborted";
 export const TESTSTEPS_SEND_NEW_LINE = "newLineSentToDatabase";
 export const TESTSTEPS_REORDER_STEPS = "stepsReordered";
+export const TESTSTEPS_DELETE_STEP = "stepDeleted";

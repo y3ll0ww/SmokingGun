@@ -6,7 +6,6 @@ import { KEY_FOLDER } from "../../constants";
 const initialState = {
     type: ROOT,
     object: [],
-    testStepIds: [],
     tree: {
         openNodes: [],
         treeUpdate: ''
@@ -31,15 +30,10 @@ export default function reducer (state = initialState, action) {
             }
         }
         case actions.GET_TESTCASE: {
-            const stepIds = [];
-            for (const step of action.payload.test_steps) {
-                stepIds.push(step.id);
-            }
             return {
                 ...state,
                 type: TESTCASE,
-                object: action.payload,
-                testStepIds: stepIds
+                object: action.payload
             }
         }
         case actions.TREE_EXPAND_NODE: {
@@ -155,7 +149,15 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
-
+        case actions.TESTSTEPS_DELETE_STEP: {
+            return {
+                ...state,
+                object: {
+                    ...state.object,
+                    test_steps: action.payload
+                }
+            }
+        }
 
 
 

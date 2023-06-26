@@ -79,7 +79,7 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         axios.delete(`/api/${endpoint}/${id}/`, getCommonOptions())
             .then(() => {
                 setLoading(false);
-                enqueueSnackbar(`"${resourceLabel}" is deleted`)
+                enqueueSnackbar(`${resourceLabel} deleted`)
                 const newResourceList = {
                     results: resourceList.results.filter((r) => {
                         return r.id !== id

@@ -124,6 +124,18 @@ class TestRunDetailView(generics.RetrieveUpdateDestroyAPIView):
         return TestRun.objects.all()
 
 
+#class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
+#    serializer_class = TestStepSerializer
+#
+#    def get_queryset(self):
+#        return TestStep.objects.all()
+#
+#    def delete(self, request, *args, **kwargs):
+#        test_step = self.get_object()
+#        self.perform_destroy(test_step)
+#        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TestStepSerializer
 
@@ -132,6 +144,17 @@ class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         test_step = self.get_object()
+        order_to_delete = test_step.order
+        testcase = test_step.testcase
+
+        # Get the trailing steps with higher order values
+        trailing_steps = TestStep.objects.filter(testcase=testcase, order__gt=order_to_delete)
+
+        # Decrease the order value of each trailing step by one
+        for step in trailing_steps:
+            step.order -= 1
+            step.save()
+
         self.perform_destroy(test_step)
         return Response(status=status.HTTP_204_NO_CONTENT)
 

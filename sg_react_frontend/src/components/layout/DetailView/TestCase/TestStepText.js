@@ -7,7 +7,8 @@ export default function TestStepText(props) {
     const [text, setText] = useState(props.text);
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState(false);
-    const databaseIds = useSelector(state => state.testStepIds);
+    const storeSteps = useSelector(state => state.object.test_steps);
+    const databaseIds = storeSteps.map(step => step.id);
     const steps = useSelector(state => state.object.test_steps);
     const inputRef = useRef(null);
     const resourceLabel = "Teststep";

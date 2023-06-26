@@ -4,7 +4,9 @@ import { Box, Card, IconButton, TableContainer, Table, TableHead, TableBody, Tab
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TestStepText from './TestStepText';
 import AddIcon from '@mui/icons-material/Add';
+import UploadIcon from '@mui/icons-material/Upload';
 import AddLinkIcon from '@mui/icons-material/AddLink';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { STEP_ACTION, STEP_RESULT } from '../../../constants';
 import useRequestResource from '../../../../hooks/useRequestResource';
@@ -15,12 +17,15 @@ export default function TestCaseView() {
   const object = useSelector(state => state.object);
   const [steps, setSteps] = useState([]);
   const storeSteps = useSelector(state => state.object.test_steps);
-  const resourceLabel = 'teststeps';
-  const { updateOrder } = useRequestResource({ endpoint: '/suite/teststeps/update-order/', resourceLabel: resourceLabel });
+  const { updateOrder } = useRequestResource({ endpoint: '/suite/teststeps/update-order/', resourceLabel: 'teststeps' });
   const { addResource } = useRequestResource({ endpoint: '/suite/teststep/create/' });
+  const { deleteResource } = useRequestResource({ endpoint: '/suite/teststep/delete', resourceLabel: 'Teststep' });
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/testcase` });
-
   const databaseIds = storeSteps.map(step => step.id);
+
+  useEffect(() => {
+    setSteps(storeSteps);
+  }, [storeSteps]);
 
   function reOrderSteps(result, currentSteps) {
     const { source, destination } = result;
@@ -79,9 +84,24 @@ export default function TestCaseView() {
     setSteps([...storeSteps]);
   };
 
-  useEffect(() => {
-    setSteps(storeSteps);
-  }, [storeSteps]);
+  const handleDelete = (id) => {
+    if (id in databaseIds) {
+      deleteResource(id);
+    }
+    const stepsMinusDeleted = steps.filter(step => step.id !== id);
+    store.dispatch({ type: actions.TESTSTEPS_DELETE_STEP, payload: stepsMinusDeleted });
+  }
+
+  const TableHead = () => {
+    return (
+      <TableRow>
+        <TableCell style={{ fontWeight: 'bold' }}>Step</TableCell>
+        <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
+        <TableCell style={{ fontWeight: 'bold' }}>Expected Result</TableCell>
+        <TableCell style={{ fontWeight: 'bold' }}></TableCell>
+      </TableRow>
+    );
+  }
 
   return (
     <Box>
@@ -106,12 +126,7 @@ export default function TestCaseView() {
                 >
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
-                      <TableRow>
-                        <TableCell style={{ fontWeight: 'bold' }}>Step</TableCell>
-                        <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
-                        <TableCell style={{ fontWeight: 'bold' }}>Expected Result</TableCell>
-                        <TableCell style={{ fontWeight: 'bold' }}>Resource</TableCell>
-                      </TableRow>
+                      {TableHead}
                     </TableHead>
                     <TableBody>
                       {steps.map((step, index) => (
@@ -139,7 +154,8 @@ export default function TestCaseView() {
                                 <TestStepText id={step.id} text={step.result} step={STEP_RESULT} />
                               </TableCell>
                               <TableCell>
-                                <IconButton>{!step.file ? <AddIcon /> : <AttachFileIcon />}</IconButton>
+                                <IconButton style={{ padding: 0, margin: 2 }}>{!step.file ? <UploadIcon style={{ fontSize: 20 }}/> : <AttachFileIcon style={{ fontSize: 20 }}/>}</IconButton>
+                                <IconButton style={{ padding: 0, margin: 2 }} onClick={() => handleDelete(step.id)}><DeleteForeverIcon style={{ fontSize: 20 }}/></IconButton>
                               </TableCell>
                             </TableRow>
                           )}
@@ -161,12 +177,7 @@ export default function TestCaseView() {
           <TableContainer component={Card} style={{ padding: 4 }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontWeight: 'bold' }}>Step</TableCell>
-                  <TableCell style={{ fontWeight: 'bold' }}>Action</TableCell>
-                  <TableCell style={{ fontWeight: 'bold' }}>Expected Result</TableCell>
-                  <TableCell style={{ fontWeight: 'bold' }}>Resource</TableCell>
-                </TableRow>
+                {TableHead}
               </TableHead>
               <TableBody>
                 <TableRow>
