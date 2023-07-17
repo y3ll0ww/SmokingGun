@@ -11,6 +11,7 @@ export const DELETE_FOLDER = "folderDeleted";
 export const DELETE_TESTCASE = "testcaseDeleted";
 
 
+export const TESTSTEPS_CREATE_NEW_LINE = "newLineCreated";
 export const TESTSTEPS_ADD_NEW_LINE = "newLineAdded";
 export const TESTSTEPS_ABORT_NEW_LINE = "newLineAborted";
 export const TESTSTEPS_SEND_NEW_LINE = "newLineSentToDatabase";

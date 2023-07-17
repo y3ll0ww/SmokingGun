@@ -2,29 +2,35 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Box, TextField } from '@mui/material';
 import useRequestResource from "../../../../hooks/useRequestResource";
+import store from '../../Redux/store';
+import * as actions from '../../Redux/actionTypes';
 
 export default function TestStepText(props) {
     const [text, setText] = useState(props.text);
+    const [originalText, setOriginalText] = useState(props.text);
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState(false);
-    const storeSteps = useSelector(state => state.object.test_steps);
-    const databaseIds = storeSteps.map(step => step.id);
-    const steps = useSelector(state => state.object.test_steps);
+    const newStepIds = useSelector(state => state.steps.newStepIds);
     const inputRef = useRef(null);
     const resourceLabel = "Teststep";
     const { updateResource } = useRequestResource({ endpoint: `/suite/teststep/update`, resourceLabel: resourceLabel });
+    const { addResource } = useRequestResource({ endpoint: "/suite/teststep/create", resourceLabel: resourceLabel });
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
             if (text.length > 500) {
                 event.preventDefault();
                 setError("Use at least 5 to 500 characters.");
-            } else if (text === props.text) {
+            } else if (text === originalText) {
                 handleCancel();
             }
             else {
-                if (databaseIds.length < steps) {
+                if (!newStepIds.includes(props.id)) {
                     updateResource(props.id, { [props.step]: text });
+                    setOriginalText(text);
+                } else {
+                    store.dispatch({ type: actions.TESTSTEPS_ADD_NEW_LINE, payload: props.id });
+                    addResource({ testcase: props.tc, [props.step]: text });
                 }
                 setIsEditing(false);
                 setError("");
@@ -41,11 +47,14 @@ export default function TestStepText(props) {
     };
 
     const handleCancel = () => {
-        console.log('cancel');
         setError("");
         setIsEditing(false);
-        setText(props.text);
+        setText(originalText);
     };
+
+    const handleClick = () => {
+        handleKeyDown({ key: "Enter" });
+    }
 
     useEffect(() => {
         if (isEditing && inputRef.current) {
@@ -65,7 +74,7 @@ export default function TestStepText(props) {
                   autoFocus
                   variant="standard"
                   error={!!error}
-                  onBlur={handleCancel}
+                  onBlur={handleClick}
                   onKeyDown={handleKeyDown}
                   onChange={handleChange}
                   inputRef={inputRef}

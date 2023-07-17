@@ -10,7 +10,10 @@ const initialState = {
         openNodes: [],
         treeUpdate: ''
     },
-    newStepIds: []
+    steps: {
+        newStepIds: [],
+        stepUpdate: '',
+    }
 };
 
 export default function reducer (state = initialState, action) {
@@ -123,7 +126,7 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
-        case actions.TESTSTEPS_ADD_NEW_LINE: {
+        case actions.TESTSTEPS_CREATE_NEW_LINE: {
             const id = Date.now();
             const data = {
                 id: id,
@@ -140,11 +143,32 @@ export default function reducer (state = initialState, action) {
                     ...state.object,
                     test_steps: newSteps
                 },
-                newStepIds: [
-                    ...state.newStepIds,
-                    id
-                ]
+                steps: {
+                    ...state.steps,
+                    newStepIds: [
+                        ...state.steps.newStepIds,
+                        id
+                    ]
+                }
             }
+        }
+        case actions.TESTSTEPS_ADD_NEW_LINE: {
+            const update = Date.now();
+            const newSteps = state.object.test_steps.filter(step => step.id !== action.payload);
+            const newStepIds = state.steps.newStepIds.filter(stepId => stepId.id !== action.payload);
+
+            return {
+                ...state,
+                object: {
+                    ...state.object,
+                    test_steps: newSteps
+                },
+                steps: {
+                    newStepIds: newStepIds,
+                    stepUpdate: update
+                }
+            }
+
         }
         case actions.TESTSTEPS_REORDER_STEPS: {
             return {
@@ -156,14 +180,17 @@ export default function reducer (state = initialState, action) {
             }
         }
         case actions.TESTSTEPS_DELETE_STEP: {
-            const newStepIds = state.newStepIds.filter(stepId => stepId !== action.payload.id);
+            const newStepIds = state.steps.newStepIds.filter(stepId => stepId !== action.payload.id);
             return {
                 ...state,
                 object: {
                     ...state.object,
                     test_steps: action.payload.steps
                 },
-                newStepIds: newStepIds
+                steps: {
+                    ...state.steps,
+                    newStepIds: newStepIds
+                }
             }
         }
 

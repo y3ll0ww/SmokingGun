@@ -17,7 +17,7 @@ export default function TestCaseView() {
   const object = useSelector(state => state.object);
   const [steps, setSteps] = useState([]);
   const storeSteps = useSelector(state => state.object.test_steps);
-  const newStepIds = useSelector(state => state.newStepIds);
+  const newStepIds = useSelector(state => state.steps.newStepIds);
   const { updateOrder } = useRequestResource({ endpoint: '/suite/teststeps/update-order/', resourceLabel: 'teststeps' });
   const { addResource } = useRequestResource({ endpoint: '/suite/teststep/create/' });
   const { deleteResource } = useRequestResource({ endpoint: '/suite/teststep/delete', resourceLabel: 'Teststep' });
@@ -85,18 +85,16 @@ export default function TestCaseView() {
 
   const handleAddNewLine = () => {
     const order = storeSteps.length;
-    store.dispatch({ type: actions.TESTSTEPS_ADD_NEW_LINE, payload: { action: '\u200B', result: '\u200B', order: order } });
+    store.dispatch({ type: actions.TESTSTEPS_CREATE_NEW_LINE, payload: { action: '\u200B', result: '\u200B', order: order } });
     setSteps([...storeSteps]);
-    console.log(store.getState().newStepIds);
   };
 
   const handleDelete = (id) => {
     if (!newStepIds.includes(id)) {
       deleteResource(id);
-    } else { console.log(storeSteps);};
+    }
     const stepsMinusDeleted = steps.filter(step => step.id !== id);
     store.dispatch({ type: actions.TESTSTEPS_DELETE_STEP, payload: { steps: stepsMinusDeleted, id: id } });
-    console.log(store.getState().newStepIds);
   }
 
   const TableHead = () => {
@@ -155,10 +153,10 @@ export default function TestCaseView() {
                             >
                               <TableCell>{index + 1}.</TableCell>
                               <TableCell>
-                                <TestStepText id={step.id} text={step.action} step={STEP_ACTION} />
+                                <TestStepText tc={object.id} id={step.id} text={step.action} step={STEP_ACTION} />
                               </TableCell>
                               <TableCell>
-                                <TestStepText id={step.id} text={step.result} step={STEP_RESULT} />
+                                <TestStepText tc={object.id} id={step.id} text={step.result} step={STEP_RESULT} />
                               </TableCell>
                               <TableCell>
                                 <IconButton style={{ padding: 0, margin: 2 }}>{!step.file ? <UploadIcon style={{ fontSize: 20 }}/> : <AttachFileIcon style={{ fontSize: 20 }}/>}</IconButton>

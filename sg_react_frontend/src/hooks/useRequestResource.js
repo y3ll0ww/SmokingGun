@@ -95,7 +95,6 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
           ids: ids,
           orders: orders
         };
-        console.log(data);
         axios.put(`/api/${endpoint}`, data, getCommonOptions())
           .then(() => {
             setLoading(false);

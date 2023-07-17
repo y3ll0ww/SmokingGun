@@ -31,6 +31,7 @@ function DetailView() {
   };
 
   const treeUpdate = useSelector((state) => state.tree.treeUpdate);
+  const stepUpdate = useSelector((state) => state.steps.stepUpdate);
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/${type}` });
 
   useEffect(() => {
@@ -39,7 +40,7 @@ function DetailView() {
     } else {
         getResource();
     }
-  }, [treeUpdate]);
+  }, [treeUpdate, stepUpdate]);
 
   useEffect(() => {
     if (resource) {

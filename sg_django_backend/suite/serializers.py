@@ -29,6 +29,9 @@ class TestRunSerializer(serializers.ModelSerializer):
 
 
 class TestStepSerializer(serializers.ModelSerializer):
+    action = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    result = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+
     class Meta:
         model = TestStep
         fields = '__all__'
