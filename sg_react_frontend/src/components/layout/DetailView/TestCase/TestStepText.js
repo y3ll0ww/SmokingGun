@@ -6,7 +6,7 @@ import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
 
 export default function TestStepText(props) {
-    const [text, setText] = useState(props.text);
+    const [text, setText] = useState(props.text || "");
     const [originalText, setOriginalText] = useState(props.text);
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState(false);
