@@ -12,6 +12,7 @@ import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { NavLink } from "react-router-dom";
 import { Box } from "@mui/system";
 import { GlobalStyles, useTheme, Paper, Modal, IconButton } from "@mui/material";
+import ProjectDropDown from "./ProjectDropDown";
 import Directory from "./Directory";
 import ModalAdd from "./ModalAdd";
 import { FOLDER, TESTCASE, modalStyle } from "../../constants";
@@ -86,10 +87,13 @@ export function SideMenu(props) {
         sx={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "end",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 1,
           marginTop: 1
         }}
       >
+        <ProjectDropDown />
         <NavLink
           className={(props) => {
             return `${

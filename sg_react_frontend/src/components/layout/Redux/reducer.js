@@ -5,9 +5,7 @@ import { KEY_FOLDER } from "../../constants";
 
 const initialState = {
     type: PROJECT,
-    project: {
-        "id": 1
-    },
+    project: {},
     object: {},
     tree: {
         openNodes: [],
@@ -22,6 +20,16 @@ const initialState = {
 export default function reducer (state = initialState, action) {
     console.log(action.payload);
     switch (action.type) {
+        case actions.SET_PROJECT: {
+            return {
+                ...state,
+                type: PROJECT,
+                project: {
+                    ...state.project,
+                    id: action.payload
+                }
+            }
+        }
         case actions.GET_PROJECT: {
             let data = action.payload;
             data.child_folders = action.payload.project_folders;

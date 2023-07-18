@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card } from '@mui/material';
+import { Box, Card } from '@mui/material';
 import FolderView from './Folder/FolderView';
 import TestCaseView from './TestCase/TestCaseView';
 import { Provider, useSelector } from 'react-redux';
@@ -25,7 +25,10 @@ function DetailView() {
     } else if (type === TESTCASE) {
       return <TestCaseView type={type} object={object} />;
     } else if (type === PROJECT) {
-      return <FolderView type={type} object={object} />;
+      if (project.id) {
+        return <FolderView type={type} object={object} />;
+      }
+      return <p>Nothing</p>;
     } else {
       return <div>404 Not Found...</div>;
     }
@@ -39,9 +42,11 @@ function DetailView() {
     if (type != PROJECT) {
         getResource(object.id);
     } else {
-        getResource(project.id);
+        if(project.id) {
+          getResource(project.id);
+        }
     }
-  }, [treeUpdate, stepUpdate]);
+  }, [treeUpdate, stepUpdate, project.id]);
 
   useEffect(() => {
     if (resource) {
@@ -54,13 +59,19 @@ function DetailView() {
         }   
     }
   }, [resource])
-
+  
   return (
     <Card sx={{ paddingTop: padY, paddingLeft: padX, paddingRight: padX, paddingBottom: padY }}>
-        <BreadcrumbsTrail type={type} object={object} />
-        <Title />
-        <Description />
-        {viewType()}
+      {project.id ?
+        <Box>
+          <BreadcrumbsTrail type={type} object={object} />
+          <Title />
+          <Description />
+        </Box>
+        :
+        <span/>
+      }
+      {viewType()}
     </Card>
   );
 }

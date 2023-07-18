@@ -15,6 +15,7 @@ urlpatterns = [
     path('testcase/<int:id>/', views.TestCaseDetailView.as_view(), name='testcase-detail'),
 
     # Create
+    path('projects/', views.ProjectsAllView.as_view(), name='projects-all'),
     path('project/create/', views.ProjectCreateView.as_view(), name='project-create'),
     path('folder/create/', views.FolderCreateView.as_view(), name='folder-create'),
     path('testcase/create/', views.TestCaseCreateView.as_view(), name='testcase-create'),

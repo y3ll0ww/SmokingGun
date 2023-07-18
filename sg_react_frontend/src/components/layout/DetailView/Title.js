@@ -109,7 +109,7 @@ export default function Title() {
                         size="small"
                         autoFocus
                         error={!!error}
-                        style={{ width: '80%', marginLeft: '5px' }}
+                        style={{ width: '60%', marginLeft: '5px' }}
                         inputProps={{
                             maxLength: 50,
                             style: {

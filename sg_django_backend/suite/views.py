@@ -6,6 +6,15 @@ from .serializers import ProjectSerializer, FolderSerializer, TestCaseSerializer
 from .models import Project, Folder, TestCase, TestRun, TestStep
 
 
+class ProjectsAllView(generics.RetrieveAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+    def get(self, request, *args, **kwargs):
+        projects = self.queryset.values("id", "name")
+        return Response({'projects': list(projects)})
+
+
 class ProjectCreateView(generics.CreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer

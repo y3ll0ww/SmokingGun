@@ -12,7 +12,9 @@ function Directory() {
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/root/tree/${projectId}` });
 
   useEffect(() => {
-    getResource();
+    if (projectId) {
+      getResource();
+    }
   }, [projectId, treeUpdate]);
 
   useEffect(() => {
@@ -20,16 +22,21 @@ function Directory() {
       setTreeItems(resource);
     }    
   }, [resource]);
-
-  return (
-    <List style={{ fontSize: "8px" }}>
-      {treeItems.map((item) => (
-        <div key={item.key}>
-          <DirectoryNode key={item.id} item={item} padding={10} />
-        </div>
-      ))}
-    </List>
-  );
+  
+  if (treeItems.length > 0) {
+    return (
+      <List style={{ fontSize: "8px" }}>
+        {treeItems.map((item) => (
+          <div key={item.key}>
+            <DirectoryNode key={item.id} item={item} padding={10} />
+          </div>
+        ))}
+      </List>
+    );
+  } else {
+    return <p>Nothing</p>;
+  }
+  
 }
 
 function View() {
