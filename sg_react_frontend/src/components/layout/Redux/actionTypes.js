@@ -1,4 +1,4 @@
-export const GET_ROOT = "rootFound";
+export const GET_PROJECT = "rootFound";
 export const GET_FOLDER = "folderFound";
 export const GET_TESTCASE = "testcaseFound";
 export const TREE_EXPAND_NODE = "folderExpanded";

@@ -3,21 +3,23 @@ import { List } from "@mui/material";
 import DirectoryNode from "./DirectoryNode";
 import { Provider, useSelector } from "react-redux";
 import store from "../Redux/store";
+import useRequestResource from '../../../hooks/useRequestResource';
 
 function Directory() {
   const [treeItems, setTreeItems] = useState([]);
   const treeUpdate = useSelector((state) => state.tree.treeUpdate);
+  const projectId = useSelector((state) => state.project.id);
+  const { getResource, resource } = useRequestResource({ endpoint: `/suite/root/tree/${projectId}` });
 
   useEffect(() => {
-    fetch("/api/suite/root/tree/")
-      .then(response => response.json())
-      .then(data => {
-        setTreeItems(data);
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
-  }, [treeUpdate]);
+    getResource();
+  }, [projectId, treeUpdate]);
+
+  useEffect(() => {
+    if (resource) {
+      setTreeItems(resource);
+    }    
+  }, [resource]);
 
   return (
     <List style={{ fontSize: "8px" }}>

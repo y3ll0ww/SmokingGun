@@ -5,11 +5,12 @@ import HomeIcon from '@mui/icons-material/Home';
 import store from '../Redux/store';
 import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from '../Redux/actionTypes';
-import { ROOT, FOLDER, TESTCASE, KEY_FOLDER } from '../../constants';
+import { PROJECT, FOLDER, TESTCASE, KEY_FOLDER } from '../../constants';
 
 export default function BreadcrumbsTrail(props) {
     const type = useSelector(state => state.type);
     const object = useSelector(state => state.object);
+    const project = useSelector(state => state.project);
     const [trail, setTrail] = useState([]);
 
     useEffect(() => {
@@ -52,7 +53,7 @@ export default function BreadcrumbsTrail(props) {
               .catch((error) => {
                 console.error('Error:', error);
               });
-        } else if (type === ROOT) {
+        } else if (type === PROJECT) {
             const trail = [];
             trail.unshift(
                 <Button
@@ -68,7 +69,7 @@ export default function BreadcrumbsTrail(props) {
         }
     }, [type, object.id]);
 
-    const { getResource: getFolderResource, resource: folderResource } = useRequestResource({ endpoint: '/suite/folder' });
+    const { getResource: getFolderResource, resource: folderResource } = useRequestResource({ endpoint: `/suite/${FOLDER}` });
 
     const handleFolderClick = (id) => {
       getFolderResource(id);
@@ -80,15 +81,15 @@ export default function BreadcrumbsTrail(props) {
       }
     }, [folderResource]);
 
-    const { getResource: getRootResource, resource: rootResource } = useRequestResource({ endpoint: '/suite/root/' });
+    const { getResource: getRootResource, resource: rootResource } = useRequestResource({ endpoint: `/suite/${PROJECT}` });
 
     const handleRootClick = () => {
-      getRootResource();
+      getRootResource(project.id);
     };
 
     useEffect(() => {
       if (rootResource) {
-        store.dispatch({ type: actions.GET_ROOT, payload: rootResource });
+        store.dispatch({ type: actions.GET_PROJECT, payload: rootResource }); // Set project in store
       }
     }, [rootResource]);
 

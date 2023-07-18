@@ -2,8 +2,38 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.http import QueryDict
-from .serializers import FolderSerializer, TestCaseSerializer, TestRunSerializer, TestStepSerializer
-from .models import Folder, TestCase, TestRun, TestStep
+from .serializers import ProjectSerializer, FolderSerializer, TestCaseSerializer, TestRunSerializer, TestStepSerializer
+from .models import Project, Folder, TestCase, TestRun, TestStep
+
+
+class ProjectCreateView(generics.CreateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+
+class ProjectDetailView(generics.RetrieveUpdateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+
+class ProjectDeleteView(generics.DestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+    def perform_destroy(self, instance):
+        folders = instance.project_folders.all()
+        for folder in folders:
+            folder.delete()
+
+        testcases = instance.project_testcases.all()
+        for testcase in testcases:
+            testcase.delete()
+
+        testruns = instance.project_testruns.all()
+        for testrun in testruns:
+            testrun.delete()
+
+        instance.delete()
 
 
 class FolderCreateView(generics.CreateAPIView):
@@ -215,16 +245,18 @@ class TestStepOrderUpdateView(generics.UpdateAPIView):
 
 
 class TreeView(generics.RetrieveAPIView):
-    queryset = Folder.objects.all()
+    #queryset = Folder.objects.all()
     serializer_class = FolderSerializer
 
     def get(self, request, *args, **kwargs):
+        project_id = kwargs['project']
+
         if 'id' in kwargs:
             folder = self.get_object()
             serializer = self.get_serializer(folder)
             data = serializer.data
         else:
-            root_folders = Folder.objects.filter(parent_folder=None).order_by('order')
+            root_folders = Folder.objects.filter(project=project_id, parent_folder=None).order_by('order')
             serializer = self.get_serializer(root_folders, many=True)
             data = serializer.data
 
@@ -254,7 +286,7 @@ class TreeView(generics.RetrieveAPIView):
             get_children(folder_data)
 
         # Retrieve test cases from root level
-        testcases = TestCase.objects.filter(folder=None).order_by('order')
+        testcases = TestCase.objects.filter(project=project_id, folder=None).order_by('order')
         testcase_serializer = TestCaseSerializer(testcases, many=True)
         root_testcases = testcase_serializer.data
 
@@ -316,19 +348,30 @@ class BreadcrumbTrailView(generics.RetrieveAPIView):
 
 
 class RootFolderDetailView(generics.RetrieveAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    lookup_field = 'id'
+
     def get(self, request, *args, **kwargs):
+        project_id = kwargs['id']
+        project = self.get_object()
+        serializer = self.get_serializer(project)
+
         # Retrieve all folders with parent_folder=None
-        folders = Folder.objects.filter(parent_folder=None).order_by('order')
+        folders = Folder.objects.filter(project=project_id, parent_folder=None).order_by('order')
         folders_serializer = FolderSerializer(folders, many=True)
 
         # Retrieve all test cases with folder=None
-        test_cases = TestCase.objects.filter(folder=None).order_by('order')
+        test_cases = TestCase.objects.filter(project=project_id, folder=None).order_by('order')
         test_cases_serializer = TestCaseSerializer(test_cases, many=True)
 
         # Prepare the response data
-        data = {
-            'child_folders': folders_serializer.data,
-            'test_cases': test_cases_serializer.data
-        }
+        data = serializer.data
+        data['project_folders'] = folders_serializer.data
+        data['project_testcases'] = test_cases_serializer.data
+        #data = {
+        #    'child_folders': folders_serializer.data,
+        #    'test_cases': test_cases_serializer.data
+        #}
 
         return Response(data)

@@ -2,7 +2,21 @@ from django.db import models
 from django import forms
 
 
+class Project(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=500)
+    project_folders = models.ManyToManyField('Folder', blank=True, related_name='projects')
+    project_testcases = models.ManyToManyField('TestCase', blank=True, related_name='projects')
+    project_testruns = models.ManyToManyField('TestRun', blank=True, related_name='projects')
+    created_on = models.DateTimeField(auto_now_add=True)
+    edited_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Folder(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='folders', null=False)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=500)
     references = models.ManyToManyField('Reference', blank=True)
@@ -21,6 +35,7 @@ class Reference(models.Model):
 
 
 class TestCase(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='testcases', null=False)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='testcases', null=True)
     order = models.IntegerField(null=False)
     name = models.CharField(max_length=255)
@@ -47,6 +62,7 @@ class TestStepForm(forms.ModelForm):
 
 
 class TestRun(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='testruns', null=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE, related_name='testruns')
     passed = models.BooleanField(default=False)

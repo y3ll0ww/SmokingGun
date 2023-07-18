@@ -1,5 +1,13 @@
 from rest_framework import serializers
-from .models import Folder, TestCase, TestRun, TestStep
+from .models import Project, Folder, TestCase, TestRun, TestStep
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(required=False, allow_blank=True)
+
+    class Meta:
+        model = Project
+        fields = '__all__'
 
 
 class FolderSerializer(serializers.ModelSerializer):

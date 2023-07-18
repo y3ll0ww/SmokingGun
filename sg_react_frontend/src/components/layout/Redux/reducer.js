@@ -1,11 +1,14 @@
-import { ROOT, FOLDER, TESTCASE } from "../../constants";
+import { PROJECT, FOLDER, TESTCASE } from "../../constants";
 import * as actions from "./actionTypes";
 import { KEY_FOLDER } from "../../constants";
 
 
 const initialState = {
-    type: ROOT,
-    object: [],
+    type: PROJECT,
+    project: {
+        "id": 1
+    },
+    object: {},
     tree: {
         openNodes: [],
         treeUpdate: ''
@@ -19,11 +22,18 @@ const initialState = {
 export default function reducer (state = initialState, action) {
     console.log(action.payload);
     switch (action.type) {
-        case actions.GET_ROOT: {
+        case actions.GET_PROJECT: {
+            let data = action.payload;
+            data.child_folders = action.payload.project_folders;
+            data.test_cases = action.payload.project_testcases;
+            delete data.project_folders;
+            delete data.project_testcases;
+
             return {
                 ...state,
-                type: ROOT,
-                object: action.payload
+                type: PROJECT,
+                object: data,
+                project: action.payload
             }
         }
         case actions.GET_FOLDER: {

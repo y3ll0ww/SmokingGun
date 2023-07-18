@@ -1,4 +1,4 @@
-export const ROOT = "root";
+export const PROJECT = "project";
 export const FOLDER = "folder";
 export const TESTCASE = "testcase";
 export const KEY = (key, id) => { return key + id + ":"; }

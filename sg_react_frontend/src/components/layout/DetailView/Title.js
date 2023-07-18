@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, IconButton, TextField } from "@mui/material";
-import { FOLDER, TESTCASE, ROOT, KEY_FOLDER, KEY_TESTCASE } from '../../constants';
+import { FOLDER, TESTCASE, PROJECT, KEY_FOLDER, KEY_TESTCASE } from '../../constants';
 import TagIcon from '@mui/icons-material/Tag';
 import EditIcon from '@mui/icons-material/Edit';
 import store from "../Redux/store";
@@ -10,18 +10,19 @@ import useRequestResource from "../../../hooks/useRequestResource";
 
 
 export default function Title() {
+    const project = useSelector(state => state.project);
     const type = useSelector(state => state.type);
     const object = useSelector(state => state.object);
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState("");
     const [error, setError] = useState("");
-    const resourceLabel = `${type.charAt(0).toUpperCase() + type.slice(1)} ${object.name}`;
+    const resourceLabel = `${type.charAt(0).toUpperCase() + type.slice(1)} "${object.name ? object.name : project.name}"`;
     const { updateResource } = useRequestResource({ endpoint: `/suite/${type}/update`, resourceLabel: resourceLabel });
     
 
     const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    const created = new Date(object.created_on).toLocaleString(undefined, dateOptions);
-    const edited = new Date(object.edited_on).toLocaleString(undefined, dateOptions);
+    const created = new Date(object.created_on ? object.created_on : project.created_on).toLocaleString(undefined, dateOptions);
+    const edited = new Date(object.edited_on ? object.edited_on : project.edited_on).toLocaleString(undefined, dateOptions);
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -35,12 +36,16 @@ export default function Title() {
     const handleClickOutside = () => {
         setError("");
         setIsEditing(false);
-        setNewTitle(object.name ? object.name : 'Project name');
+        setNewTitle(object.name ? object.name : project.name);
     };
 
     useEffect(() => {
-        setNewTitle(store.getState().object.name);
-    }, [store.getState().object.name, []]);
+        if (type !== PROJECT) {
+            setNewTitle(object.name);
+        } else {
+            setNewTitle(project.name);
+        }
+    }, [object.name, []]);
 
     useEffect(() => {
         setNewTitle(newTitle);
@@ -52,12 +57,14 @@ export default function Title() {
                 event.preventDefault();
                 setError("Use at least 5 to 150 characters.");
             } else {
-                updateResource(object.id, { name: newTitle });
+                updateResource(object.id ? object.id : project.id, { name: newTitle });
                 setError("");
                 setIsEditing(false);
                 if (type === FOLDER) {
                     store.dispatch({ type: actions.UPDATE_FOLDER, payload: { name: newTitle } });
                 } else if (type === TESTCASE) {
+                    store.dispatch({ type: actions.UPDATE_TESTCASE, payload: { name: newTitle } });
+                } else if (type === PROJECT) {
                     store.dispatch({ type: actions.UPDATE_TESTCASE, payload: { name: newTitle } });
                 }
                 
@@ -73,7 +80,7 @@ export default function Title() {
         <span style={{ color: 'gray', fontSize: '22px' }}>
             {type === FOLDER ? KEY_FOLDER(object.id) :
              type === TESTCASE ? KEY_TESTCASE(object.id) :
-             type === ROOT ? <TagIcon /> :
+             type === PROJECT ? <TagIcon style={{ marginRight: 5 }}/> :
              ''}
         </span>
     )
@@ -82,14 +89,13 @@ export default function Title() {
         <Box>
             {!isEditing ? (
                 <h1 style={{ marginBottom: 0 }}>
-                    {key} {object.name != undefined ? (
-                        <React.Fragment>
-                            {object.name}
-                            <IconButton style={{ marginLeft: '5px' }} onClick={handleEditClick}>
-                                <EditIcon />
-                            </IconButton>
-                        </React.Fragment>
-                    ) : 'Project name'}
+                    {key}
+                    <React.Fragment>
+                        {object.name ? object.name : project.name}
+                        <IconButton style={{ marginLeft: '5px' }} onClick={handleEditClick}>
+                            <EditIcon />
+                        </IconButton>
+                    </React.Fragment>
                 </h1>
             ) : (
                 <h1 style={{ marginBottom: '-1px' }}>
@@ -103,7 +109,7 @@ export default function Title() {
                         size="small"
                         autoFocus
                         error={!!error}
-                        style={{ width: '55%', marginLeft: '5px' }}
+                        style={{ width: '80%', marginLeft: '5px' }}
                         inputProps={{
                             maxLength: 50,
                             style: {
