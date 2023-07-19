@@ -10,7 +10,7 @@ import { PROJECT, FOLDER, TESTCASE, KEY_FOLDER } from '../../constants';
 export default function BreadcrumbsTrail(props) {
     const type = useSelector(state => state.type);
     const object = useSelector(state => state.object);
-    const project = useSelector(state => state.project);
+    const project = useSelector(state => state.projects.currentProject);
     const [trail, setTrail] = useState([]);
 
     useEffect(() => {

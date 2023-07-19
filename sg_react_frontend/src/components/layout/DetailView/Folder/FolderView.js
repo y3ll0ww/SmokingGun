@@ -13,6 +13,7 @@ import ModalAdd from '../../SideMenu/ModalAdd';
 
 export default function FolderView(props) {
     const object = useSelector((state) => state.object);
+    const projectId = useSelector((state) => state.projects.currentProject.id);
     const [modalOpen, setModalOpen] = useState(false);
     const [direct, setDirect] = useState(false);
     const [type, setType] = useState(undefined);
@@ -29,9 +30,9 @@ export default function FolderView(props) {
 
     const modalDetail = () => {
         if (direct) {
-            return <ModalAdd handleCloseModal={handleCloseModal} parent_folder={object.id} type={type} />
+            return <ModalAdd handleCloseModal={handleCloseModal} parent_folder={object.id} type={type} projectId={projectId} />
         }
-        return <ModalAddAny handleCloseModal={handleCloseModal} parent_folder={object.id} />
+        return <ModalAddAny handleCloseModal={handleCloseModal} parent_folder={object.id} projectId={projectId} />
     }
 
     const modal = (
@@ -60,7 +61,7 @@ export default function FolderView(props) {
                         </IconButton>
                         <h2>No contents</h2>
                         <p style={{ marginTop: '0px', textAlign: 'center', color: 'gray' }}>
-                            This folder doesn't contain any testcases or other folders.<br />
+                            This {props.type} doesn't contain any testcases or other folders.<br />
                             You can create new resources by <b>clicking the icon</b> above.
                         </p>
                     </div>

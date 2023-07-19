@@ -51,6 +51,7 @@ class FolderCreateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         name = request.data.get('name')
         parent_folder_id = request.data.get('parent_folder')
+        project_id = request.data.get('project')
 
         # Check if the parent folder exists
         parent_folder = None
@@ -60,8 +61,22 @@ class FolderCreateView(generics.CreateAPIView):
             except Folder.DoesNotExist:
                 return Response({'error': 'Parent folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Retrieve the Project instance
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return Response({'error': 'Project does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Set the order number
+        if parent_folder is not None:
+            existing_child_folders_count = Folder.objects.filter(parent_folder=parent_folder).count()
+            order = existing_child_folders_count + 1
+        else:
+            existing_root_folders_count = Folder.objects.filter(project=project, parent_folder=None).count()
+            order = existing_root_folders_count + 1
+
         # Create the folder
-        folder = Folder(name=name, parent_folder=parent_folder)
+        folder = Folder(name=name, parent_folder=parent_folder, project=project, order=order)
         folder.save()
 
         # Serialize the created folder

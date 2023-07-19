@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Box, Card } from '@mui/material';
+import ProjectView from './Project/ProjectView';
 import FolderView from './Folder/FolderView';
 import TestCaseView from './TestCase/TestCaseView';
 import { Provider, useSelector } from 'react-redux';
@@ -15,7 +16,7 @@ import Description from './Description';
 function DetailView() {
   const type = useSelector(state => state.type);
   const object = useSelector(state => state.object);
-  const project = useSelector(state => state.project);
+  const project = useSelector(state => state.projects.currentProject);
   const padX = '30px';
   const padY = '25px';
 
@@ -28,7 +29,7 @@ function DetailView() {
       if (project.id) {
         return <FolderView type={type} object={object} />;
       }
-      return <p>Nothing</p>;
+      return <ProjectView />;
     } else {
       return <div>404 Not Found...</div>;
     }

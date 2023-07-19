@@ -22,7 +22,7 @@ export default function ModalAddAny(props) {
     };
 
     if (type != undefined) {
-        return <ModalAdd handleCloseModal={props.handleCloseModal} type={type} parent_folder={props.parent_folder} />
+        return <ModalAdd handleCloseModal={props.handleCloseModal} type={type} parent_folder={props.parent_folder} projectId={props.projectId} />
     }
 
     return (

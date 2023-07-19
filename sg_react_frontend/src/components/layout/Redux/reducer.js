@@ -5,7 +5,10 @@ import { KEY_FOLDER } from "../../constants";
 
 const initialState = {
     type: PROJECT,
-    project: {},
+    projects: {
+        availableProjects: [],
+        currentProject: {}
+    },
     object: {},
     tree: {
         openNodes: [],
@@ -20,13 +23,25 @@ const initialState = {
 export default function reducer (state = initialState, action) {
     console.log(action.payload);
     switch (action.type) {
+        case actions.GET_PROJECTS: {
+            return {
+                ...state,
+                projects: {
+                    ...state.projects,
+                    availableProjects: action.payload
+                }
+            }
+        }
         case actions.SET_PROJECT: {
             return {
                 ...state,
                 type: PROJECT,
-                project: {
-                    ...state.project,
-                    id: action.payload
+                projects: {
+                    ...state.projects,
+                    currentProject: {
+                        ...state.projects.currentProject,
+                        id: action.payload
+                    }
                 }
             }
         }
@@ -41,7 +56,10 @@ export default function reducer (state = initialState, action) {
                 ...state,
                 type: PROJECT,
                 object: data,
-                project: action.payload
+                projects: {
+                    ...state.projects,
+                    currentProject: action.payload
+                }
             }
         }
         case actions.GET_FOLDER: {

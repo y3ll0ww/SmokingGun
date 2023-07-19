@@ -13,12 +13,16 @@ export default function ProjectDropDown() {
   const [projectId, setProjectId] = useState('');
   const { getResource, resource } = useRequestResource({ endpoint: '/suite/projects/' });
   const fontSize = 14;
-
   const [projects, setProjects] = useState([]);
+  const currentProjectId = useSelector((state) => state.projects.currentProject.id)
 
   const handleChange = (event: SelectChangeEvent) => {
     setProjectId(event.target.value);
   };
+
+  useEffect(() => {
+    setProjectId(currentProjectId);
+  }, [currentProjectId])
 
   useEffect(() => {
     getResource();
@@ -27,6 +31,7 @@ export default function ProjectDropDown() {
   useEffect(() => {
     if (resource) {
         setProjects(resource.projects);
+        store.dispatch({ type: actions.GET_PROJECTS, payload: resource.projects })
     }
   }, [resource])
 
@@ -38,22 +43,22 @@ export default function ProjectDropDown() {
 
   return (
     <div>
-    <Box id="form-control-wrapper">
-      <TagIcon size="small" style={{ color: 'gray', marginTop: 9, marginRight: 3, fontSize: fontSize + 5 }}/>
-      <FormControl size="small" sx={{ s: 0, maxWidth: 250, minWidth: 120 }}>
-        <Select
-          value={projectId}
-          onChange={handleChange}
-          inputProps={{ 'aria-label': 'Without label' }}
-          style={{ fontSize: fontSize }}
-        >
-          <MenuItem style={{ fontSize: fontSize }} value=""><em>Select Project</em></MenuItem>
-          {projects.map((project) => (
-            <MenuItem style={{ fontSize: fontSize }} value={project.id}>{project.name}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
+      <Box id="form-control-wrapper">
+        <TagIcon size="small" style={{ color: 'gray', marginTop: 9, marginRight: 3, fontSize: fontSize + 5 }}/>
+        <FormControl size="small" sx={{ s: 0, maxWidth: 250, minWidth: 120 }}>
+          <Select
+            value={projectId}
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'Without label' }}
+            style={{ fontSize: fontSize }}
+          >
+            <MenuItem style={{ fontSize: fontSize }} value=""><em>Select Project</em></MenuItem>
+            {projects.map((project) => (
+              <MenuItem style={{ fontSize: fontSize }} value={project.id}>{project.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
     </div>
   );
 }

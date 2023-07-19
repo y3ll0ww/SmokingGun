@@ -10,7 +10,7 @@ import useRequestResource from "../../../hooks/useRequestResource";
 
 
 export default function Title() {
-    const project = useSelector(state => state.project);
+    const project = useSelector(state => state.projects.currentProject);
     const type = useSelector(state => state.type);
     const object = useSelector(state => state.object);
     const [isEditing, setIsEditing] = useState(false);

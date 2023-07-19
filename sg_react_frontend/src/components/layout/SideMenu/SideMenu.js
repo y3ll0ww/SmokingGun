@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import PropTypes from "prop-types";
 import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,6 +16,7 @@ import ProjectDropDown from "./ProjectDropDown";
 import Directory from "./Directory";
 import ModalAdd from "./ModalAdd";
 import { FOLDER, TESTCASE, modalStyle } from "../../constants";
+import store from "../Redux/store";
 
 const SidebarGlobalStyles = () => {
   const theme = useTheme();
@@ -74,7 +75,7 @@ export function SideMenu(props) {
         <style>{`::-webkit-scrollbar {
           display: none;
         }`}</style>
-        <ModalAdd handleCloseModal={handleCloseModal} type={type} />
+        <ModalAdd handleCloseModal={handleCloseModal} type={type} projectId={store.getState().projects.currentProject.id} />
       </Paper>
     </Modal>
   );
@@ -93,7 +94,9 @@ export function SideMenu(props) {
           marginTop: 1
         }}
       >
-        <ProjectDropDown />
+        <Provider store={store}>
+          <ProjectDropDown />
+        </Provider>
         <NavLink
           className={(props) => {
             return `${

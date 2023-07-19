@@ -24,13 +24,11 @@ export default function ModalAdd(props) {
             return;
         }
 
-        if (props.parent_folder != undefined) {
-            if (props.type === FOLDER) {
-                setValues({ name: name, parent_folder: props.parent_folder })
-            } else if (props.type === TESTCASE) {
-                setValues({ name: name, folder: props.parent_folder })
-            }
-        }        
+          if (props.type === FOLDER) {
+              setValues({ name: name, parent_folder: props.parent_folder, project: props.projectId })
+          } else if (props.type === TESTCASE) {
+              setValues({ name: name, folder: props.parent_folder, project: props.projectId })
+          }
     };
 
     useEffect(() => {
