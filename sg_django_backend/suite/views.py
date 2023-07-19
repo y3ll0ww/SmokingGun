@@ -143,6 +143,7 @@ class TestCaseCreateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         name = request.data.get('name')
         parent_folder_id = request.data.get('folder')
+        project_id = request.data.get('project')
 
         # Check if the parent folder exists
         parent_folder = None
@@ -152,8 +153,22 @@ class TestCaseCreateView(generics.CreateAPIView):
             except Folder.DoesNotExist:
                 return Response({'error': 'Parent folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Retrieve the Project instance
+        try:
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return Response({'error': 'Project does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Set the order number
+        if parent_folder is not None:
+            existing_testcases_count = TestCase.objects.filter(folder=parent_folder).count()
+            order = existing_testcases_count + 1
+        else:
+            existing_root_testcases_count = TestCase.objects.filter(project=project, folder=None).count()
+            order = existing_root_testcases_count + 1
+
         # Create the testcase
-        testcase = TestCase(name=name, folder=parent_folder)
+        testcase = TestCase(name=name, folder=parent_folder, project=project, order=order)
         testcase.save()
 
         # Serialize the created folder
