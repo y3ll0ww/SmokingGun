@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, IconButton, TextField } from "@mui/material";
-import { FOLDER, TESTCASE, PROJECT, KEY_FOLDER, KEY_TESTCASE } from '../../constants';
+import { FOLDER, TESTCASE, PROJECT, KEY_FOLDER, KEY_TESTCASE, DATE } from '../../constants';
 import TagIcon from '@mui/icons-material/Tag';
 import EditIcon from '@mui/icons-material/Edit';
 import store from "../Redux/store";
@@ -19,10 +19,8 @@ export default function Title() {
     const resourceLabel = `${type.charAt(0).toUpperCase() + type.slice(1)} "${object.name ? object.name : project.name}"`;
     const { updateResource } = useRequestResource({ endpoint: `/suite/${type}/update`, resourceLabel: resourceLabel });
     
-
-    const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    const created = new Date(object.created_on ? object.created_on : project.created_on).toLocaleString(undefined, dateOptions);
-    const edited = new Date(object.edited_on ? object.edited_on : project.edited_on).toLocaleString(undefined, dateOptions);
+    const created = DATE(object.created_on ? object.created_on : project.created_on, true);
+    const edited = DATE(object.edited_on ? object.edited_on : project.edited_on, true);
 
     const handleEditClick = () => {
         setIsEditing(true);

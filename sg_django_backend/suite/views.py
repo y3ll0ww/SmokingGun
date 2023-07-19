@@ -11,7 +11,7 @@ class ProjectsAllView(generics.RetrieveAPIView):
     serializer_class = ProjectSerializer
 
     def get(self, request, *args, **kwargs):
-        projects = self.queryset.values("id", "name")
+        projects = self.queryset.values("id", "name", "edited_on")
         return Response({'projects': list(projects)})
 
 

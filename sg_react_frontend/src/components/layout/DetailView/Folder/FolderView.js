@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Card, List, IconButton, Modal, Paper } from '@mui/material';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, modalStyle } from '../../../constants';
+import { FOLDER, TESTCASE, MODALSTYLE } from '../../../constants';
 import ModalAddAny from './ModalAddAny';
 import InputIcon from '@mui/icons-material/Input';
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
@@ -38,7 +38,7 @@ export default function FolderView(props) {
     const modal = (
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <Paper
-          sx={modalStyle}
+          sx={MODALSTYLE}
           disableEqualOverflow
           style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}
         >

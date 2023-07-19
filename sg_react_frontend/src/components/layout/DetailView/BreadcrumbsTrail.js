@@ -5,7 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import store from '../Redux/store';
 import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from '../Redux/actionTypes';
-import { PROJECT, FOLDER, TESTCASE, KEY_FOLDER } from '../../constants';
+import { PROJECT, FOLDER, TESTCASE, KEY_FOLDER, TRUNCATE } from '../../constants';
 
 export default function BreadcrumbsTrail(props) {
     const type = useSelector(state => state.type);
@@ -19,7 +19,6 @@ export default function BreadcrumbsTrail(props) {
               .then((response) => response.json())
               .then((data) => {
                 const trail = data.map((item) => {
-                    const truncatedName = item.name.length > 20 ? `${item.name.slice(0, 17)}...` : item.name;
                     return (
                         <Button
                             underline='hover'
@@ -28,7 +27,7 @@ export default function BreadcrumbsTrail(props) {
                             onClick={() => handleFolderClick(item.id)}
                             style={{ textTransform: 'none' }}
                         >
-                            {<span style={{ color: 'silver', fontSize: '10px' }}>{KEY_FOLDER(item.id)}</span>}&nbsp;{truncatedName}
+                            {<span style={{ color: 'silver', fontSize: '10px' }}>{KEY_FOLDER(item.id)}</span>}&nbsp;{TRUNCATE(item.name, 20)}
                         </Button>
                     );
                 });

@@ -5,14 +5,14 @@ import TagIcon from '@mui/icons-material/Tag';
 import AddIcon from '@mui/icons-material/Add';
 import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
+import { DATE } from '../../../constants';
 
 
-export default function ProjectView(props) {
+export default function ProjectView() {
     const availableProjects = useSelector(state => state.projects.availableProjects);
     const [projects, setProjects] = useState([]);
     
     useEffect(() => {
-        console.log(availableProjects);
         setProjects(availableProjects);
     }, [availableProjects])
 
@@ -36,7 +36,7 @@ export default function ProjectView(props) {
           <List>
             {projects.map((project) => (
               <ListItem button onClick={() => handleSelectProject(project.id)}>
-                <p><TagIcon style={{ fontSize: 14, color: 'gray', marginRight: 3 }} /> {project.name}</p>
+                <p><TagIcon style={{ fontSize: 14, color: 'gray', marginRight: 3 }} /> {project.name} <span style={{ fontSize: 12, color: 'gray' }}>| last edited {DATE(project.edited_on)}</span></p>
               </ListItem>
             ))}
             <ListItem button onClick={handleCreateProject}>

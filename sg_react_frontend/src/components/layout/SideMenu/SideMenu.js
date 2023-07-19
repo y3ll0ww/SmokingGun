@@ -15,7 +15,7 @@ import { GlobalStyles, useTheme, Paper, Modal, IconButton } from "@mui/material"
 import ProjectDropDown from "./ProjectDropDown";
 import Directory from "./Directory";
 import ModalAdd from "./ModalAdd";
-import { FOLDER, TESTCASE, modalStyle } from "../../constants";
+import { FOLDER, TESTCASE, MODALSTYLE } from "../../constants";
 import store from "../Redux/store";
 
 const SidebarGlobalStyles = () => {
@@ -68,7 +68,7 @@ export function SideMenu(props) {
   const addModal = (
     <Modal open={modalAdd} onClose={handleCloseModal}>
       <Paper
-        sx={modalStyle}
+        sx={MODALSTYLE}
         disableEqualOverflow
         style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}
       >

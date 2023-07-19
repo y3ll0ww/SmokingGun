@@ -5,7 +5,7 @@ import FolderView from './Folder/FolderView';
 import TestCaseView from './TestCase/TestCaseView';
 import { Provider, useSelector } from 'react-redux';
 import store from '../Redux/store';
-import { FOLDER, TESTCASE, PROJECT, KEY_FOLDER, KEY_TESTCASE, modalStyle } from '../../constants';
+import { FOLDER, TESTCASE, PROJECT, KEY_FOLDER, KEY_TESTCASE, MODALSTYLE } from '../../constants';
 import BreadcrumbsTrail from './BreadcrumbsTrail';
 import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from "../Redux/actionTypes";
