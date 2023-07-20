@@ -100,13 +100,13 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
-        case action.TREE_UPDATE: {
+        case actions.TREE_UPDATE: {
             const name = action.payload.name;
             return {
                 ...state,
                 tree: {
                     ...state.tree,
-                    treeUpdate: `[${Date.now()}]: "${name}"]`
+                    treeUpdate: `[${Date.now()} | "${name}"]`
                 }
             }
         }

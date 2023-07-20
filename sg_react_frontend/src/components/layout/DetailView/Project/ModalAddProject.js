@@ -58,14 +58,14 @@ export default function ModalAddProject(props) {
 
     const handleSetName = (value) => {
         if (value.length <= maxLengthName) {
-            const formattedValue = value.replace(/[^A-Za-z\s]/g, '');
+            const formattedValue = value.replace(/[^A-Za-z0-9\s!@#$%^&*()-_=+[\]{}|;:'",.<>/?\\]/g, '');
             setName(formattedValue);
         }
     }
 
     const handleSetDescription = (value) => {
         if (value.length <= maxLengthDescription) {
-            const formattedValue = value.replace(/[^A-Za-z\s]/g, '');
+            const formattedValue = value.replace(/[^A-Za-z0-9\s!@#$%^&*()-_=+[\]{}|;:'",.<>/?\\]/g, '');
             setDescription(formattedValue);
         }
     }

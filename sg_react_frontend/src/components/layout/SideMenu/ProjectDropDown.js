@@ -15,6 +15,7 @@ export default function ProjectDropDown() {
   const fontSize = 14;
   const [projects, setProjects] = useState([]);
   const currentProjectId = useSelector((state) => state.projects.currentProject.id)
+  const treeUpdate = useSelector((state) => state.tree.treeUpdate)
 
   const handleChange = (event: SelectChangeEvent) => {
     setProjectId(event.target.value);
@@ -26,7 +27,7 @@ export default function ProjectDropDown() {
 
   useEffect(() => {
     getResource();
-  }, []);
+  }, [treeUpdate]);
 
   useEffect(() => {
     if (resource) {
