@@ -5,6 +5,7 @@ from django import forms
 class Project(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=500)
+    key = models.CharField(max_length=4, null=False)
     project_folders = models.ManyToManyField('Folder', blank=True, related_name='projects')
     project_testcases = models.ManyToManyField('TestCase', blank=True, related_name='projects')
     project_testruns = models.ManyToManyField('TestRun', blank=True, related_name='projects')

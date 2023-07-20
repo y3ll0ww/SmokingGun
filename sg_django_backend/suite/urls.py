@@ -31,7 +31,7 @@ urlpatterns = [
     path('teststeps/update-order/', views.TestStepOrderUpdateView.as_view(), name='teststep-update-order'),
 
     # Delete
-    path('project/delete/<int:pk>', views.ProjectDeleteView.as_view(), name='project-delete'),
+    path('project/delete/<int:pk>/', views.ProjectDeleteView.as_view(), name='project-delete'),
     path('folder/delete/<int:pk>/', views.FolderDeleteView.as_view(), name='folder-delete'),
     path('testcase/delete/<int:pk>/', views.TestCaseDeleteView.as_view(), name='testcase-delete'),
     path('teststep/delete/<int:pk>/', views.TestStepDetailView.as_view(), name='teststep-delete')

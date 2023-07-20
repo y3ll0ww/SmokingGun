@@ -18,7 +18,6 @@ export const DATE = (date, showTime) => {
 
 export const TRUNCATE = (text, max) => {
     return text.length > max ? `${text.slice(0, max-3)}...` : text;
-
 }
 
 export const MODALSTYLE = {

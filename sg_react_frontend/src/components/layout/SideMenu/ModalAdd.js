@@ -23,22 +23,17 @@ export default function ModalAdd(props) {
             setError("Use at least 5 to 150 characters.");
             return;
         }
-
-          if (props.type === FOLDER) {
-              setValues({ name: name, parent_folder: props.parent_folder, project: props.projectId })
-          } else if (props.type === TESTCASE) {
-              setValues({ name: name, folder: props.parent_folder, project: props.projectId })
-          }
+        if (props.type === FOLDER) {
+            setValues({ name: name, parent_folder: props.parent_folder, project: props.projectId })
+        } else if (props.type === TESTCASE) {
+            setValues({ name: name, folder: props.parent_folder, project: props.projectId })
+        }
     };
 
     useEffect(() => {
         if (isMounted) {
             addResource(values, () => {
-                if (props.type === FOLDER) {
-                    store.dispatch({ type: actions.CREATE_FOLDER, payload: { name: name } });
-                } else if (props.type === TESTCASE) {
-                    store.dispatch({ type: actions.CREATE_TESTCASE, payload: { name: name } });
-                }
+                store.dispatch({ type: actions.TREE_UPDATE, payload: { name: name } });
                 props.handleCloseModal();
             },
             () => {
@@ -70,7 +65,7 @@ export default function ModalAdd(props) {
             </IconButton>
             <h4 style={{ marginTop: '-5px', marginBottom: '5px' }}>Create a new {props.type}</h4>
             <TextField 
-                id="outlined-search" label={`Add ${props.type}`} type="search" 
+                id="resource-name" label={`Add ${props.type}`} type="name" 
                 InputProps={{ style: { marginTop: '6px', height: '40px', width: '275px' }, }} 
                 value={name}
                 onChange={(e) => setName(e.target.value)}

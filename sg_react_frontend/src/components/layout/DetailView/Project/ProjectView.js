@@ -36,7 +36,7 @@ export default function ProjectView() {
           <List>
             {projects.map((project) => (
               <ListItem button onClick={() => handleSelectProject(project.id)}>
-                <p><TagIcon style={{ fontSize: 14, color: 'gray', marginRight: 3 }} /> {project.name} <span style={{ fontSize: 12, color: 'gray' }}>| last edited {DATE(project.edited_on)}</span></p>
+                <p><TagIcon style={{ fontSize: 14, color: 'gray', marginRight: 3 }} /> <span style={{ color: 'gray', fontSize: '12px' }}>{project.key}</span> {project.name} <span style={{ fontSize: 12, color: 'gray' }}>| last edited {DATE(project.edited_on)}</span></p>
               </ListItem>
             ))}
             <ListItem button onClick={handleCreateProject}>

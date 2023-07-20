@@ -58,14 +58,7 @@ export default function Title() {
                 updateResource(object.id ? object.id : project.id, { name: newTitle });
                 setError("");
                 setIsEditing(false);
-                if (type === FOLDER) {
-                    store.dispatch({ type: actions.UPDATE_FOLDER, payload: { name: newTitle } });
-                } else if (type === TESTCASE) {
-                    store.dispatch({ type: actions.UPDATE_TESTCASE, payload: { name: newTitle } });
-                } else if (type === PROJECT) {
-                    store.dispatch({ type: actions.UPDATE_TESTCASE, payload: { name: newTitle } });
-                }
-                
+                store.dispatch({ type: actions.TREE_UPDATE, payload: { name: newTitle } });
             }
         }
         if (event.key === "Escape") {

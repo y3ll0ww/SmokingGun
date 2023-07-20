@@ -100,65 +100,13 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
-        case actions.CREATE_FOLDER: {
+        case action.TREE_UPDATE: {
             const name = action.payload.name;
             return {
                 ...state,
                 tree: {
                     ...state.tree,
-                    treeUpdate: `[${Date.now()}]: Added folder "${name}"`
-                }
-            }
-        }
-        case actions.UPDATE_FOLDER: {
-            const name = action.payload.name;
-            return {
-                ...state,
-                tree: {
-                    ...state.tree,
-                    treeUpdate: `[${Date.now()}]: Updated folder "${name}"`
-                }
-            }
-        }
-        case actions.DELETE_FOLDER: {
-            const id = action.payload.id;
-            const name = action.payload.name;
-            return {
-                ...state,
-                tree: {
-                    ...state.tree,
-                    treeUpdate: `[${Date.now()}]: Deleted folder "${KEY_FOLDER(id)} ${name}"`
-                }
-            }
-        }
-        case actions.CREATE_TESTCASE: {
-            const name = action.payload.name;
-            return {
-                ...state,
-                tree: {
-                    ...state.tree,
-                    treeUpdate: `[${Date.now()}]: Added testcase "${name}"`
-                }
-            }
-        }
-        case actions.UPDATE_TESTCASE: {
-            const name = action.payload.name;
-            return {
-                ...state,
-                tree: {
-                    ...state.tree,
-                    treeUpdate: `[${Date.now()}]: Updated testcase "${name}"`
-                }
-            }
-        }
-        case actions.DELETE_TESTCASE: {
-            const id = action.payload.id;
-            const name = action.payload.name;
-            return {
-                ...state,
-                tree: {
-                    ...state.tree,
-                    treeUpdate: `[${Date.now()}]: Deleted testcase "${KEY_FOLDER(id)} ${name}"`
+                    treeUpdate: `[${Date.now()}]: "${name}"]`
                 }
             }
         }
@@ -229,10 +177,6 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
-
-
-
-
         default:
             return state;
     }

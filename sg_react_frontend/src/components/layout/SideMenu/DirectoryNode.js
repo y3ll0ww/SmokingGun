@@ -3,6 +3,7 @@ import { List, ListItem, ListItemIcon, ListItemText, IconButton, Menu, MenuItem,
 
 import FolderIcon from '@mui/icons-material/Folder';
 import ListIcon from '@mui/icons-material/List';
+import TagIcon from '@mui/icons-material/Tag';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BuildIcon from '@mui/icons-material/Build';
@@ -13,7 +14,7 @@ import ModalDelete from "./ModalDelete";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
-import { FOLDER, KEY_FOLDER, KEY_TESTCASE, TESTCASE } from "../../constants";
+import { FOLDER, KEY_FOLDER, KEY_TESTCASE, TESTCASE, PROJECT } from "../../constants";
 import { useSelector } from "react-redux";
 
 
@@ -37,11 +38,13 @@ export default function DirectoryNode(props) {
       id: props.item.id,
       key: type === FOLDER ? KEY_FOLDER(props.item.id) : 
            type === TESTCASE ? KEY_TESTCASE(props.item.id) :
+           type === PROJECT ? props.item.key :
            props.item.id,
       name: props.item.name,
       type: type,
       icon: type === FOLDER ? <FolderIcon /> : 
             type === TESTCASE ? <ListIcon /> :
+            type === PROJECT ? <TagIcon /> :
             <PestControlIcon />,
       child_folders: props.item.child_folders,
       testcases: props.item.testcases
@@ -91,7 +94,7 @@ export default function DirectoryNode(props) {
                     display: none;
                 }`}
             </style>
-            <ModalDelete handleCloseModal={handleCloseModal} name={item.name} type={props.item.type} id={item.id} />
+            <ModalDelete handleCloseModal={handleCloseModal} name={item.name} type={type} id={item.id} />
         </Paper>
     </Modal>
   )
@@ -119,6 +122,8 @@ export default function DirectoryNode(props) {
             store.dispatch({ type: actions.GET_FOLDER, payload: resource })
           } else if (item.type === TESTCASE) {
             store.dispatch({ type: actions.GET_TESTCASE, payload: resource })
+          } else {
+            store.dispatch({ type: actions.GET_PROJECT, payload: resource })
           }
           
       }

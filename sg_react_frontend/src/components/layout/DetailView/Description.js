@@ -42,11 +42,7 @@ export default function Description() {
             else {
                 setError("");
                 updateResource(object.id, { description: newText });
-                if (type === FOLDER) {
-                    store.dispatch({ type: actions.UPDATE_FOLDER, payload: { name: newText } });
-                } else if (type === TESTCASE) {
-                    store.dispatch({ type: actions.UPDATE_TESTCASE, payload: { name: newText } });
-                }
+                store.dispatch({ type: actions.TREE_UPDATE, payload: { name: newText } });
                 setIsEditing(false);
             }
         }
