@@ -62,6 +62,16 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
+        case actions.DESELECT_PROJECT: {
+            return {
+                ...state,
+                type: PROJECT,
+                projects: {
+                    ...state.projects,
+                    currentProject: {}
+                }
+            }
+        }
         case actions.GET_FOLDER: {
             return {
                 ...state,

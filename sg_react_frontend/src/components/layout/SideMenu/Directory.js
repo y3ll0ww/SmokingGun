@@ -25,15 +25,16 @@ function Directory() {
   const { getResource: getProjectsResource, resource: projectsResource } = useRequestResource({ endpoint: '/suite/projects/' });
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId > 0) {
       getRootResource();
     } else {
       getProjectsResource();
+      setTreeItems([]);
     }
   }, [projectId, treeUpdate]);
 
   useEffect(() => {
-    if (rootResource) {
+    if (rootResource && projectId > 0) {
       setTreeItems(rootResource);
     } else if (projectsResource) {
       store.dispatch({ type: actions.GET_PROJECTS, payload: projectsResource.projects })

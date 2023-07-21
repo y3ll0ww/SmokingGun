@@ -1,6 +1,7 @@
 export const GET_PROJECTS = "projectFound"
 export const SET_PROJECT = "projectSet";
 export const GET_PROJECT = "rootFound";
+export const DESELECT_PROJECT = "projectDeselected";
 export const GET_FOLDER = "folderFound";
 export const GET_TESTCASE = "testcaseFound";
 export const TREE_EXPAND_NODE = "folderExpanded";

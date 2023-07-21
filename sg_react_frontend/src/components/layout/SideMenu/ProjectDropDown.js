@@ -22,7 +22,11 @@ export default function ProjectDropDown() {
   };
 
   useEffect(() => {
-    setProjectId(currentProjectId);
+    if (currentProjectId) {
+        setProjectId(currentProjectId);
+    } else {
+        setProjectId(0);
+    }    
   }, [currentProjectId])
 
   useEffect(() => {
@@ -37,8 +41,11 @@ export default function ProjectDropDown() {
   }, [resource])
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId > 0) {
         store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
+    } else {
+        store.dispatch({ type: actions.DESELECT_PROJECT });
+        console.log(store.getState());
     }
   }, [projectId])
 
@@ -53,7 +60,7 @@ export default function ProjectDropDown() {
             inputProps={{ 'aria-label': 'Without label' }}
             style={{ fontSize: fontSize }}
           >
-            <MenuItem style={{ fontSize: fontSize }} value=""><em>Select Project</em></MenuItem>
+            <MenuItem style={{ fontSize: fontSize }} value={0}><em>Select Project</em></MenuItem>
             {projects.map((project) => (
               <MenuItem style={{ fontSize: fontSize }} value={project.id}>{project.name}</MenuItem>
             ))}
