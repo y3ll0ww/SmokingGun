@@ -44,7 +44,7 @@ export default function Tools(props) {
                 <PlaylistAddIcon style={{ color: isDisabled ? 'gray' : '' }} />
               </IconButton>
             </ListItem>
-            <ListItem style={{ padding: 1, cursor: isDisabled ? 'default' : '' }}>
+            <ListItem style={{ marginRight: -10, padding: 1, cursor: isDisabled ? 'default' : '' }}>
               <IconButton disabled={isDisabled}>
                 <UnfoldMoreIcon style={{ color: isDisabled ? 'gray' : '' }} />
               </IconButton>

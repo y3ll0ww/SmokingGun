@@ -1,22 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Provider } from "react-redux";
 import PropTypes from "prop-types";
-import Drawer from "@mui/material/Drawer";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import { Box, Drawer, Toolbar, List, Divider, GlobalStyles, useTheme, Paper, Modal } from "@mui/material";
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import { NavLink } from "react-router-dom";
-import { Box } from "@mui/system";
-import { GlobalStyles, useTheme, Paper, Modal, IconButton } from "@mui/material";
 import ProjectDropDown from "./ProjectDropDown";
 import Tools from "./Tools";
 import Directory from "./Directory";
 import ModalAdd from "./ModalAdd";
-import { FOLDER, TESTCASE, MODALSTYLE } from "../../constants";
+import { MODALSTYLE } from "../../constants";
 import store from "../Redux/store";
 
 const SidebarGlobalStyles = () => {
@@ -81,32 +72,7 @@ export function SideMenu(props) {
     </Modal>
   );
 
-  const drawer = (
-    <Box>
-      <Toolbar />
-      <Divider />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: 1,
-          marginTop: 1
-        }}
-      >
-        <Provider store={store}>
-          <ProjectDropDown />
-          <Tools handleOpenModal={handleOpenModal} />
-        </Provider>
-      </Box>
-      <Divider />
-      <List>
-        <Directory />
-      </List>
-    </Box>
-  );
-
+  
   // Scale the width of the menu
   const [currentDrawerWidth, setCurrentDrawerWidth] = useState(35);
 
@@ -135,6 +101,49 @@ export function SideMenu(props) {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
   };
+
+  const drawer = (
+    <Box>
+      <Toolbar />
+      <Divider />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 1,
+          marginTop: 1
+        }}
+      >
+        <Provider store={store}>
+          <ProjectDropDown />
+          <Tools handleOpenModal={handleOpenModal} />
+        </Provider>
+      </Box>
+      <Divider />
+      <Box sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "end",
+      }}>
+        <UnfoldMoreIcon 
+          onMouseDown={handleMouseDown} 
+          style={{ 
+            transform: 'rotate(90deg)', 
+            marginTop: -10, 
+            marginBottom: -20,
+            marginRight: 0,
+            fontSize: 19,
+            color: 'lightgray',  
+            cursor: 'col-resize' }}/>
+      </Box>
+      <List>
+        <Directory />
+      </List>
+    </Box>
+  );
+
 
   return (
     <Box
@@ -172,12 +181,7 @@ export function SideMenu(props) {
         }}
         open
       >
-        <div
-          style={{ width: "100%", height: "100%" }}
-          onMouseDown={handleMouseDown}
-        >
-          {drawer}
-        </div>
+        <div style={{ width: "100%", height: "100%" }}>{drawer}</div>
       </Drawer>
     </Box>
   );

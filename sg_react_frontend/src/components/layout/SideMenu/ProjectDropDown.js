@@ -4,7 +4,6 @@ import { Box } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import TagIcon from '@mui/icons-material/Tag';
 import useRequestResource from "../../../hooks/useRequestResource";
 import store from "../Redux/store";
 import * as actions from '../Redux/actionTypes';
@@ -52,7 +51,6 @@ export default function ProjectDropDown() {
   return (
     <div>
       <Box id="form-control-wrapper">
-        <TagIcon size="small" style={{ color: 'gray', marginTop: 9, marginRight: 3, fontSize: fontSize + 5 }}/>
         <FormControl size="small" sx={{ s: 0, maxWidth: 250, minWidth: 120 }}>
           <Select
             value={projectId}
