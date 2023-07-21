@@ -109,7 +109,7 @@ function Directory() {
         {addModal}
         <Alert severity="warning" style={{ margin: 10, marginTop: 0 }}>
           <AlertTitle>No project selected</AlertTitle>
-          You can select or create a project with the <b>dropdown</b> in the toolbar, or in the <b>list</b> on the right.
+          There can only exsist <b>folders</b> and <b>testcases</b> within a project. Select a project first, or create a new one.
         </Alert>
         <ListItem button onClick={() => handleOpenModal(PROJECT)}>
           <ListItemIcon><AddIcon /></ListItemIcon>

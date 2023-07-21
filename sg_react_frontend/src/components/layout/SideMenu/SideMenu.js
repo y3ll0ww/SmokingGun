@@ -13,6 +13,7 @@ import { NavLink } from "react-router-dom";
 import { Box } from "@mui/system";
 import { GlobalStyles, useTheme, Paper, Modal, IconButton } from "@mui/material";
 import ProjectDropDown from "./ProjectDropDown";
+import Tools from "./Tools";
 import Directory from "./Directory";
 import ModalAdd from "./ModalAdd";
 import { FOLDER, TESTCASE, MODALSTYLE } from "../../constants";
@@ -96,29 +97,8 @@ export function SideMenu(props) {
       >
         <Provider store={store}>
           <ProjectDropDown />
+          <Tools handleOpenModal={handleOpenModal} />
         </Provider>
-        <NavLink
-          className={(props) => {
-            return `${
-              props.isActive ? "sidebar-nav-item-active" : "sidebar-nav-item"
-            }`;
-          }}
-        >
-          <List
-            sx={{ display: "flex", flexDirection: "row", alignItems: "flex-end" }}
-            style={{ paddingRight: 8 }}
-          >
-            <ListItem onClick={() => handleOpenModal(FOLDER)} style={{ padding: 1 }}>
-              <IconButton><CreateNewFolderIcon /></IconButton>
-            </ListItem>
-            <ListItem onClick={() => handleOpenModal(TESTCASE)} style={{ padding: 1 }}>
-            <IconButton><PlaylistAddIcon /></IconButton>
-            </ListItem>
-            <ListItem style={{ padding: 1 }}>
-                <IconButton><UnfoldMoreIcon /></IconButton>
-            </ListItem>
-          </List>
-        </NavLink>
       </Box>
       <Divider />
       <List>
