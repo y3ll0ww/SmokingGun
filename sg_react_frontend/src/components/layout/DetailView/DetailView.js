@@ -27,7 +27,7 @@ function DetailView() {
       return <TestCaseView type={type} object={object} />;
     } else if (type === PROJECT) {
       if (project.id) {
-        return <FolderView type={type} object={object} />;
+        return <FolderView type={type} />;
       }
       return <ProjectView />;
     } else {

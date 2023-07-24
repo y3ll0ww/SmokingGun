@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Card, List, IconButton, Modal, Paper } from '@mui/material';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
 import { FOLDER, TESTCASE, MODALSTYLE } from '../../../constants';
 import ModalAddAny from './ModalAddAny';
@@ -11,9 +12,11 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ModalAdd from '../../SideMenu/ModalAdd';
 
 
-export default function FolderView(props) {
+function FolderView(props) {
     const object = useSelector((state) => state.object);
     const projectId = useSelector((state) => state.projects.currentProject.id);
+    const [folders, setFolders] = useState(object.child_folders || []);
+    const [testcases, setTestcases] = useState(object.test_cases || []);
     const [modalOpen, setModalOpen] = useState(false);
     const [direct, setDirect] = useState(false);
     const [type, setType] = useState(undefined);
@@ -50,7 +53,12 @@ export default function FolderView(props) {
       </Modal>
     );
 
-    if (!(object?.child_folders ?? []).length && !(object?.test_cases ?? []).length) {
+    useEffect(() => {
+      setFolders(object.child_folders || []);
+      setTestcases(object.test_cases || []);
+    }, [object]);
+
+    if (!(folders ?? []).length && !(testcases ?? []).length) {
         return (
             <Box>
                 {modal}
@@ -69,7 +77,7 @@ export default function FolderView(props) {
             </Box>
         );
     }
-     
+
     return (
         <Box>
             {modal}
@@ -86,14 +94,68 @@ export default function FolderView(props) {
             </div>
             <Card>
               <List>
-                {object?.child_folders?.map((folder) => (
-                  <DirectoryNode key={folder.id} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} display={false} />
-                ))}
-                {object?.test_cases?.map((testcase) => (
-                  <DirectoryNode key={testcase.id} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} display={false} />
-                ))}
+                {folders.length > 0 ? 
+                  <Droppable droppableId={(FOLDER + object.id.toString())}>
+                    {(provided, snapshot) => (
+                      <div {...provided.droppableProps} ref={provided.innerRef}>
+                              {folders.map((folder, index) => (
+                                <Draggable draggableId={(folder.id.toString() + "-" + FOLDER)} index={index}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <DirectoryNode key={(folder.id.toString() + "-" + FOLDER)} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} display={false} />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                  :
+                  ""
+                }
+                {testcases.length > 0 ?
+                <Droppable droppableId={(TESTCASE + object.id.toString())}>
+                  {(provided, snapshot) => (
+                      <Box {...provided.droppableProps} ref={provided.innerRef}>
+                              {testcases.map((testcase, index) => (
+                                <Draggable draggableId={(testcase.id.toString() + "-" + TESTCASE)} index={index}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <DirectoryNode key={(testcase.id.toString() + "-" + TESTCASE)} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} display={false} />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                        {provided.placeholder}
+                      </Box>
+                    )}
+                  </Droppable>
+                  :
+                  ""
+                }
               </List>
             </Card>
         </Box>
     );
   }
+
+export default function App() {
+  const onDragEnd = (result) => {
+    console.log(result);
+  };
+
+  return(
+    <DragDropContext onDragEnd={onDragEnd}>
+      <FolderView />
+    </DragDropContext>
+  )
+}
