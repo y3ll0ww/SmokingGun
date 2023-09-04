@@ -104,6 +104,10 @@ function Directory() {
       </Box>
     );
   } else {
+    const handleClick = (projectId) => {
+      store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
+    }
+    
     return (
       <Box>
         {addModal}
@@ -117,7 +121,9 @@ function Directory() {
         </ListItem>
         {nodeProjects.length > 0 ?
           nodeProjects.map((project) => (
-            <DirectoryNode item={project} padding={10} />
+            <div onClick={() => handleClick(project.id)}>
+              <DirectoryNode item={project} padding={10} />
+            </div>
           )) : ''
         }
       </Box>

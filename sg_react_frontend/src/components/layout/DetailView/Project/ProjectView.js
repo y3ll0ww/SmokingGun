@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Card, List, ListItem, IconButton, Modal, Paper } from '@mui/material';
+import { Box, Card, List, ListItem } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
 import AddIcon from '@mui/icons-material/Add';
 import store from '../../Redux/store';
@@ -17,8 +17,7 @@ export default function ProjectView() {
     }, [availableProjects])
 
     const handleSelectProject = (projectId) => {
-        store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
-        
+        store.dispatch({ type: actions.SET_PROJECT, payload: projectId });    
     }
 
     const handleCreateProject = () => {
