@@ -28,6 +28,8 @@ urlpatterns = [
     path('teststep/update/<int:pk>/', tst.TestStepDetailView.as_view(), name='teststep-update'),
 
     # Order
+    path('folders/update-order/', nav.FolderOrderUpdateView.as_view(), name='folders-update-order'),
+    path('testcases/update-order/', nav.TestCaseOrderUpdateView.as_view(), name='testcases-update-order'),
     path('teststeps/update-order/', tst.TestStepOrderUpdateView.as_view(), name='teststep-update-order'),
 
     # Delete

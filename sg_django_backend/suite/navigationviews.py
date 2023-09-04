@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .serializers import ProjectSerializer, FolderSerializer, TestCaseSerializer
@@ -177,3 +178,45 @@ class BreadcrumbTrailView(generics.RetrieveAPIView):
                 pass  # Handle the case where the item is not a test case
 
         return breadcrumb_trail
+
+
+class FolderOrderUpdateView(generics.UpdateAPIView):
+    def put(self, request):
+        data = request.data
+        ids = data.get('ids')
+        orders = data.get('orders')
+
+        if len(ids) != len(orders):
+            return Response({"error": "Invalid input. The number of IDs and orders should be the same."}, status=400)
+
+        for id, order in zip(ids, orders):
+            try:
+                folders = Folder.objects.filter(id=id)
+                for folder in folders:
+                    folder.order = order
+                    folder.save()
+            except ObjectDoesNotExist:
+                return Response({"error": f"Folder with ID {id} does not exist."}, status=400)
+
+        return Response({"success": "Folder orders updated."})
+
+
+class TestCaseOrderUpdateView(generics.UpdateAPIView):
+    def put(self, request):
+        data = request.data
+        ids = data.get('ids')
+        orders = data.get('orders')
+
+        if len(ids) != len(orders):
+            return Response({"error": "Invalid input. The number of IDs and orders should be the same."}, status=400)
+
+        for id, order in zip(ids, orders):
+            try:
+                testcases = TestCase.objects.filter(id=id)
+                for testcase in testcases:
+                    testcase.order = order
+                    testcase.save()
+            except ObjectDoesNotExist:
+                return Response({"error": f"Testcase with ID {id} does not exist."}, status=400)
+
+        return Response({"success": "Testcase orders updated."})

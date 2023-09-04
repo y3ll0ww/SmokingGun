@@ -10,9 +10,12 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ModalAdd from '../../SideMenu/ModalAdd';
+import useRequestResource from '../../../../hooks/useRequestResource';
+import store from '../../Redux/store';
+import * as actions from "../../Redux/actionTypes";
 
 
-function FolderView(props) {
+export default function FolderView(props) {
     const object = useSelector((state) => state.object);
     const projectId = useSelector((state) => state.projects.currentProject.id);
     const [folders, setFolders] = useState(object.child_folders || []);
@@ -20,6 +23,8 @@ function FolderView(props) {
     const [modalOpen, setModalOpen] = useState(false);
     const [direct, setDirect] = useState(false);
     const [type, setType] = useState(undefined);
+    const { updateOrder: updateFolderOrder } = useRequestResource({ endpoint: '/suite/folders/update-order/', resourceLabel: 'updateFolders' });
+    const { updateOrder: updateTestCaseOrder } = useRequestResource({ endpoint: '/suite/testcases/update-order/', resourceLabel: 'updateTestcases' });
 
     const handleOpenModal = (set, type=undefined) => {
         setDirect(set);
@@ -56,9 +61,53 @@ function FolderView(props) {
     useEffect(() => {
       setFolders(object.child_folders || []);
       setTestcases(object.test_cases || []);
-    }, [object]);
+    }, [object]);    
+  
+    const onDragEnd = (result) => {
+      if (!result.destination) return;
+  
+      const { source, destination } = result;
+      const type = result.draggableId.split('-')[1];
+  
+      if (type === FOLDER) {
+        if (destination.droppableId.includes(TESTCASE)) return;
 
-    if (!(folders ?? []).length && !(testcases ?? []).length) {
+        const updatedOrder = reOrderContent(folders, source, destination);
+        setFolders(updatedOrder);
+  
+        const ids = updatedOrder.map(folder => folder.id);
+        const orders = updatedOrder.map(folder => folder.order);
+  
+        updateFolderOrder(ids, orders, () => {});
+      } else if (type === TESTCASE) {
+        if (destination.droppableId.includes(FOLDER)) return;
+
+        const updatedOrder = reOrderContent(testcases, source, destination);
+        setTestcases(updatedOrder);
+  
+        const ids = updatedOrder.map(testcase => testcase.id);
+        const orders = updatedOrder.map(testcase => testcase.order);
+          
+        updateTestCaseOrder(ids, orders, () => {});
+        
+      }
+
+      store.dispatch({ type: actions.TREE_UPDATE, payload: { name: result.draggableId } });
+    };
+  
+    function reOrderContent(array, source, destination) {
+      const reorderedContent = Array.from(array);
+      const [movedContent] = reorderedContent.splice(source.index, 1);
+      reorderedContent.splice(destination.index, 0, movedContent);
+  
+      return reorderedContent.map((item, index) => ({
+        ...item,
+        order: index,
+      }));
+    }
+
+    function FolderContents() {
+      if (!(folders ?? []).length && !(testcases ?? []).length) {
         return (
             <Box>
                 {modal}
@@ -76,86 +125,81 @@ function FolderView(props) {
                 </Card>
             </Box>
         );
+      }
+    
+      return (
+        <Box>
+          {modal}
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
+              <IconButton>
+                  <UploadFileIcon />
+              </IconButton>
+              <IconButton>
+                  <PlaylistAddIcon onClick={() => handleOpenModal(true, TESTCASE)}/>
+              </IconButton>
+              <IconButton>
+                  <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
+              </IconButton>
+          </div>
+          <Card>
+            <List>
+              {folders.length > 0 ? 
+                <Droppable droppableId={(FOLDER + object.id.toString())}>
+                  {(provided, snapshot) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {folders.map((folder, index) => (
+                              <Draggable draggableId={(folder.id.toString() + "-" + FOLDER)} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <DirectoryNode key={(folder.id.toString() + "-" + FOLDER)} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} display={false} />
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+                :
+                ""
+              }
+              {testcases.length > 0 ?
+              <Droppable droppableId={(TESTCASE + object.id.toString())}>
+                {(provided, snapshot) => (
+                    <Box {...provided.droppableProps} ref={provided.innerRef}>
+                            {testcases.map((testcase, index) => (
+                              <Draggable draggableId={(testcase.id.toString() + "-" + TESTCASE)} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <DirectoryNode key={(testcase.id.toString() + "-" + TESTCASE)} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} display={false} />
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                      {provided.placeholder}
+                    </Box>
+                  )}
+                </Droppable>
+                :
+                ""
+              }
+            </List>
+          </Card>
+        </Box>
+      );
     }
 
     return (
-        <Box>
-            {modal}
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
-                <IconButton>
-                    <UploadFileIcon />
-                </IconButton>
-                <IconButton>
-                    <PlaylistAddIcon onClick={() => handleOpenModal(true, TESTCASE)}/>
-                </IconButton>
-                <IconButton>
-                    <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
-                </IconButton>
-            </div>
-            <Card>
-              <List>
-                {folders.length > 0 ? 
-                  <Droppable droppableId={(FOLDER + object.id.toString())}>
-                    {(provided, snapshot) => (
-                      <div {...provided.droppableProps} ref={provided.innerRef}>
-                              {folders.map((folder, index) => (
-                                <Draggable draggableId={(folder.id.toString() + "-" + FOLDER)} index={index}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <DirectoryNode key={(folder.id.toString() + "-" + FOLDER)} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} display={false} />
-                                    </div>
-                                  )}
-                                </Draggable>
-                              ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                  :
-                  ""
-                }
-                {testcases.length > 0 ?
-                <Droppable droppableId={(TESTCASE + object.id.toString())}>
-                  {(provided, snapshot) => (
-                      <Box {...provided.droppableProps} ref={provided.innerRef}>
-                              {testcases.map((testcase, index) => (
-                                <Draggable draggableId={(testcase.id.toString() + "-" + TESTCASE)} index={index}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <DirectoryNode key={(testcase.id.toString() + "-" + TESTCASE)} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} display={false} />
-                                    </div>
-                                  )}
-                                </Draggable>
-                              ))}
-                        {provided.placeholder}
-                      </Box>
-                    )}
-                  </Droppable>
-                  :
-                  ""
-                }
-              </List>
-            </Card>
-        </Box>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <FolderContents />
+      </DragDropContext>
     );
-  }
-
-export default function App() {
-  const onDragEnd = (result) => {
-    console.log(result);
-  };
-
-  return(
-    <DragDropContext onDragEnd={onDragEnd}>
-      <FolderView />
-    </DragDropContext>
-  )
 }
