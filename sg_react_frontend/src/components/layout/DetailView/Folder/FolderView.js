@@ -69,10 +69,15 @@ export default function FolderView(props) {
       const { source, destination } = result;
       const type = result.draggableId.split('-')[1];
 
-      if (type === FOLDER) {
-        if (destination.droppableId.includes(TESTCASE)) return;
+      let updatedOrder;
 
-        const updatedOrder = reOrderContent(folders, source, destination);
+      if (type === FOLDER) {
+        if (destination.droppableId.includes(TESTCASE)) {
+          updatedOrder = reOrderContent(folders, source.index, folders.length - 1);
+        } else {
+          updatedOrder = reOrderContent(folders, source.index, destination.index);
+        }
+
         setFolders(updatedOrder);
 
         const ids = updatedOrder.map(folder => folder.id);
@@ -80,9 +85,12 @@ export default function FolderView(props) {
 
         updateFolderOrder(ids, orders, () => {});
       } else if (type === TESTCASE) {
-        if (destination.droppableId.includes(FOLDER)) return;
+        if (destination.droppableId.includes(FOLDER)) {
+          updatedOrder = reOrderContent(testcases, source.index, 0);
+        } else {
+          updatedOrder = reOrderContent(testcases, source.index, destination.index);
+        }
 
-        const updatedOrder = reOrderContent(testcases, source, destination);
         setTestcases(updatedOrder);
 
         const ids = updatedOrder.map(testcase => testcase.id);
@@ -95,10 +103,10 @@ export default function FolderView(props) {
       store.dispatch({ type: actions.TREE_UPDATE, payload: { name: result.draggableId } });
     };
   
-    function reOrderContent(array, source, destination) {
+    function reOrderContent(array, sourceIndex, destinationIndex) {
       const reorderedContent = Array.from(array);
-      const [movedContent] = reorderedContent.splice(source.index, 1);
-      reorderedContent.splice(destination.index, 0, movedContent);
+      const [movedContent] = reorderedContent.splice(sourceIndex, 1);
+      reorderedContent.splice(destinationIndex, 0, movedContent);
   
       return reorderedContent.map((item, index) => ({
         ...item,
