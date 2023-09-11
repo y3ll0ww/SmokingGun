@@ -72,32 +72,23 @@ export default function FolderView(props) {
       let updatedOrder;
 
       if (type === FOLDER) {
-        if (destination.droppableId.includes(TESTCASE)) {
-          updatedOrder = reOrderContent(folders, source.index, folders.length - 1);
-        } else {
-          updatedOrder = reOrderContent(folders, source.index, destination.index);
-        }
-
-        setFolders(updatedOrder);
+        updatedOrder = reOrderContent(folders, source.index, destination.index);
+        
+        //setFolders(updatedOrder);
 
         const ids = updatedOrder.map(folder => folder.id);
         const orders = updatedOrder.map(folder => folder.order);
 
         updateFolderOrder(ids, orders, () => {});
       } else if (type === TESTCASE) {
-        if (destination.droppableId.includes(FOLDER)) {
-          updatedOrder = reOrderContent(testcases, source.index, 0);
-        } else {
-          updatedOrder = reOrderContent(testcases, source.index, destination.index);
-        }
+        updatedOrder = reOrderContent(testcases, source.index-folders.length, destination.index-folders.length);
 
-        setTestcases(updatedOrder);
+        //setTestcases(updatedOrder);
 
         const ids = updatedOrder.map(testcase => testcase.id);
         const orders = updatedOrder.map(testcase => testcase.order);
 
         updateTestCaseOrder(ids, orders, () => {});
-
       }
 
       store.dispatch({ type: actions.TREE_UPDATE, payload: { name: result.draggableId } });
@@ -151,45 +142,29 @@ export default function FolderView(props) {
           </div>
           <Card>
             <List>
-              <Droppable droppableId={(FOLDER + object.id.toString())}>
+              <Droppable droppableId={`${object.id}`}>
                 {(provided, snapshot) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
-                          {folders.map((folder, index) => (
-                            <Draggable draggableId={(folder.id.toString() + "-" + FOLDER)} index={index}>
-                              {(provided, snapshot) => (
+                  <Box {...provided.droppableProps} ref={provided.innerRef}>
+                          {(folders.concat(testcases)).map((item, index) => {
+                            
+                            const type = folders.includes(item) ? FOLDER : TESTCASE;
+
+                            return (
+                              <Draggable draggableId={`${item.id}-${type}`} index={index} key={`${item.id}-${type}`}>
+                                {(provided, snapshot) => (
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
                                 >
-                                  <DirectoryNode key={(folder.id.toString() + "-" + FOLDER)} item={{ ...folder, type: FOLDER }} padding={20} type={FOLDER} display={false} />
+                                  <DirectoryNode key={`${item.id}-${type}`} item={{ ...item, type: type }} padding={20} type={type} display={false} />
                                 </div>
-                              )}
-                            </Draggable>
-                          ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-              <Droppable droppableId={(TESTCASE + object.id.toString())}>
-                {(provided, snapshot) => (
-                  
-                    <Box {...provided.droppableProps} ref={provided.innerRef}>
-                            {testcases.map((testcase, index) => (
-                              <Draggable draggableId={(testcase.id.toString() + "-" + TESTCASE)} index={index}>
-                                {(provided, snapshot) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                  >
-                                    <DirectoryNode key={(testcase.id.toString() + "-" + TESTCASE)} item={{ ...testcase, type: TESTCASE }} padding={20} type={TESTCASE} display={false} />
-                                  </div>
                                 )}
                               </Draggable>
-                            ))}
-                      {provided.placeholder}
-                    </Box>
+                            );
+                          })}
+                    {provided.placeholder}
+                  </Box>
                   )}
                 </Droppable>
             </List>
