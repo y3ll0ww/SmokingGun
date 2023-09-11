@@ -18,8 +18,9 @@ import * as actions from "../../Redux/actionTypes";
 export default function FolderView(props) {
     const object = useSelector((state) => state.object);
     const projectId = useSelector((state) => state.projects.currentProject.id);
-    const [folders, setFolders] = useState(object.child_folders || []);
-    const [testcases, setTestcases] = useState(object.test_cases || []);
+    const [nodes, setNodes] = useState([]);
+    const storeFolders = useSelector((state) => object.child_folders);
+    const storeTestCases = useSelector((state) => object.test_cases);
     const [modalOpen, setModalOpen] = useState(false);
     const [direct, setDirect] = useState(false);
     const [type, setType] = useState(undefined);
@@ -59,9 +60,13 @@ export default function FolderView(props) {
     );
 
     useEffect(() => {
-      setFolders(object.child_folders || []);
-      setTestcases(object.test_cases || []);
-    }, [object]);
+      const newNodes = [
+        ...(storeFolders || []).map(folder => ({ ...folder, type: FOLDER })),
+        ...(storeTestCases || []).map(testcase => ({ ...testcase, type: TESTCASE }))
+      ];
+
+      setNodes(newNodes);
+    }, [storeFolders, storeTestCases])
   
     const onDragEnd = (result) => {
       if (!result.destination) return;
@@ -72,18 +77,14 @@ export default function FolderView(props) {
       let updatedOrder;
 
       if (type === FOLDER) {
-        updatedOrder = reOrderContent(folders, source.index, destination.index);
-        
-        //setFolders(updatedOrder);
+        updatedOrder = reOrderContent(storeFolders, source.index, destination.index);
 
         const ids = updatedOrder.map(folder => folder.id);
         const orders = updatedOrder.map(folder => folder.order);
 
         updateFolderOrder(ids, orders, () => {});
       } else if (type === TESTCASE) {
-        updatedOrder = reOrderContent(testcases, source.index-folders.length, destination.index-folders.length);
-
-        //setTestcases(updatedOrder);
+        updatedOrder = reOrderContent(storeTestCases, source.index-storeFolders.length, destination.index-storeFolders.length);
 
         const ids = updatedOrder.map(testcase => testcase.id);
         const orders = updatedOrder.map(testcase => testcase.order);
@@ -104,11 +105,50 @@ export default function FolderView(props) {
         order: index,
       }));
     }
-
-    function FolderContents() {
-      if (!(folders ?? []).length && !(testcases ?? []).length) {
-        return (
-            <Box>
+    
+    return (
+      <DragDropContext onDragEnd={onDragEnd}>
+        {nodes.length > 0 ? (
+          <Box>
+            {modal}
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
+                <IconButton>
+                    <UploadFileIcon />
+                </IconButton>
+                <IconButton>
+                    <PlaylistAddIcon onClick={() => handleOpenModal(true, TESTCASE)}/>
+                </IconButton>
+                <IconButton>
+                    <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
+                </IconButton>
+            </div>
+            <Card>
+              <List>
+                <Droppable droppableId={`${FOLDER}-${object.id}`}>
+                  {(provided, snapshot) => (
+                    <Box {...provided.droppableProps} ref={provided.innerRef}>
+                      {nodes.map((node, index) => (
+                        <Draggable draggableId={`${node.id}-${node.type}`} index={index} key={`${node.id}-${node.type}`}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <DirectoryNode key={`${node.id}-${node.type}`} item={{ ...node, type: type }} padding={20} type={node.type} display={false} />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}     
+                      {provided.placeholder}
+                    </Box>
+                    )}
+                  </Droppable>
+              </List>
+            </Card>
+          </Box>
+        ) : (
+          <Box>
                 {modal}
                 <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }} style={{ padding: 80 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -123,59 +163,7 @@ export default function FolderView(props) {
                     </div>
                 </Card>
             </Box>
-        );
-      }
-    
-      return (
-        <Box>
-          {modal}
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
-              <IconButton>
-                  <UploadFileIcon />
-              </IconButton>
-              <IconButton>
-                  <PlaylistAddIcon onClick={() => handleOpenModal(true, TESTCASE)}/>
-              </IconButton>
-              <IconButton>
-                  <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
-              </IconButton>
-          </div>
-          <Card>
-            <List>
-              <Droppable droppableId={`${object.id}`}>
-                {(provided, snapshot) => (
-                  <Box {...provided.droppableProps} ref={provided.innerRef}>
-                          {(folders.concat(testcases)).map((item, index) => {
-                            
-                            const type = folders.includes(item) ? FOLDER : TESTCASE;
-
-                            return (
-                              <Draggable draggableId={`${item.id}-${type}`} index={index} key={`${item.id}-${type}`}>
-                                {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                >
-                                  <DirectoryNode key={`${item.id}-${type}`} item={{ ...item, type: type }} padding={20} type={type} display={false} />
-                                </div>
-                                )}
-                              </Draggable>
-                            );
-                          })}
-                    {provided.placeholder}
-                  </Box>
-                  )}
-                </Droppable>
-            </List>
-          </Card>
-        </Box>
-      );
-    }
-
-    return (
-      <DragDropContext onDragEnd={onDragEnd}>
-        <FolderContents />
+        )}
       </DragDropContext>
     );
 }
