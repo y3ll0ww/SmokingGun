@@ -11,6 +11,7 @@ const initialState = {
     },
     object: {},
     tree: {
+        folders: [],
         openNodes: [],
         treeUpdate: ''
     },
@@ -19,6 +20,29 @@ const initialState = {
         stepUpdate: '',
     }
 };
+
+const createFolderTree = (data, parentId = null) => {
+    const folderTree = [];
+  
+    for (const item of data) {
+      if (item.type === FOLDER && item.parent_folder === parentId) {
+        // Recursively create child folders
+        const childFolders = createFolderTree(data, item.id);
+  
+        // Remove "testcases" key
+        const { testcases, ...folderWithoutTestcases } = item;
+  
+        // If there are child folders after filtering, add the folder to the tree
+        if (childFolders.length > 0) {
+          folderWithoutTestcases.child_folders = childFolders;
+        }
+  
+        folderTree.push(folderWithoutTestcases);
+      }
+    }
+  
+    return folderTree;
+  };
 
 export default function reducer (state = initialState, action) {
     console.log(action.payload);
@@ -84,6 +108,17 @@ export default function reducer (state = initialState, action) {
                 ...state,
                 type: TESTCASE,
                 object: action.payload
+            }
+        }
+        case actions.TREE_SET_FOLDERS: {
+            const treeFolders = createFolderTree(action.payload);
+
+            return{
+                ...state,
+                tree: {
+                    ...state.tree,
+                    folders: treeFolders
+                }
             }
         }
         case actions.TREE_EXPAND_NODE: {

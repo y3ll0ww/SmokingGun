@@ -6,11 +6,12 @@ import ListIcon from '@mui/icons-material/List';
 import TagIcon from '@mui/icons-material/Tag';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import BuildIcon from '@mui/icons-material/Build';
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PestControlIcon from '@mui/icons-material/PestControl';
 
 import ModalDelete from "./ModalDelete";
+import ModalMove from "./ModalMove";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
@@ -75,18 +76,27 @@ export default function DirectoryNode(props) {
   };
 
   // Handling modal options
-  const [modal, setModal] = React.useState(false);
+  const [modalDelete, setModalDelete] = React.useState(false);
+  const [modalMove, setModalMove] = React.useState(false);
 
-  const handleOpenModal = () => {
-    setModal(true);
+  const handleOpenModalDelete = () => {
+    setModalDelete(true);
   }
 
-  const handleCloseModal = () => {
-    setModal(false);
+  const handleOpenModalMove = () => {
+    setModalMove(true);
+  }
+
+  const handleCloseModalDelete = () => {
+    setModalDelete(false);
+  }
+
+  const handleCloseModalMove = () => {
+    setModalMove(false);
   }
 
   const deleteModal = (
-    <Modal open={modal} onClose={handleCloseModal}>
+    <Modal open={modalDelete} onClose={handleCloseModalDelete}>
         <Paper sx={modalStyle} disableEqualOverflow 
              style={{ borderRadius: 10, overflowY:'auto', maxHeight:"500px", width: "500px" }}>      
             <style>
@@ -94,8 +104,22 @@ export default function DirectoryNode(props) {
                     display: none;
                 }`}
             </style>
-            <ModalDelete handleCloseModal={handleCloseModal} name={item.name} type={type} id={item.id} />
+            <ModalDelete handleCloseModal={handleCloseModalDelete} name={item.name} type={type} id={item.id} />
         </Paper>
+    </Modal>
+  )
+
+  const moveModal = (
+    <Modal open={modalMove} onClose={handleCloseModalMove}>
+      <Paper sx={modalStyle} disableEqualOverflow
+        	  style={{ borderRadius: 10, overflowY:'auto', maxHeight:"500px", width: "500px" }}>
+            <style>
+                {`::-webkit-scrollbar {
+                    display: none;
+                }`}
+            </style>
+            <ModalMove handleCloseModal={handleCloseModalMove} name={item.name} type={type} id={item.id} />
+      </Paper>
     </Modal>
   )
 
@@ -174,14 +198,15 @@ export default function DirectoryNode(props) {
         }}
       >
         <MenuItem onClick={handleCloseOptions}>
-          <IconButton>
-            <BuildIcon />
+          <IconButton onClick={handleOpenModalMove}>
+            <DriveFileMoveIcon />
           </IconButton>
-          <IconButton onClick={handleOpenModal}>
+          <IconButton onClick={handleOpenModalDelete}>
             <DeleteForeverIcon/>
           </IconButton>
         </MenuItem>
       </Menu>
+      {moveModal}
       {deleteModal}
     </div>
   );

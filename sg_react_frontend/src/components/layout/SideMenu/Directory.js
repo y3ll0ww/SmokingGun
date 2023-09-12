@@ -36,8 +36,9 @@ function Directory() {
   useEffect(() => {
     if (rootResource && projectId > 0) {
       setTreeItems(rootResource);
+      store.dispatch({ type: actions.TREE_SET_FOLDERS, payload: rootResource });
     } else if (projectsResource) {
-      store.dispatch({ type: actions.GET_PROJECTS, payload: projectsResource.projects })
+      store.dispatch({ type: actions.GET_PROJECTS, payload: projectsResource.projects });
     }
   }, [rootResource, projectsResource]);
   
