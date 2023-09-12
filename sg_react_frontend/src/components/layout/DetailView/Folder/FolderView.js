@@ -60,13 +60,17 @@ export default function FolderView(props) {
     );
 
     useEffect(() => {
+      handleNewNodes(storeFolders, storeTestCases);      
+    }, [storeFolders, storeTestCases])
+
+    function handleNewNodes(folders, testcases) {
       const newNodes = [
-        ...(storeFolders || []).map(folder => ({ ...folder, type: FOLDER })),
-        ...(storeTestCases || []).map(testcase => ({ ...testcase, type: TESTCASE }))
+        ...(folders || []).map(folder => ({ ...folder, type: FOLDER })),
+        ...(testcases || []).map(testcase => ({ ...testcase, type: TESTCASE }))
       ];
 
       setNodes(newNodes);
-    }, [storeFolders, storeTestCases])
+    }
   
     const onDragEnd = (result) => {
       if (!result.destination) return;
@@ -79,12 +83,16 @@ export default function FolderView(props) {
       if (type === FOLDER) {
         updatedOrder = reOrderContent(storeFolders, source.index, destination.index);
 
+        handleNewNodes(updatedOrder, storeTestCases);
+
         const ids = updatedOrder.map(folder => folder.id);
         const orders = updatedOrder.map(folder => folder.order);
 
         updateFolderOrder(ids, orders, () => {});
       } else if (type === TESTCASE) {
         updatedOrder = reOrderContent(storeTestCases, source.index-storeFolders.length, destination.index-storeFolders.length);
+
+        handleNewNodes(storeFolders, updatedOrder);
 
         const ids = updatedOrder.map(testcase => testcase.id);
         const orders = updatedOrder.map(testcase => testcase.order);
@@ -105,7 +113,7 @@ export default function FolderView(props) {
         order: index,
       }));
     }
-    
+
     return (
       <DragDropContext onDragEnd={onDragEnd}>
         {nodes.length > 0 ? (
