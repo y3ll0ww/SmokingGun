@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .serializers import ProjectSerializer, FolderSerializer, TestCaseSerializer
@@ -220,3 +221,84 @@ class TestCaseOrderUpdateView(generics.UpdateAPIView):
                 return Response({"error": f"Testcase with ID {id} does not exist."}, status=400)
 
         return Response({"success": "Testcase orders updated."})
+
+
+class FolderChangeParentView(generics.UpdateAPIView):
+    queryset = Folder.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        folder_id = kwargs.get('pk')
+        new_parent_folder_id = request.data.get('parent_folder')
+
+        print("QWERTYYY" + str(folder_id))
+        print("QWERTYYY" + str(new_parent_folder_id))
+
+        try:
+            folder = Folder.objects.get(id=folder_id)
+        except Folder.DoesNotExist:
+            return Response({'error': 'Folder does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if new_parent_folder_id != 0:
+            try:
+                new_parent_folder = Folder.objects.get(id=new_parent_folder_id)
+            except Folder.DoesNotExist:
+                return Response({'error': 'New parent folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            new_parent_folder = None
+
+        # Check if the new parent folder is the same as the current parent folder
+        if folder.parent_folder == new_parent_folder:
+            return Response({'error': 'The folder is already in the specified parent folder.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        with transaction.atomic():
+            # Set the order to 0 for the folder being moved
+            folder.order = 0
+            folder.parent_folder = new_parent_folder
+            folder.save()
+
+            # Increment the order for other folders with the same parent_folder
+            siblings = Folder.objects.filter(parent_folder=new_parent_folder).exclude(id=folder_id).order_by('order')
+            for index, sibling in enumerate(siblings, start=1):
+                sibling.order = index
+                sibling.save()
+
+        return Response({'success': 'Folder parent changed and order updated.'}, status=status.HTTP_200_OK)
+
+
+class TestCaseChangeParentView(generics.UpdateAPIView):
+    queryset = TestCase.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        testcase_id = kwargs.get('pk')
+        new_parent_folder_id = request.data.get('parent_folder')
+
+        try:
+            testcase = TestCase.objects.get(id=testcase_id)
+        except TestCase.DoesNotExist:
+            return Response({'error': 'Test case does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if new_parent_folder_id != 0:
+            try:
+                new_parent_folder = Folder.objects.get(id=new_parent_folder_id)
+            except Folder.DoesNotExist:
+                return Response({'error': 'New parent folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            new_parent_folder = None
+
+        # Check if the new parent folder is the same as the current parent folder
+        if testcase.folder == new_parent_folder:
+            return Response({'error': 'The test case is already in the specified parent folder.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        with transaction.atomic():
+            # Set the order to 0 for the test case being moved
+            testcase.order = 0
+            testcase.folder = new_parent_folder
+            testcase.save()
+
+            # Increment the order for other test cases with the same parent folder
+            siblings = TestCase.objects.filter(folder=new_parent_folder).exclude(id=testcase_id).order_by('order')
+            for index, sibling in enumerate(siblings, start=1):
+                sibling.order = index
+                sibling.save()
+
+        return Response({'success': 'Test case parent changed and order updated.'}, status=status.HTTP_200_OK)

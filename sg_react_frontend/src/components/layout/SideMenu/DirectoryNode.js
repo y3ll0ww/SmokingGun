@@ -198,9 +198,11 @@ export default function DirectoryNode(props) {
         }}
       >
         <MenuItem onClick={handleCloseOptions}>
-          <IconButton onClick={handleOpenModalMove}>
-            <DriveFileMoveIcon />
-          </IconButton>
+          {item.type !== PROJECT ? (
+            <IconButton onClick={handleOpenModalMove}>
+              <DriveFileMoveIcon />
+            </IconButton>
+          ):''}
           <IconButton onClick={handleOpenModalDelete}>
             <DeleteForeverIcon/>
           </IconButton>

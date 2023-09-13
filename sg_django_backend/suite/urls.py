@@ -27,6 +27,10 @@ urlpatterns = [
     path('testcase/update/<int:pk>/', tst.TestCaseUpdateView.as_view(), name='testcase-update'),
     path('teststep/update/<int:pk>/', tst.TestStepDetailView.as_view(), name='teststep-update'),
 
+    # Move
+    path('folder/move/<int:pk>/', nav.FolderChangeParentView.as_view(), name='folder-move'),
+    path('testcase/move/<int:pk>/', nav.TestCaseChangeParentView.as_view(), name='testcase-move'),
+
     # Order
     path('folders/update-order/', nav.FolderOrderUpdateView.as_view(), name='folders-update-order'),
     path('testcases/update-order/', nav.TestCaseOrderUpdateView.as_view(), name='testcases-update-order'),
