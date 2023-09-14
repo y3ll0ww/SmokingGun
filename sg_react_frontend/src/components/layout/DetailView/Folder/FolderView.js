@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Card, List, IconButton, Modal, Paper } from '@mui/material';
+import { Box, Card, List, IconButton, Modal, Paper, Button } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, MODALSTYLE } from '../../../constants';
+import { FOLDER, TESTCASE, MODALSTYLE, KEY_FOLDER, KEY_TESTCASE, PROJECT } from '../../../constants';
 import ModalAddAny from './ModalAddAny';
+import SelectionView from './SelectionView';
+import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
+import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
 import InputIcon from '@mui/icons-material/Input';
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ModalAdd from '../../SideMenu/ModalAdd';
 import useRequestResource from '../../../../hooks/useRequestResource';
 import store from '../../Redux/store';
@@ -18,9 +23,11 @@ import * as actions from "../../Redux/actionTypes";
 export default function FolderView(props) {
     const object = useSelector((state) => state.object);
     const projectId = useSelector((state) => state.projects.currentProject.id);
+    const selection = useSelector((state) => state.selection);
     const [nodes, setNodes] = useState([]);
     const storeFolders = useSelector((state) => object.child_folders);
     const storeTestCases = useSelector((state) => object.test_cases);
+    const [selectionMode, setSelectionMode] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [direct, setDirect] = useState(false);
     const [type, setType] = useState(undefined);
@@ -37,11 +44,28 @@ export default function FolderView(props) {
         setModalOpen(false);
     };
 
+    const handleSelectionMode = () => {
+      setSelectionMode(selectionMode ? false : true);
+      if (selection.length > 0) {
+        store.dispatch({ type: actions.SELECTION, payload: [] })
+      }
+    }
+
+    function handleSelection() {
+      const payload = [];
+      if (selection.length === 0) {
+        for (const node of nodes) {
+          payload.push(`${node.type}-${node.id}`);
+        }
+      }
+      store.dispatch({ type: actions.SELECTION, payload: payload });
+    }
+
     const modalDetail = () => {
         if (direct) {
-            return <ModalAdd handleCloseModal={handleCloseModal} parent_folder={object.id} type={type} projectId={projectId} />
+            return <ModalAdd handleCloseModal={handleCloseModal} parent_folder={type === undefined ? null : object.id} type={type} projectId={projectId} />
         }
-        return <ModalAddAny handleCloseModal={handleCloseModal} parent_folder={object.id} projectId={projectId} />
+        return <ModalAddAny handleCloseModal={handleCloseModal} parent_folder={type === undefined ? null : object.id} projectId={projectId} />
     }
 
     const modal = (
@@ -119,18 +143,45 @@ export default function FolderView(props) {
         {nodes.length > 0 ? (
           <Box>
             {modal}
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
-                <IconButton>
-                    <UploadFileIcon />
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginLeft: '3px' }}>
+                <IconButton onClick={handleSelectionMode}>
+                  {selectionMode ? (<LibraryAddCheckIcon />) : (<LibraryAddCheckOutlinedIcon />)}
                 </IconButton>
-                <IconButton>
-                    <PlaylistAddIcon onClick={() => handleOpenModal(true, TESTCASE)}/>
-                </IconButton>
-                <IconButton>
-                    <CreateNewFolderIcon onClick={() => handleOpenModal(true, FOLDER)}/>
-                </IconButton>
+                {selectionMode ? (
+                  <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9 }} onClick={handleSelection}>
+                    {selection.length > 0 ? "Deselect all" : "Select all"}
+                  </Button>) : ('')}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end', marginRight: '10px' }}>
+                {selectionMode ? (
+                  <div>
+                    <IconButton>
+                      <DriveFileMoveIcon />
+                    </IconButton>
+                    <IconButton>
+                      <DeleteForeverIcon />
+                    </IconButton>                    
+                  </div>
+                ) : (
+                  <div>
+                    <IconButton>
+                      <UploadFileIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleOpenModal(true, TESTCASE)}>
+                      <PlaylistAddIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleOpenModal(true, FOLDER)}>
+                      <CreateNewFolderIcon />
+                    </IconButton>
+                  </div>
+                )}
+              </div>
             </div>
             <Card>
+              {selectionMode ? (
+                <SelectionView nodes={nodes} />
+              ) : (
               <List>
                 <Droppable droppableId={`${FOLDER}-${object.id}`}>
                   {(provided, snapshot) => (
@@ -153,6 +204,7 @@ export default function FolderView(props) {
                     )}
                   </Droppable>
               </List>
+              )}
             </Card>
           </Box>
         ) : (

@@ -15,6 +15,7 @@ const initialState = {
         openNodes: [],
         treeUpdate: ''
     },
+    selection: [],
     steps: {
         newStepIds: [],
         stepUpdate: '',
@@ -108,6 +109,12 @@ export default function reducer (state = initialState, action) {
                 ...state,
                 type: TESTCASE,
                 object: action.payload
+            }
+        }
+        case actions.SELECTION: {
+            return {
+                ...state,
+                selection: action.payload
             }
         }
         case actions.TREE_SET_FOLDERS: {

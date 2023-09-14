@@ -17,6 +17,7 @@ export default function ProjectDropDown() {
   const treeUpdate = useSelector((state) => state.tree.treeUpdate)
 
   const handleChange = (event: SelectChangeEvent) => {
+    store.dispatch({ type: actions.SELECTION, payload: [] })
     setProjectId(event.target.value);
   };
 

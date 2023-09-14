@@ -137,6 +137,7 @@ export default function DirectoryNode(props) {
   const { getResource, resource } = useRequestResource({ endpoint: `/suite/${item.type}` });
 
   const handleClick = () => {
+    store.dispatch({ type: actions.SELECTION, payload: [] })
     getResource(item.id);
   }
 

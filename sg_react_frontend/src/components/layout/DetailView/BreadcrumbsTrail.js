@@ -71,6 +71,7 @@ export default function BreadcrumbsTrail(props) {
     const { getResource: getFolderResource, resource: folderResource } = useRequestResource({ endpoint: `/suite/${FOLDER}` });
 
     const handleFolderClick = (id) => {
+      store.dispatch({ type: actions.SELECTION, payload: [] });
       getFolderResource(id);
     };
 
