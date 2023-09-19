@@ -61,7 +61,6 @@ export function SideMenu(props) {
     <Modal open={modalAdd} onClose={handleCloseModal}>
       <Paper
         sx={MODALSTYLE}
-        disableEqualOverflow
         style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}
       >
         <style>{`::-webkit-scrollbar {

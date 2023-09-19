@@ -97,21 +97,21 @@ export default function DirectoryNode(props) {
 
   const deleteModal = (
     <Modal open={modalDelete} onClose={handleCloseModalDelete}>
-        <Paper sx={modalStyle} disableEqualOverflow 
+        <Paper sx={modalStyle}
              style={{ borderRadius: 10, overflowY:'auto', maxHeight:"500px", width: "500px" }}>      
             <style>
                 {`::-webkit-scrollbar {
                     display: none;
                 }`}
             </style>
-            <ModalDelete handleCloseModal={handleCloseModalDelete} name={item.name} type={type} id={item.id} item_number={item.item_number} />
+            <ModalDelete handleCloseModal={handleCloseModalDelete} name={type === PROJECT ? `${item.key}: ${item.name}` : item.name} type={type} id={item.id} item_number={item.item_number} />
         </Paper>
     </Modal>
   )
 
   const moveModal = (
     <Modal open={modalMove} onClose={handleCloseModalMove}>
-      <Paper sx={modalStyle} disableEqualOverflow
+      <Paper sx={modalStyle}
         	  style={{ borderRadius: 10, overflowY:'auto', maxHeight:"500px", width: "500px" }}>
             <style>
                 {`::-webkit-scrollbar {
@@ -150,7 +150,6 @@ export default function DirectoryNode(props) {
           } else {
             store.dispatch({ type: actions.GET_PROJECT, payload: resource })
           }
-          
       }
   }, [resource])
 

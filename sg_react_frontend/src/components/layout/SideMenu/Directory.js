@@ -61,14 +61,13 @@ function Directory() {
     <Modal open={modalAdd} onClose={handleCloseModal}>
       <Paper
         sx={MODALSTYLE}
-        disableEqualOverflow
         style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}
       >
         <style>{`::-webkit-scrollbar {
           display: none;
         }`}</style>
         {addType === PROJECT ? 
-          <ModalAddProject handleCloseModal={handleCloseModal} type={addType} projectId={projectId} />
+          <ModalAddProject handleCloseModal={handleCloseModal} />
         :
           <ModalAdd handleCloseModal={handleCloseModal} type={addType} projectId={projectId} />
         }
@@ -105,10 +104,6 @@ function Directory() {
       </Box>
     );
   } else {
-    const handleClick = (projectId) => {
-      store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
-    }
-    
     return (
       <Box>
         {addModal}
@@ -122,9 +117,7 @@ function Directory() {
         </ListItem>
         {nodeProjects.length > 0 ?
           nodeProjects.map((project) => (
-            <div onClick={() => handleClick(project.id)}>
-              <DirectoryNode item={project} padding={10} />
-            </div>
+            <DirectoryNode item={project} padding={10} />
           )) : ''
         }
       </Box>

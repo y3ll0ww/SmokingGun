@@ -72,7 +72,6 @@ export default function FolderView(props) {
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <Paper
           sx={MODALSTYLE}
-          disableEqualOverflow
           style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}
         >
           <style>{`::-webkit-scrollbar {
@@ -94,7 +93,6 @@ export default function FolderView(props) {
       ];
 
       setNodes(newNodes);
-      console.log(nodes);
     }
   
     const onDragEnd = (result) => {

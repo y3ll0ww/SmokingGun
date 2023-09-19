@@ -9,8 +9,7 @@ import { useSelector } from "react-redux";
 
 export default function ModalDelete(props) {
     const projectKey = useSelector((state) => state.projects.currentProject.key)
-    const resourceLabel = props.type === FOLDER || TESTCASE ? '"' + KEY_(projectKey, props.item_number) + ': ' + props.name + '"' : 
-                          'Project "' + props.name + '"';
+    const resourceLabel = props.type === PROJECT ? `Project "${props.name}"` : `"${KEY_(projectKey, props.item_number)}: props.name"`;
 
     const { deleteResource, resource } = useRequestResource({ endpoint: `/suite/${props.type}/delete`, resourceLabel: resourceLabel });
 
@@ -57,7 +56,7 @@ export default function ModalDelete(props) {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button variant="contained" style={{ textTransform: 'none', marginTop: '25px', width: '350px' }} onClick={() => handleClick(props.id)}>
                     Delete {props.type} 
-                    {props.type === PROJECT ? '' : 
+                    {props.type === PROJECT ? ` ${props.name.split(':')[0]}` : 
                      ' ' + KEY_(projectKey, props.item_number)
                     }
                 </Button>
