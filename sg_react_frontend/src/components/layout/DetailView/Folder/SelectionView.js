@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { FOLDER, KEY_FOLDER, KEY_TESTCASE } from '../../../constants';
+import { FOLDER, KEY_ } from '../../../constants';
 import FolderIcon from '@mui/icons-material/Folder';
 import ListIcon from '@mui/icons-material/List';
 import { useState } from 'react';
@@ -37,13 +37,13 @@ const columns: GridColDef[] = [
   },
 ];
 
-function getRows(data) {
+function getRows(key, data) {
     let rows = [];
 
     for (const node of data) {
         rows.push({
             id: `${node.type}-${node.id}`,
-            key: node.type === FOLDER ? KEY_FOLDER(node.id) : KEY_TESTCASE(node.id),
+            key: KEY_(key, node.item_number),
             type: node.type,
             name: node.name,
         })
@@ -55,6 +55,7 @@ function getRows(data) {
 export default function SelectionView(props) {
     const [selectedRows, setSelectedRows] = useState([]);
     const selection = useSelector((state) => state.selection);
+    const projectKey = useSelector((state) => state.projects.currentProject.key)
 
     useEffect(() => {
         setSelectedRows(selection);
@@ -75,7 +76,7 @@ export default function SelectionView(props) {
           }`}
         </style>
         <DataGrid
-          rows={getRows(props.nodes)}
+          rows={getRows(projectKey, props.nodes)}
           columns={columns}
           checkboxSelection
           columnHeaderHeight={0}

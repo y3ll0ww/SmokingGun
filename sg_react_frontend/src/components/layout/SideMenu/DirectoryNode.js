@@ -15,7 +15,7 @@ import ModalMove from "./ModalMove";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
-import { FOLDER, KEY_FOLDER, KEY_TESTCASE, TESTCASE, PROJECT } from "../../constants";
+import { FOLDER, KEY_, TESTCASE, PROJECT } from "../../constants";
 import { useSelector } from "react-redux";
 
 
@@ -31,22 +31,22 @@ const modalStyle = {
 };
 
 export default function DirectoryNode(props) {
+  const projectKey = useSelector((state) => state.projects.currentProject.key);
   const padding = props.padding + 'px';
   const type = props.item.type != null ? props.item.type : props.type != null ? props.type : 'typeless';
   const display = props.display != null ? props.display : true; // Prevents weird padding in FolderView
 
   const item = {
       id: props.item.id,
-      key: type === FOLDER ? KEY_FOLDER(props.item.id) : 
-           type === TESTCASE ? KEY_TESTCASE(props.item.id) :
-           type === PROJECT ? props.item.key :
-           props.item.id,
+      key: type === PROJECT ? props.item.key :
+           KEY_(projectKey, props.item.item_number),
       name: props.item.name,
       type: type,
       icon: type === FOLDER ? <FolderIcon /> : 
             type === TESTCASE ? <ListIcon /> :
             type === PROJECT ? <TagIcon /> :
             <PestControlIcon />,
+      item_number: props.item.item_number,
       child_folders: props.item.child_folders,
       testcases: props.item.testcases
     };
@@ -104,7 +104,7 @@ export default function DirectoryNode(props) {
                     display: none;
                 }`}
             </style>
-            <ModalDelete handleCloseModal={handleCloseModalDelete} name={item.name} type={type} id={item.id} />
+            <ModalDelete handleCloseModal={handleCloseModalDelete} name={item.name} type={type} id={item.id} item_number={item.item_number} />
         </Paper>
     </Modal>
   )
@@ -118,7 +118,7 @@ export default function DirectoryNode(props) {
                     display: none;
                 }`}
             </style>
-            <ModalMove handleCloseModal={handleCloseModalMove} name={item.name} type={type} id={item.id} />
+            <ModalMove handleCloseModal={handleCloseModalMove} name={item.name} type={type} id={item.id} item_number={item.item_number} />
       </Paper>
     </Modal>
   )

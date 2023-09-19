@@ -1,6 +1,5 @@
 import { PROJECT, FOLDER, TESTCASE } from "../../constants";
 import * as actions from "./actionTypes";
-import { KEY_FOLDER } from "../../constants";
 
 
 const initialState = {

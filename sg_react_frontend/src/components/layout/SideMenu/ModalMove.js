@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, IconButton, Alert, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { FOLDER, KEY_FOLDER, KEY_TESTCASE } from "../../constants";
+import { KEY_ } from "../../constants";
 import { useSelector } from "react-redux";
 import HomeIcon from '@mui/icons-material/Home';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -15,7 +15,7 @@ export default function ModalMove(props) {
     const projectName = useSelector((state) => state.projects.currentProject.name);
     const projectKey = useSelector((state) => state.projects.currentProject.key);
     const treeFolders = useSelector((state) => state.tree.folders);
-    const resourceLabel = `"${props.type === FOLDER ? KEY_FOLDER(props.id) : KEY_TESTCASE(props.id)} ${props.name}"`
+    const resourceLabel = `"${KEY_(projectKey, props.item_number)}: ${props.name}"`;
     const padding = 3;
 
     const { updateResource } = useRequestResource({ endpoint: `/suite/${props.type}/move`, resourceLabel: resourceLabel });
@@ -40,7 +40,7 @@ export default function ModalMove(props) {
             <div>
                 <ListItem button onClick={() => handleClick(folder.id)} style={{ paddingLeft: padding, fontSize: "8px" }}>
                     <ListItemIcon>{root ? <FolderIcon /> : <TurnLeftIcon style={{ transform: 'rotate(180deg)' }}/> }</ListItemIcon>
-                    <ListItemText primary={<span><span style={{ color: 'gray', fontSize: '12px' }}>{KEY_FOLDER(folder.id)} </span>{folder.name}</span>} />
+                    <ListItemText primary={<span><span style={{ color: 'gray', fontSize: '12px' }}>{KEY_(projectKey, folder.item_number)} </span>{folder.name}</span>} />
                 </ListItem>              
                 <div>
                   {folder.child_folders &&
@@ -68,7 +68,7 @@ export default function ModalMove(props) {
             >
                 <CloseIcon style={{ fontSize: '18px' }} />
             </IconButton>
-            <h3 style={{ marginTop: '5px'}}>Move "{props.type === FOLDER ? KEY_FOLDER(props.id) : KEY_TESTCASE(props.id)} {props.name}"</h3>
+            <h3 style={{ marginTop: '5px'}}>Move "{KEY_(projectKey, props.item_number)}: {props.name}"</h3>
             <Alert severity="info" style={{ margin: 10, marginTop: 0 }}>
                 Select a new location for the {props.type} "<b>{props.name}</b>" below.
             </Alert>

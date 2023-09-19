@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, IconButton, TextField } from "@mui/material";
-import { FOLDER, TESTCASE, PROJECT, KEY_FOLDER, KEY_TESTCASE, DATE } from '../../constants';
+import { PROJECT, KEY_, DATE } from '../../constants';
 import TagIcon from '@mui/icons-material/Tag';
 import EditIcon from '@mui/icons-material/Edit';
 import store from "../Redux/store";
@@ -69,10 +69,8 @@ export default function Title() {
 
     const key = (
         <span style={{ color: 'gray', fontSize: '22px' }}>
-            {type === FOLDER ? KEY_FOLDER(object.id) :
-             type === TESTCASE ? KEY_TESTCASE(object.id) :
-             type === PROJECT ? <TagIcon style={{ marginRight: 5 }}/> :
-             ''}
+            {type === PROJECT ? <TagIcon style={{ marginRight: 5 }}/> : ''}
+            {type === PROJECT ? project.key + ' ' : KEY_(project.key, object.item_number) + ' '}
         </span>
     )
 

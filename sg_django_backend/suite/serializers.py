@@ -14,6 +14,7 @@ class FolderSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False, allow_blank=True)
     description = serializers.CharField(required=False, allow_blank=True)
     order = serializers.IntegerField(required=False)
+    item_number = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = Folder
@@ -24,6 +25,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False, allow_blank=True)
     description = serializers.CharField(required=False, allow_blank=True)
     order = serializers.IntegerField(required=False)
+    item_number = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = TestCase

@@ -59,6 +59,7 @@ class TestCaseDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         # Add the test steps to the serialized data
         data = serializer.data
+        data['type'] = 'testcase'
         data['test_steps'] = test_steps_serializer.data
 
         return Response(data)
@@ -96,6 +97,13 @@ class TestCaseCreateView(generics.CreateAPIView):
 
         # Create the testcase
         testcase = TestCase(name=name, folder=parent_folder, project=project, order=order)
+        testcase.save()
+
+        # Increase item_count of project by 1
+        project.item_count += 1
+        project.save()
+
+        testcase.item_number = project.item_count
         testcase.save()
 
         # Serialize the created folder

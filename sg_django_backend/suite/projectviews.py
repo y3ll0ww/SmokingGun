@@ -63,6 +63,7 @@ class RootFolderDetailView(generics.RetrieveAPIView):
 
         # Prepare the response data
         data = serializer.data
+        data['type'] = 'project'
         data['project_folders'] = folders_serializer.data
         data['project_testcases'] = test_cases_serializer.data
         #data = {

@@ -1,14 +1,15 @@
 import React from "react";
 import { Box, IconButton, Button, Alert, AlertTitle } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { FOLDER, KEY_FOLDER, KEY_TESTCASE, TESTCASE, PROJECT } from "../../constants";
+import { FOLDER, KEY_, TESTCASE, PROJECT } from "../../constants";
 import useRequestResource from "../../../hooks/useRequestResource";
 import store from "../Redux/store";
 import * as actions from "../Redux/actionTypes";
+import { useSelector } from "react-redux";
 
 export default function ModalDelete(props) {
-    const resourceLabel = props.type === FOLDER ? '"' + KEY_FOLDER(props.id) + ' ' + props.name + '"' : 
-                          props.typ === TESTCASE ? '"' + KEY_TESTCASE(props.id) + ' ' + props.name + '"' :
+    const projectKey = useSelector((state) => state.projects.currentProject.key)
+    const resourceLabel = props.type === FOLDER || TESTCASE ? '"' + KEY_(projectKey, props.item_number) + ': ' + props.name + '"' : 
                           'Project "' + props.name + '"';
 
     const { deleteResource, resource } = useRequestResource({ endpoint: `/suite/${props.type}/delete`, resourceLabel: resourceLabel });
@@ -48,8 +49,7 @@ export default function ModalDelete(props) {
                 Are you sure you want to delete the {props.type} 
                 <b>&nbsp;"
                     {props.type === PROJECT ? '' : 
-                    props.type === FOLDER ? KEY_FOLDER(props.id) + " " : 
-                    KEY_TESTCASE(props.id) + " "}
+                     KEY_(projectKey, props.item_number) + ": "}
                     {props.name}"
                 </b>
                 {props.type === TESTCASE ? '?' : ' and all of its child components?'}
@@ -58,9 +58,7 @@ export default function ModalDelete(props) {
                 <Button variant="contained" style={{ textTransform: 'none', marginTop: '25px', width: '350px' }} onClick={() => handleClick(props.id)}>
                     Delete {props.type} 
                     {props.type === PROJECT ? '' : 
-                        (props.type === FOLDER ? KEY_FOLDER(props.id).replace(':',"") : 
-                        props.type === TESTCASE ? KEY_TESTCASE(props.id).replace(':',"") :
-                        '')
+                     ' ' + KEY_(projectKey, props.item_number)
                     }
                 </Button>
             </div>

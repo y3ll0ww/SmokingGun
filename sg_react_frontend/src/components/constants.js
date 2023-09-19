@@ -1,9 +1,9 @@
 export const PROJECT = "project";
 export const FOLDER = "folder";
 export const TESTCASE = "testcase";
-export const KEY = (key, id) => { return key + id + ":"; }
-export const KEY_FOLDER = (id) => { return KEY("F", id); }
-export const KEY_TESTCASE = (id) => { return KEY("T", id); }
+export const KEY_ = (key, id) => { return `${key}-${id}`; }
+export const KEY_FOLDER = (project_key, item_number) => { return KEY_(project_key, item_number); }
+export const KEY_TESTCASE = (project_key, item_number) => { return KEY_(project_key, item_number); }
 export const STEP_ACTION = "action";
 export const STEP_RESULT = "result";
 

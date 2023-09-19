@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Box, Card, List, IconButton, Modal, Paper, Button } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, MODALSTYLE, KEY_FOLDER, KEY_TESTCASE, PROJECT } from '../../../constants';
+import { FOLDER, TESTCASE, MODALSTYLE, PROJECT } from '../../../constants';
 import ModalAddAny from './ModalAddAny';
 import SelectionView from './SelectionView';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
@@ -63,9 +63,9 @@ export default function FolderView(props) {
 
     const modalDetail = () => {
         if (direct) {
-            return <ModalAdd handleCloseModal={handleCloseModal} parent_folder={type === undefined ? null : object.id} type={type} projectId={projectId} />
+            return <ModalAdd handleCloseModal={handleCloseModal} parent_folder={object.type === PROJECT ? null : object.id} type={type} projectId={projectId} />
         }
-        return <ModalAddAny handleCloseModal={handleCloseModal} parent_folder={type === undefined ? null : object.id} projectId={projectId} />
+        return <ModalAddAny handleCloseModal={handleCloseModal} parent_folder={object.type === PROJECT ? null : object.id} projectId={projectId} />
     }
 
     const modal = (
@@ -94,6 +94,7 @@ export default function FolderView(props) {
       ];
 
       setNodes(newNodes);
+      console.log(nodes);
     }
   
     const onDragEnd = (result) => {
@@ -194,7 +195,7 @@ export default function FolderView(props) {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <DirectoryNode key={`${node.id}-${node.type}`} item={{ ...node, type: type }} padding={20} type={node.type} display={false} />
+                              <DirectoryNode key={`${node.id}-${node.type}`} item={{ ...node }} padding={20} type={node.type} display={false} />
                             </div>
                           )}
                         </Draggable>

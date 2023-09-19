@@ -40,6 +40,13 @@ class FolderCreateView(generics.CreateAPIView):
         folder = Folder(name=name, parent_folder=parent_folder, project=project, order=order)
         folder.save()
 
+        # Increase item_count of project by 1
+        project.item_count += 1
+        project.save()
+
+        folder.item_number = project.item_count
+        folder.save()
+
         # Serialize the created folder
         serializer = self.get_serializer(folder)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -72,6 +79,7 @@ class FolderDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         # Add the child folders and test cases to the serialized data
         data = serializer.data
+        data['type'] = 'folder'
         data['child_folders'] = child_folders_serializer.data
         data['test_cases'] = test_cases_serializer.data
 
@@ -149,12 +157,12 @@ class BreadcrumbTrailView(generics.RetrieveAPIView):
             try:
                 # Find the folder by its ID
                 item = Folder.objects.get(id=item_id)
-                breadcrumb_trail.append({'id': item.id, 'name': item.name})  # Add the folder to the breadcrumb trail
+                breadcrumb_trail.append({'id': item.id, 'name': item.name, 'item_number': item.item_number})  # Add the folder to the breadcrumb trail
 
                 # Traverse the folder hierarchy using the parent_folder field
                 while item.parent_folder:
                     item = item.parent_folder
-                    breadcrumb_trail.insert(0, {'id': item.id, 'name': item.name})  # Insert each parent folder at the beginning of the trail
+                    breadcrumb_trail.insert(0, {'id': item.id, 'name': item.name, 'item_number': item.item_number})  # Insert each parent folder at the beginning of the trail
 
             except Folder.DoesNotExist:
                 pass  # Handle the case where the item is not a folder
@@ -166,14 +174,14 @@ class BreadcrumbTrailView(generics.RetrieveAPIView):
                 folder = item.folder
 
                 if folder:
-                    breadcrumb_trail.append({'id': folder.id, 'name': folder.name})  # Add the folder to the breadcrumb trail
+                    breadcrumb_trail.append({'id': folder.id, 'name': folder.name, 'item_number': folder.item_number})  # Add the folder to the breadcrumb trail
 
                     # Traverse the folder hierarchy using the parent_folder field
                     while folder.parent_folder:
                         folder = folder.parent_folder
-                        breadcrumb_trail.insert(0, {'id': folder.id, 'name': folder.name})  # Insert each parent folder at the beginning of the trail
+                        breadcrumb_trail.insert(0, {'id': folder.id, 'name': folder.name, 'item_number': folder.item_number})  # Insert each parent folder at the beginning of the trail
 
-                breadcrumb_trail.append({'id': item.id, 'name': item.name})  # Add the test case to the breadcrumb trail
+                breadcrumb_trail.append({'id': item.id, 'name': item.name, 'item_number': item.item_number})  # Add the test case to the breadcrumb trail
 
             except TestCase.DoesNotExist:
                 pass  # Handle the case where the item is not a test case

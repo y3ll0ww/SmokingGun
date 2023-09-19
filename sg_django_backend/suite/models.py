@@ -11,6 +11,7 @@ class Project(models.Model):
     project_testruns = models.ManyToManyField('TestRun', blank=True, related_name='projects')
     created_on = models.DateTimeField(auto_now_add=True)
     edited_on = models.DateTimeField(auto_now=True)
+    item_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -28,6 +29,7 @@ class Folder(models.Model):
     order = models.IntegerField(null=False)
     created_on = models.DateTimeField(auto_now_add=True)
     edited_on = models.DateTimeField(auto_now=True)
+    item_number = models.PositiveIntegerField(null=True)
 
 
 class Reference(models.Model):
@@ -43,6 +45,7 @@ class TestCase(models.Model):
     description = models.CharField(max_length=500)
     created_on = models.DateTimeField(auto_now_add=True)
     edited_on = models.DateTimeField(auto_now=True)
+    item_number = models.PositiveIntegerField(null=True)
 
 
 class TestStep(models.Model):
