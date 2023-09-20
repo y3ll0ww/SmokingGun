@@ -43,10 +43,6 @@ export default function ProjectView() {
         </Paper>
       </Modal>
     );
-
-    const handleCreateProject = () => {
-        console.log("CREATE");
-    }
     
     return (
       <Box>
@@ -58,17 +54,17 @@ export default function ProjectView() {
         
         <Card style={{ width: '100%' }}>
           <List>
+            {projects.map((project) => (
+              <ListItem button onClick={() => handleSelectProject(project.id)} key={project.id}>
+                <p><TagIcon style={{ fontSize: 14, color: 'gray', marginRight: 3 }} /> <span style={{ color: 'gray', fontSize: '12px' }}>{project.key}</span> {project.name} <span style={{ fontSize: 12, color: 'gray' }}>| last edited {DATE(project.edited_on)}</span></p>
+              </ListItem>
+            ))}
             <ListItem button onClick={handleOpenModal}>
               <p>
                 <AddIcon style={{ fontSize: 14, color: 'gray', marginRight: 7 }} /> 
                 <span style={{ color: 'gray' }}>Add new project</span>
               </p>
             </ListItem>
-            {projects.map((project) => (
-              <ListItem button onClick={() => handleSelectProject(project.id)}>
-                <p><TagIcon style={{ fontSize: 14, color: 'gray', marginRight: 3 }} /> <span style={{ color: 'gray', fontSize: '12px' }}>{project.key}</span> {project.name} <span style={{ fontSize: 12, color: 'gray' }}>| last edited {DATE(project.edited_on)}</span></p>
-              </ListItem>
-            ))}
           </List>
         </Card>
       </Box>

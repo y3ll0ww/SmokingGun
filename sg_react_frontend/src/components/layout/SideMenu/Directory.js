@@ -111,15 +111,15 @@ function Directory() {
           <AlertTitle>No project selected</AlertTitle>
           There can only exsist <b>folders</b> and <b>testcases</b> within a project. Select a project first, or create a new one.
         </Alert>
+        {nodeProjects.length > 0 ?
+          nodeProjects.map((project) => (
+            <DirectoryNode key={project.id} item={project} padding={10} />
+          )) : ''
+        }
         <ListItem button onClick={() => handleOpenModal(PROJECT)}>
           <ListItemIcon><AddIcon /></ListItemIcon>
           <ListItemText><i style={{ color: 'gray' }}>Add new project</i></ListItemText>
         </ListItem>
-        {nodeProjects.length > 0 ?
-          nodeProjects.map((project) => (
-            <DirectoryNode item={project} padding={10} />
-          )) : ''
-        }
       </Box>
     );
   }

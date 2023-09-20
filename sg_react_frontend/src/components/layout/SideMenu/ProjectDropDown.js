@@ -16,7 +16,7 @@ export default function ProjectDropDown() {
   const currentProjectId = useSelector((state) => state.projects.currentProject.id)
   const treeUpdate = useSelector((state) => state.tree.treeUpdate)
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = (event) => {
     store.dispatch({ type: actions.SELECTION, payload: [] })
     setProjectId(event.target.value);
   };
@@ -45,7 +45,6 @@ export default function ProjectDropDown() {
         store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
     } else {
         store.dispatch({ type: actions.DESELECT_PROJECT });
-        console.log(store.getState());
     }
   }, [projectId])
 
@@ -61,7 +60,7 @@ export default function ProjectDropDown() {
           >
             <MenuItem style={{ fontSize: fontSize }} value={0}><em>Select Project</em></MenuItem>
             {projects.map((project) => (
-              <MenuItem style={{ fontSize: fontSize }} value={project.id}>{project.name}</MenuItem>
+              <MenuItem key={project.id} style={{ fontSize: fontSize }} value={project.id}>{project.name}</MenuItem>
             ))}
           </Select>
         </FormControl>

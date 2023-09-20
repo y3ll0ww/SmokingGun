@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, IconButton, Alert, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { KEY_ } from "../../constants";
@@ -15,6 +15,7 @@ export default function ModalMove(props) {
     const projectName = useSelector((state) => state.projects.currentProject.name);
     const projectKey = useSelector((state) => state.projects.currentProject.key);
     const treeFolders = useSelector((state) => state.tree.folders);
+    const [sameIdAlert, setSameIdAlert] = useState(false);
     const resourceLabel = `"${KEY_(projectKey, props.item_number)}: ${props.name}"`;
     const padding = 3;
 
@@ -27,11 +28,15 @@ export default function ModalMove(props) {
     };
 
     const handleClick = (id) => {
-        props.handleCloseModal();
         console.log(props);
-        console.log(id);
-        updateResource(props.id, { parent_folder: id });
-        store.dispatch({ type: actions.TREE_UPDATE, payload: { name: props.name } })
+        if (id === props.id) {
+            setSameIdAlert(true);
+        } else {
+            props.handleCloseModal();
+            setSameIdAlert(false);
+            updateResource(props.id, { parent_folder: id });
+            store.dispatch({ type: actions.TREE_UPDATE, payload: { name: props.name } })
+        }
     }
 
     function folderNode(folder, padding=3, root=true) {
@@ -52,11 +57,6 @@ export default function ModalMove(props) {
         )
     }
 
-    //if (type != undefined) {
-    //    return <ModalAdd handleCloseModal={props.handleCloseModal} type={type} parent_folder={props.parent_folder} projectId={props.projectId} />
-    //}
-
-
     return (
         <Box>
             <IconButton
@@ -69,9 +69,15 @@ export default function ModalMove(props) {
                 <CloseIcon style={{ fontSize: '18px' }} />
             </IconButton>
             <h3 style={{ marginTop: '5px'}}>Move "{KEY_(projectKey, props.item_number)}: {props.name}"</h3>
-            <Alert severity="info" style={{ margin: 10, marginTop: 0 }}>
-                Select a new location for the {props.type} "<b>{props.name}</b>" below.
-            </Alert>
+            {sameIdAlert ? (
+                <Alert severity="error" style={{ margin: 10, marginTop: 0 }}>
+                    It is not possible to move a folder into itself; please choose a different location.
+                </Alert>
+            ) : (
+                <Alert severity="info" style={{ margin: 10, marginTop: 0 }}>
+                    Select a new location for the {props.type} "<b>{props.name}</b>" below.
+                </Alert>
+            )}
             <List>
                 <ListItem button onClick={() => handleClick(0)} style={{ paddingLeft: padding, fontSize: "8px" }}>
                     <ListItemIcon><HomeIcon /></ListItemIcon>

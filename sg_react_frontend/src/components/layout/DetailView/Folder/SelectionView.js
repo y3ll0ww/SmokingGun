@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid} from '@mui/x-data-grid';
 import { FOLDER, KEY_ } from '../../../constants';
 import FolderIcon from '@mui/icons-material/Folder';
 import ListIcon from '@mui/icons-material/List';
@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import store from '../../Redux/store';
 import * as actions from "../../Redux/actionTypes";
 
-const columns: GridColDef[] = [
+const columns = [
   {
     field: 'type',
     headerName: '',
