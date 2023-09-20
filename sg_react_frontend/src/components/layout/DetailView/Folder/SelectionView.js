@@ -26,24 +26,26 @@ const columns = [
   { 
     field: 'key', 
     headerName: '',
-    flex: 0.1,
-    minWidth: 10,
+    flex: 0.15,
+    minWidth: 100,
   },
   {
     field: 'name',
     headerName: '',
-    flex: 1,
+    flex: 2,
     minWidth: 150,
   },
 ];
 
-function getRows(key, data) {
+function getRows(projectKey, data) {
     let rows = [];
 
     for (const node of data) {
+        const key = KEY_(projectKey, node.item_number);
+        
         rows.push({
-            id: `${node.type}-${node.id}`,
-            key: KEY_(key, node.item_number),
+            id: `${node.type}_${node.id}_${key}`,
+            key: key,
             type: node.type,
             name: node.name,
         })

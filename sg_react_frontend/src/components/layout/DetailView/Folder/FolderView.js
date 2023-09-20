@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Box, Card, List, IconButton, Modal, Paper, Button } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, MODALSTYLE, PROJECT } from '../../../constants';
+import { FOLDER, TESTCASE, MODALSTYLE, PROJECT, KEY_ } from '../../../constants';
 import ModalAddAny from '../Modal/ModalAddAny';
 import SelectionView from './SelectionView';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
@@ -18,31 +18,52 @@ import ModalAdd from '../Modal/ModalAdd';
 import useRequestResource from '../../../../hooks/useRequestResource';
 import store from '../../Redux/store';
 import * as actions from "../../Redux/actionTypes";
+import ModalDeleteBulk from '../Modal/ModalDeleteBulk';
 
 
 export default function FolderView(props) {
     const object = useSelector((state) => state.object);
     const projectId = useSelector((state) => state.projects.currentProject.id);
+    const projectKey = useSelector((state) => state.projects.currentProject.key);
     const selection = useSelector((state) => state.selection);
     const [nodes, setNodes] = useState([]);
     const storeFolders = useSelector((state) => object.child_folders);
     const storeTestCases = useSelector((state) => object.test_cases);
     const [selectionMode, setSelectionMode] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalAdd, setModalAdd] = useState(false);
+    const [modalDeleteBulk, setModalDeleteBulk] = useState(false);
+    const [modalMoveBulk, setModalMoveBulk] = useState(false);
     const [direct, setDirect] = useState(false);
     const [type, setType] = useState(undefined);
+
     const { updateOrder: updateFolderOrder } = useRequestResource({ endpoint: '/suite/folders/update-order/', resourceLabel: 'updateFolders' });
     const { updateOrder: updateTestCaseOrder } = useRequestResource({ endpoint: '/suite/testcases/update-order/', resourceLabel: 'updateTestcases' });
 
-    const handleOpenModal = (set, type=undefined) => {
+    const handleOpenModalAdd = (set, type=undefined) => {
         setDirect(set);
         setType(type);
-        setModalOpen(true);
+        setModalAdd(true);
     };
 
-    const handleCloseModal = () => {
-        setModalOpen(false);
+    const handleCloseModalAdd = () => {
+        setModalAdd(false);
     };
+
+    const handleOpenModalDeleteBulk = () => {
+      setModalDeleteBulk(true);
+    }
+
+    const handleCloseModalDeleteBulk = () => {
+      setModalDeleteBulk(false);
+    }
+
+    const handleOpenModalMoveBulk = () => {
+      setModalMoveBulk(true);
+    }
+
+    const handleCloseModalMoveBulk = () => {
+      setModalMoveBulk(false);
+    }
 
     const handleSelectionMode = () => {
       setSelectionMode(selectionMode ? false : true);
@@ -55,7 +76,7 @@ export default function FolderView(props) {
       const payload = [];
       if (selection.length === 0) {
         for (const node of nodes) {
-          payload.push(`${node.type}-${node.id}`);
+          payload.push(`${node.type}_${node.id}_${KEY_(projectKey, node.item_number)}`);
         }
       }
       store.dispatch({ type: actions.SELECTION, payload: payload });
@@ -63,13 +84,26 @@ export default function FolderView(props) {
 
     const modalDetail = () => {
         if (direct) {
-            return <ModalAdd handleCloseModal={handleCloseModal} parent_folder={object.type === PROJECT ? null : object.id} type={type} projectId={projectId} />
+            return <ModalAdd handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} type={type} projectId={projectId} />
         }
-        return <ModalAddAny handleCloseModal={handleCloseModal} parent_folder={object.type === PROJECT ? null : object.id} projectId={projectId} />
+        return <ModalAddAny handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} projectId={projectId} />
+    }
+
+    const decideModal = () => {
+      if (modalAdd) {
+        if (direct) {
+          return <ModalAdd handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} type={type} projectId={projectId} />
+        }
+        return <ModalAddAny handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} projectId={projectId} />
+      } else if (modalDeleteBulk) {
+        return <ModalDeleteBulk handleCloseModal={handleCloseModalDeleteBulk} items={selection} />
+      } else if (modalMoveBulk) {
+        return <div></div>
+      }
     }
 
     const modal = (
-      <Modal open={modalOpen} onClose={handleCloseModal}>
+      <Modal open={modalAdd || modalDeleteBulk || modalMoveBulk} onClose={handleCloseModalAdd}>
         <Paper
           sx={MODALSTYLE}
           style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}
@@ -77,10 +111,10 @@ export default function FolderView(props) {
           <style>{`::-webkit-scrollbar {
             display: none;
           }`}</style>
-          {modalDetail()}
+          {decideModal()}
         </Paper>
       </Modal>
-    );
+    );    
 
     useEffect(() => {
       handleNewNodes(storeFolders, storeTestCases);      
@@ -99,7 +133,7 @@ export default function FolderView(props) {
       if (!result.destination) return;
 
       const { source, destination } = result;
-      const type = result.draggableId.split('-')[1];
+      const type = result.draggableId.split('_')[1];
 
       let updatedOrder;
 
@@ -158,7 +192,7 @@ export default function FolderView(props) {
                     <IconButton>
                       <DriveFileMoveIcon />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={handleOpenModalDeleteBulk}>
                       <DeleteForeverIcon />
                     </IconButton>                    
                   </div>
@@ -167,10 +201,10 @@ export default function FolderView(props) {
                     <IconButton>
                       <UploadFileIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenModal(true, TESTCASE)}>
+                    <IconButton onClick={() => handleOpenModalAdd(true, TESTCASE)}>
                       <PlaylistAddIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenModal(true, FOLDER)}>
+                    <IconButton onClick={() => handleOpenModalAdd(true, FOLDER)}>
                       <CreateNewFolderIcon />
                     </IconButton>
                   </div>
@@ -211,7 +245,7 @@ export default function FolderView(props) {
                 {modal}
                 <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }} style={{ padding: 80 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <IconButton style={{ padding: '35px', margin: '-25px' }} onClick={() => handleOpenModal(false)}>
+                        <IconButton style={{ padding: '35px', margin: '-25px' }} onClick={() => handleOpenModalAdd(false)}>
                             <InputIcon style={{ color: 'silver', fontSize: '120px' }} />
                         </IconButton>
                         <h2>No contents</h2>

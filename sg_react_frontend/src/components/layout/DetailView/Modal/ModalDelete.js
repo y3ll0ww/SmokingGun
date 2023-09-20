@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 export default function ModalDelete(props) {
     const projectKey = useSelector((state) => state.projects.currentProject.key)
-    const resourceLabel = props.type === PROJECT ? `Project "${props.name}"` : `"${KEY_(projectKey, props.item_number)}: props.name"`;
+    const resourceLabel = props.type === PROJECT ? `Project "${props.name}"` : `"${KEY_(projectKey, props.item_number)}: ${props.name}"`;
 
     const { deleteResource, resource } = useRequestResource({ endpoint: `/suite/${props.type}/delete`, resourceLabel: resourceLabel });
 

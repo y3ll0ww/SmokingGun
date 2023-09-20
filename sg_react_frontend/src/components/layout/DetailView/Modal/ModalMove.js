@@ -28,7 +28,6 @@ export default function ModalMove(props) {
     };
 
     const handleClick = (id) => {
-        console.log(props);
         if (id === props.id) {
             setSameIdAlert(true);
         } else {
