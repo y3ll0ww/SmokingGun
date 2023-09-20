@@ -3,6 +3,7 @@ import * as actions from "./actionTypes";
 
 
 const initialState = {
+    theme: 1,
     type: PROJECT,
     projects: {
         availableProjects: [],
@@ -47,6 +48,19 @@ const createFolderTree = (data, parentId = null) => {
 export default function reducer (state = initialState, action) {
     console.log(action.payload);
     switch (action.type) {
+        case actions.SET_THEME: {
+            if (state.theme === 1) {
+                return {
+                    ...state,
+                    theme: 2
+                }
+            } else if (state.theme === 2) {
+                return {
+                    ...state,
+                    theme: 1
+                }
+            }
+        }
         case actions.GET_PROJECTS: {
             return {
                 ...state,

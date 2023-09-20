@@ -8,6 +8,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { AccountCircle, DarkMode, Inbox, Logout } from "@mui/icons-material";
 
 import logo from '../../logo.svg';
+import store from "./Redux/store";
+import * as actions from "./Redux/actionTypes";
 
 const drawerWidth = 240;
 
@@ -86,6 +88,10 @@ export function AppHeader({ mobileOpen, setMobileOpen }) {
         </Modal>
     )
 
+    const handleTheme = () => {
+        store.dispatch({ type: actions.SET_THEME });
+    }
+
     const authLinks = (
         <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
@@ -95,7 +101,7 @@ export function AppHeader({ mobileOpen, setMobileOpen }) {
                 color="inherit"
                 size="large"
             >
-                <DarkMode />
+                <DarkMode onClick={handleTheme}/>
             </IconButton>
             <Divider variant="middle" orientation="vertical" color="inherit" flexItem style={{ marginRight:'.5rem', marginLeft:'.5rem' }} />
             <IconButton

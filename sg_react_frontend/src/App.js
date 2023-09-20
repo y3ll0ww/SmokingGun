@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -15,9 +15,21 @@ import logo from './logo.svg';
 import './App.css';
 import DetailView from "./components/layout/DetailView/DetailView";
 
-export default function App() {
+import { themeDark, themeLight } from "./components/Theme";
+import { ThemeProvider } from "@mui/material";
+import { Provider, useSelector } from "react-redux";
+import store from "./components/layout/Redux/store";
+
+function App() {
+  const storeTheme = useSelector((state) => state.theme);
+  const [theme, setTheme] = useState(storeTheme === 1 ? themeDark : themeLight);
+  
+  useEffect(() => {
+    setTheme(storeTheme === 1 ? themeDark : themeLight);
+  }, [storeTheme]);
+
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthContextProvider>
         <SnackbarProvider>
@@ -41,8 +53,16 @@ export default function App() {
           </Router>
         </SnackbarProvider>
       </AuthContextProvider>
-    </div>
+    </ThemeProvider>
   );
 }
 
-ReactDOM.render(<App />, document.getElementById("root"))
+export default function storeProvider() {
+  return (
+  <Provider store={store}>
+    <App />
+  </Provider>
+  );
+}
+
+ReactDOM.render(<storeProvider />, document.getElementById("root"))

@@ -3,7 +3,7 @@ import { Box, Card } from '@mui/material';
 import ProjectView from './Project/ProjectView';
 import FolderView from './Folder/FolderView';
 import TestCaseView from './TestCase/TestCaseView';
-import { Provider, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import store from '../Redux/store';
 import { FOLDER, TESTCASE, PROJECT } from '../../constants';
 import BreadcrumbsTrail from './BreadcrumbsTrail';
@@ -13,7 +13,7 @@ import Title from './Title';
 import Description from './Description';
 
 
-function DetailView() {
+export default function DetailView() {
   const type = useSelector(state => state.type);
   const object = useSelector(state => state.object);
   const project = useSelector(state => state.projects.currentProject);
@@ -76,13 +76,3 @@ function DetailView() {
     </Card>
   );
 }
-
-function App() {
-  return (
-    <Provider store={store}>
-      <DetailView />
-    </Provider>
-  );
-}
-
-export default App;

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Provider } from "react-redux";
 import PropTypes from "prop-types";
 import { Box, Drawer, Toolbar, List, Divider, GlobalStyles, useTheme, Paper, Modal } from "@mui/material";
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
@@ -115,10 +114,8 @@ export function SideMenu(props) {
           marginTop: 1
         }}
       >
-        <Provider store={store}>
-          <ProjectDropDown />
-          <Tools handleOpenModal={handleOpenModal} />
-        </Provider>
+        <ProjectDropDown />
+        <Tools handleOpenModal={handleOpenModal} />
       </Box>
       <Divider />
       <Box sx={{

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, List, Alert, AlertTitle, ListItem, ListItemIcon, ListItemText, Modal, Paper } from "@mui/material";
 import DirectoryNode from "./DirectoryNode";
-import { Provider, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AddIcon from '@mui/icons-material/Add';
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
@@ -13,7 +13,7 @@ import store from "../Redux/store";
 import * as actions from "../Redux/actionTypes";
 
 
-function Directory() {
+export default function Directory() {
   const [treeItems, setTreeItems] = useState([]);
   const treeUpdate = useSelector((state) => state.tree.treeUpdate);
   const projectId = useSelector((state) => state.projects.currentProject.id);
@@ -123,15 +123,4 @@ function Directory() {
       </Box>
     );
   }
-  
 }
-
-function View() {
-  return (
-    <Provider store={store}>
-      <Directory />
-    </Provider>
-  );
-}
-
-export default View;
