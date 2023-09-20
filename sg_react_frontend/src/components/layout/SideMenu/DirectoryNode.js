@@ -15,20 +15,10 @@ import ModalMove from "./ModalMove";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
-import { FOLDER, KEY_, TESTCASE, PROJECT } from "../../constants";
+import { FOLDER, KEY_, TESTCASE, PROJECT, MODALSTYLE } from "../../constants";
 import { useSelector } from "react-redux";
+import NodeMenu from "./NodeMenu";
 
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-};
 
 export default function DirectoryNode(props) {
   const projectKey = useSelector((state) => state.projects.currentProject.key);
@@ -97,7 +87,7 @@ export default function DirectoryNode(props) {
 
   const deleteModal = (
     <Modal open={modalDelete} onClose={handleCloseModalDelete}>
-        <Paper sx={modalStyle}
+        <Paper sx={MODALSTYLE}
              style={{ borderRadius: 10, overflowY:'auto', maxHeight:"500px", width: "500px" }}>      
             <style>
                 {`::-webkit-scrollbar {
@@ -111,7 +101,7 @@ export default function DirectoryNode(props) {
 
   const moveModal = (
     <Modal open={modalMove} onClose={handleCloseModalMove}>
-      <Paper sx={modalStyle}
+      <Paper sx={MODALSTYLE}
         	  style={{ borderRadius: 10, overflowY:'auto', maxHeight:"500px", width: "500px" }}>
             <style>
                 {`::-webkit-scrollbar {
@@ -184,30 +174,7 @@ export default function DirectoryNode(props) {
             ))}
         </List>
       )}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseOptions}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <MenuItem onClick={handleCloseOptions}>
-          {item.type !== PROJECT ? (
-            <IconButton onClick={handleOpenModalMove}>
-              <DriveFileMoveIcon />
-            </IconButton>
-          ):''}
-          <IconButton onClick={handleOpenModalDelete}>
-            <DeleteForeverIcon/>
-          </IconButton>
-        </MenuItem>
-      </Menu>
+      <NodeMenu item={item} anchorEl={anchorEl} handleCloseOptions={handleCloseOptions} handleOpenModalMove={handleOpenModalMove} handleOpenModalDelete={handleOpenModalDelete} />
       {moveModal}
       {deleteModal}
     </div>

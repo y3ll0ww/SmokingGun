@@ -6,6 +6,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useRequestResource from "../../../../hooks/useRequestResource";
 import store from "../../Redux/store";
 import * as actions from '../../Redux/actionTypes';
+import { REGEX_NO_SPECIAL_CHARS, REGEX_SPECIAL_CHARS } from "../../../constants";
 
 export default function ModalAddProject(props) {
     const [name, setName] = useState("");
@@ -58,15 +59,13 @@ export default function ModalAddProject(props) {
 
     const handleSetName = (value) => {
         if (value.length <= maxLengthName) {
-            const formattedValue = value.replace(/[^A-Za-z0-9\s!@#$%^&*()-_=+[\]{}|;:'",.<>/?\\]/g, '');
-            setName(formattedValue);
+            setName(REGEX_NO_SPECIAL_CHARS(value));
         }
     }
 
     const handleSetDescription = (value) => {
         if (value.length <= maxLengthDescription) {
-            const formattedValue = value.replace(/[^A-Za-z0-9\s!@#$%^&*()-_=+[\]{}|;:'",.<>/?\\]/g, '');
-            setDescription(formattedValue);
+            setDescription(REGEX_SPECIAL_CHARS(value));
         }
     }
 

@@ -30,3 +30,11 @@ export const MODALSTYLE = {
     boxShadow: 24,
     p: 4,
 };
+
+export const REGEX_NO_SPECIAL_CHARS = (value) => {
+    return value.replace(/[^A-Za-z0-9\sÀàÁáÂâÃãĀāĂăȦȧÄäÅåǍǎȂȃC̀c̀ĆćÇçÈèÉéÊêẼẽĒēĔĕĖėËëE̊e̊ĚěȆȇÌìÍíÎîĨĩĪīĬĭÏïI̊i̊ǏǐȊȋÑñÒòÓóÔôÕõŎŏȮȯÖöO̊o̊ǑǒØøƟɵŞşÙùÚúÛûŨũŪūŬŭÜüŮůǓǔȖȗ]/gu, '');
+}
+
+export const REGEX_SPECIAL_CHARS = (value) => {
+    return value.replace(/[^A-Za-z0-9\s!@#$%^&*()-_=+[\]{}|;:'",.<>/?\\]ÀàÁáÂâÃãĀāĂăȦȧÄäÅåǍǎȂȃC̀c̀ĆćÇçÈèÉéÊêẼẽĒēĔĕĖėËëE̊e̊ĚěȆȇÌìÍíÎîĨĩĪīĬĭÏïI̊i̊ǏǐȊȋÑñÒòÓóÔôÕõŎŏȮȯÖöO̊o̊ǑǒØøƟɵŞşÙùÚúÛûŨũŪūŬŭÜüŮůǓǔȖȗ/g, '');
+}
