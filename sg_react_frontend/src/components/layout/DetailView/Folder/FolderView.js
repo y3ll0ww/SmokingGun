@@ -4,7 +4,7 @@ import { Box, Card, List, IconButton, Modal, Paper, Button } from '@mui/material
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
 import { FOLDER, TESTCASE, MODALSTYLE, PROJECT } from '../../../constants';
-import ModalAddAny from './ModalAddAny';
+import ModalAddAny from '../Modal/ModalAddAny';
 import SelectionView from './SelectionView';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
@@ -14,7 +14,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import ModalAdd from '../../SideMenu/ModalAdd';
+import ModalAdd from '../Modal/ModalAdd';
 import useRequestResource from '../../../../hooks/useRequestResource';
 import store from '../../Redux/store';
 import * as actions from "../../Redux/actionTypes";

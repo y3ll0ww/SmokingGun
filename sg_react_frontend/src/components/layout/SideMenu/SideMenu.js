@@ -6,7 +6,7 @@ import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import ProjectDropDown from "./ProjectDropDown";
 import Tools from "./Tools";
 import Directory from "./Directory";
-import ModalAdd from "./ModalAdd";
+import ModalAdd from "../DetailView/Modal/ModalAdd";
 import { MODALSTYLE } from "../../constants";
 import store from "../Redux/store";
 

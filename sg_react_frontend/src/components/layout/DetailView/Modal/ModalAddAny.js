@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Box, IconButton, Modal, Paper } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import { FOLDER, TESTCASE, MODALSTYLE } from "../../../constants";
-import ModalAdd from "../../SideMenu/ModalAdd";
+import { FOLDER, TESTCASE } from "../../../constants";
+import ModalAdd from "./ModalAdd";
 
 export default function ModalAddAny(props) {
     const [type, setType] = useState(undefined);

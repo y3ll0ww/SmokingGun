@@ -1,10 +1,10 @@
 import React from "react";
 import { Box, IconButton, Button, Alert, AlertTitle } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { FOLDER, KEY_, TESTCASE, PROJECT } from "../../constants";
-import useRequestResource from "../../../hooks/useRequestResource";
-import store from "../Redux/store";
-import * as actions from "../Redux/actionTypes";
+import { FOLDER, KEY_, TESTCASE, PROJECT } from "../../../constants";
+import useRequestResource from "../../../../hooks/useRequestResource";
+import store from "../../Redux/store";
+import * as actions from "../../Redux/actionTypes";
 import { useSelector } from "react-redux";
 
 export default function ModalDelete(props) {

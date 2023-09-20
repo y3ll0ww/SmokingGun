@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Box, IconButton, Alert, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
+import { Box, IconButton, Alert, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { KEY_ } from "../../constants";
+import { KEY_ } from "../../../constants";
 import { useSelector } from "react-redux";
 import HomeIcon from '@mui/icons-material/Home';
 import FolderIcon from '@mui/icons-material/Folder';
 import TurnLeftIcon from '@mui/icons-material/TurnLeft';
-import useRequestResource from "../../../hooks/useRequestResource";
-import store from "../Redux/store";
-import * as actions from "../Redux/actionTypes";
+import useRequestResource from "../../../../hooks/useRequestResource";
+import store from "../../Redux/store";
+import * as actions from "../../Redux/actionTypes";
 
 
 export default function ModalMove(props) {

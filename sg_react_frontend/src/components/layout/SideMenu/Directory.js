@@ -7,8 +7,8 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import useRequestResource from '../../../hooks/useRequestResource';
 import { PROJECT, FOLDER, TESTCASE, MODALSTYLE } from "../../constants";
-import ModalAdd from "./ModalAdd";
-import ModalAddProject from "../DetailView/Project/ModalAddProject";
+import ModalAdd from "../DetailView/Modal/ModalAdd";
+import ModalAddProject from "../DetailView/Modal/ModalAddProject";
 import store from "../Redux/store";
 import * as actions from "../Redux/actionTypes";
 

@@ -3,7 +3,6 @@ import { Box, TextField, Card, IconButton, Button } from '@mui/material';
 import { useSelector } from "react-redux";
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import { FOLDER, TESTCASE } from "../../constants";
 import store from "../Redux/store";
 import * as actions from "../Redux/actionTypes";
 import useRequestResource from "../../../hooks/useRequestResource";

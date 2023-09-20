@@ -4,10 +4,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PestControlIcon from '@mui/icons-material/PestControl';
-import store from "../Redux/store";
-import * as actions from "../Redux/actionTypes";
-import useRequestResource from "../../../hooks/useRequestResource";
-import { FOLDER, TESTCASE } from "../../constants";
+import store from "../../Redux/store";
+import * as actions from "../../Redux/actionTypes";
+import useRequestResource from "../../../../hooks/useRequestResource";
+import { FOLDER, TESTCASE } from "../../../constants";
+
 
 export default function ModalAdd(props) {
     const [name, setName] = useState("");

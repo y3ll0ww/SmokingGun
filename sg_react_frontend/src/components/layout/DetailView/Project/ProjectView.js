@@ -6,10 +6,10 @@ import AddIcon from '@mui/icons-material/Add';
 import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
 import { DATE, MODALSTYLE, PROJECT } from '../../../constants';
-import ModalAddProject from './ModalAddProject';
+import ModalAddProject from '../Modal/ModalAddProject';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NodeMenu from '../../SideMenu/NodeMenu';
-import ModalDelete from '../../SideMenu/ModalDelete';
+import ModalDelete from '../Modal/ModalDelete';
 
 
 export default function ProjectView() {
@@ -97,6 +97,7 @@ export default function ProjectView() {
           <List>
             {projects.map((project) => (
               <ListItem
+                button
                 key={project.id}
                 style={{ display: 'flex', justifyContent: 'space-between' }}
                 onClick={() => handleSelectProject(project.id)}

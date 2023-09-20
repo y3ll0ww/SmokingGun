@@ -6,12 +6,10 @@ import ListIcon from '@mui/icons-material/List';
 import TagIcon from '@mui/icons-material/Tag';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PestControlIcon from '@mui/icons-material/PestControl';
 
-import ModalDelete from "./ModalDelete";
-import ModalMove from "./ModalMove";
+import ModalDelete from "../DetailView/Modal/ModalDelete";
+import ModalMove from "../DetailView/Modal/ModalMove";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
