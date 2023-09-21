@@ -50,6 +50,7 @@ export default function ProjectView() {
     };
 
     const handleOpenModalDelete = () => {
+      setAnchorEl(null);
       setModalDelete(true);
     }
   

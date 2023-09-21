@@ -25,7 +25,7 @@ export default function NodeMenu(props) {
               <DriveFileMoveIcon style={{ color: PRIMARY_COLOR }}/>
             </IconButton>
           ):''}
-          <IconButton onClick={props.handleOpenModalDelete}>
+          <IconButton onClick={(event) => { event.stopPropagation(); props.handleOpenModalDelete(); }}>
             <DeleteForeverIcon style={{ color: PRIMARY_COLOR }}/>
           </IconButton>
         </ListItem>
