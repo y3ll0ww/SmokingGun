@@ -1,9 +1,9 @@
-import { PROJECT, FOLDER, TESTCASE } from "../../constants";
+import { PROJECT, FOLDER, TESTCASE, DARK, LIGHT } from "../../constants";
 import * as actions from "./actionTypes";
 
 
 const initialState = {
-    theme: 1,
+    theme: DARK,
     type: PROJECT,
     projects: {
         availableProjects: [],
@@ -49,15 +49,15 @@ export default function reducer (state = initialState, action) {
     console.log(action.payload);
     switch (action.type) {
         case actions.SET_THEME: {
-            if (state.theme === 1) {
+            if (state.theme === DARK) {
                 return {
                     ...state,
-                    theme: 2
+                    theme: LIGHT
                 }
-            } else if (state.theme === 2) {
+            } else if (state.theme === LIGHT) {
                 return {
                     ...state,
-                    theme: 1
+                    theme: DARK
                 }
             }
         }

@@ -1,3 +1,5 @@
+export const DARK = "darkTheme";
+export const LIGHT = "lightTheme";
 export const PROJECT = "project";
 export const FOLDER = "folder";
 export const TESTCASE = "testcase";

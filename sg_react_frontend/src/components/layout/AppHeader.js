@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { AuthContext } from "../../contexts/AuthContextProvider";
 import useRequestAuth from "../../hooks/useRequestAuth";
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, Box, Modal, TextField, CircularProgress, Divider, ListItemIcon, ListItemText, Chip } from "@mui/material";
 import PropTypes from "prop-types";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AccountCircle, DarkMode, Inbox, Logout } from "@mui/icons-material";
+import { AccountCircle, DarkMode, LightMode, Inbox, Logout } from "@mui/icons-material";
 
-import logo from '../../logo.svg';
+import LogoDark from '../../LogoDark.svg';
+import LogoLight from '../../LogoLight.svg';
 import store from "./Redux/store";
 import * as actions from "./Redux/actionTypes";
+import { useSelector } from "react-redux";
+import { themeDark, themeLight } from "../Theme";
+import { DARK } from "../constants";
 
 const drawerWidth = 240;
 
@@ -25,11 +29,17 @@ const modalStyle = {
 };
 
 export function AppHeader({ mobileOpen, setMobileOpen }) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const theme = useSelector((state) => state.theme);
+    const [logo, setLogo] = useState(LogoDark);
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const [modalIsOpen, setModalIsOpen] = React.useState(false);
-    const { user } = React.useContext(AuthContext);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const { user } = useContext(AuthContext);
     const { logout, logoutPending } = useRequestAuth();
+
+    useEffect(() => {
+        setLogo(theme === DARK ? LogoDark : LogoLight);
+      }, [theme]);
 
     const handleLogout = () => {
         logout();
@@ -100,10 +110,11 @@ export function AppHeader({ mobileOpen, setMobileOpen }) {
                 aria-haspopup="false"
                 color="inherit"
                 size="large"
+                onClick={handleTheme}
             >
-                <DarkMode onClick={handleTheme}/>
+                {theme === DARK ? <LightMode /> : <DarkMode />}
             </IconButton>
-            <Divider variant="middle" orientation="vertical" color="inherit" flexItem style={{ marginRight:'.5rem', marginLeft:'.5rem' }} />
+            <Divider variant="middle" orientation="vertical" flexItem style={{ marginRight:'.5rem', marginLeft:'.5rem' }} />
             <IconButton
                 aria-label="open notifications"
                 aria-controls="menu-appbar"
@@ -221,9 +232,9 @@ export function AppHeader({ mobileOpen, setMobileOpen }) {
                 </IconButton>
                 <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
                     <img src={logo}
-                     alt="Logo V101" 
+                     alt="SmokingGun logo"
                      width="100"
-                     style={{marginTop: '10px', width: '80px'}}/>
+                     style={{marginTop: 10, marginBottom: 5, marginLeft: -15, height: 45 }}/>
                 </Typography>
                 {authLinks}
             </Toolbar>

@@ -19,13 +19,14 @@ import { themeDark, themeLight } from "./components/Theme";
 import { ThemeProvider } from "@mui/material";
 import { Provider, useSelector } from "react-redux";
 import store from "./components/layout/Redux/store";
+import { DARK } from "./components/constants";
 
 function App() {
   const storeTheme = useSelector((state) => state.theme);
-  const [theme, setTheme] = useState(storeTheme === 1 ? themeDark : themeLight);
+  const [theme, setTheme] = useState(storeTheme === DARK ? themeDark : themeLight);
   
   useEffect(() => {
-    setTheme(storeTheme === 1 ? themeDark : themeLight);
+    setTheme(storeTheme === DARK ? themeDark : themeLight);
   }, [storeTheme]);
 
   return (
