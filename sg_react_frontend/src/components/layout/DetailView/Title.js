@@ -69,7 +69,6 @@ export default function Title() {
 
     const key = (
         <span style={{ color: 'gray', fontSize: '22px' }}>
-            {type === PROJECT ? <TagIcon style={{ marginRight: 5 }}/> : ''}
             {type === PROJECT ? project.key + ' ' : KEY_(project.key, object.item_number) + ' '}
         </span>
     )
