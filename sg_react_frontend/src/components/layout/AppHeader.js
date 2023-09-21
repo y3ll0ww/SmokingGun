@@ -7,12 +7,11 @@ import PropTypes from "prop-types";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AccountCircle, DarkMode, LightMode, Inbox, Logout } from "@mui/icons-material";
 
-import LogoDark from '../../LogoDark.svg';
-import LogoLight from '../../LogoLight.svg';
+import LogoDark from '../../assets/LogoDark.svg';
+import LogoLight from '../../assets/LogoLight.svg';
 import store from "./Redux/store";
 import * as actions from "./Redux/actionTypes";
 import { useSelector } from "react-redux";
-import { themeDark, themeLight } from "../Theme";
 import { DARK } from "../constants";
 
 const drawerWidth = 240;
