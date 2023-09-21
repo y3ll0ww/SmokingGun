@@ -101,6 +101,10 @@ export function AppHeader({ mobileOpen, setMobileOpen }) {
         store.dispatch({ type: actions.SET_THEME });
     }
 
+    const handleLogoClick = () => {
+        store.dispatch({ type: actions.DESELECT_PROJECT });
+    }
+
     const authLinks = (
         <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
@@ -233,7 +237,8 @@ export function AppHeader({ mobileOpen, setMobileOpen }) {
                     <img src={logo}
                      alt="SmokingGun logo"
                      width="100"
-                     style={{marginTop: 10, marginBottom: 0, width: 150 }}/>
+                     style={{marginTop: 10, marginBottom: 0, width: 150, cursor: 'pointer' }}
+                     onClick={handleLogoClick} />
                 </Typography>
                 {authLinks}
             </Toolbar>

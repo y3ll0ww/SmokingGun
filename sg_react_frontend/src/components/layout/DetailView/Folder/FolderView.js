@@ -9,7 +9,7 @@ import SelectionView from './SelectionView';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
 import InputIcon from '@mui/icons-material/Input';
-import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
@@ -205,7 +205,7 @@ export default function FolderView(props) {
                       <PlaylistAddIcon />
                     </IconButton>
                     <IconButton onClick={() => handleOpenModalAdd(true, FOLDER)}>
-                      <CreateNewFolderIcon />
+                      <CreateNewFolderOutlinedIcon />
                     </IconButton>
                   </div>
                 )}
