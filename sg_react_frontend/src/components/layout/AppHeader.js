@@ -233,7 +233,7 @@ export function AppHeader({ mobileOpen, setMobileOpen }) {
                     <img src={logo}
                      alt="SmokingGun logo"
                      width="100"
-                     style={{marginTop: 10, marginBottom: 5, marginLeft: -15, height: 45 }}/>
+                     style={{marginTop: 10, marginBottom: 0, width: 150 }}/>
                 </Typography>
                 {authLinks}
             </Toolbar>
