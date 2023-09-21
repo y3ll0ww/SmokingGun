@@ -3,7 +3,7 @@ import { Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import { FOLDER, TESTCASE } from "../../../constants";
+import { FOLDER, PRIMARY_COLOR, TESTCASE } from "../../../constants";
 import ModalAdd from "./ModalAdd";
 
 export default function ModalAddAny(props) {
@@ -39,10 +39,10 @@ export default function ModalAddAny(props) {
             <h4 style={{ marginTop: '-5px', marginBottom: '5px', textAlign: 'center' }}>Create a new resource</h4>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                 <IconButton onClick={() => handleClick(FOLDER)}>
-                    <CreateNewFolderIcon style={{ fontSize: '120px', color: 'gray' }} />
+                    <CreateNewFolderIcon style={{ fontSize: '120px', color: 'gray', color: PRIMARY_COLOR }} />
                 </IconButton>
                 <IconButton onClick={() => handleClick(TESTCASE)}>
-                    <PlaylistAddIcon style={{ fontSize: '120px', color: 'gray' }} />
+                    <PlaylistAddIcon style={{ fontSize: '120px', color: 'gray', color: PRIMARY_COLOR }} />
                 </IconButton>
             </div>
         </Box>

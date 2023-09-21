@@ -7,7 +7,7 @@ import PestControlIcon from '@mui/icons-material/PestControl';
 import store from "../../Redux/store";
 import * as actions from "../../Redux/actionTypes";
 import useRequestResource from "../../../../hooks/useRequestResource";
-import { FOLDER, TESTCASE } from "../../../constants";
+import { FOLDER, PRIMARY_COLOR, TESTCASE } from "../../../constants";
 
 
 export default function ModalAdd(props) {
@@ -75,8 +75,8 @@ export default function ModalAdd(props) {
                 onKeyDown={handleKeyDown}
             />
             <IconButton style={{ marginLeft: '7px' }} onClick={handleClick}>
-                {props.type === FOLDER ? <CreateNewFolderIcon style={{ fontSize: '34px' }} /> :
-                 props.type === TESTCASE ? <PlaylistAddIcon style={{ fontSize: '34px' }} /> :
+                {props.type === FOLDER ? <CreateNewFolderIcon style={{ fontSize: '34px', color: PRIMARY_COLOR }} /> :
+                 props.type === TESTCASE ? <PlaylistAddIcon style={{ fontSize: '34px', color: PRIMARY_COLOR }} /> :
                  <PestControlIcon style={{ fontSize: '34px' }} />
                 }
             </IconButton>

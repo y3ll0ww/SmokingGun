@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Box, Card, List, IconButton, Modal, Paper, Button } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, MODALSTYLE, PROJECT, KEY_ } from '../../../constants';
+import { FOLDER, TESTCASE, MODALSTYLE, PROJECT, KEY_, PRIMARY_COLOR } from '../../../constants';
 import ModalAddAny from '../Modal/ModalAddAny';
 import SelectionView from './SelectionView';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
@@ -179,10 +179,10 @@ export default function FolderView(props) {
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginLeft: '3px' }}>
                 <IconButton onClick={handleSelectionMode}>
-                  {selectionMode ? (<LibraryAddCheckIcon />) : (<LibraryAddCheckOutlinedIcon />)}
+                  {selectionMode ? (<LibraryAddCheckIcon style={{ color: PRIMARY_COLOR }}/>) : (<LibraryAddCheckOutlinedIcon style={{ color: PRIMARY_COLOR }}/>)}
                 </IconButton>
                 {selectionMode ? (
-                  <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9 }} onClick={handleSelection}>
+                  <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9, color: PRIMARY_COLOR }} onClick={handleSelection}>
                     {selection.length > 0 ? "Deselect all" : "Select all"}
                   </Button>) : ('')}
               </div>
@@ -190,22 +190,22 @@ export default function FolderView(props) {
                 {selectionMode ? (
                   <div>
                     <IconButton>
-                      <DriveFileMoveIcon />
+                      <DriveFileMoveIcon style={{ color: PRIMARY_COLOR }}/>
                     </IconButton>
-                    <IconButton onClick={handleOpenModalDeleteBulk}>
-                      <DeleteForeverIcon />
+                    <IconButton onClick={handleOpenModalDeleteBulk} >
+                      <DeleteForeverIcon style={{ color: PRIMARY_COLOR }}/>
                     </IconButton>                    
                   </div>
                 ) : (
                   <div>
                     <IconButton>
-                      <UploadFileIcon />
+                      <UploadFileIcon style={{ color: PRIMARY_COLOR }}/>
                     </IconButton>
                     <IconButton onClick={() => handleOpenModalAdd(true, TESTCASE)}>
-                      <PlaylistAddIcon />
+                      <PlaylistAddIcon style={{ color: PRIMARY_COLOR }}/>
                     </IconButton>
                     <IconButton onClick={() => handleOpenModalAdd(true, FOLDER)}>
-                      <CreateNewFolderOutlinedIcon />
+                      <CreateNewFolderOutlinedIcon style={{ color: PRIMARY_COLOR }}/>
                     </IconButton>
                   </div>
                 )}
@@ -246,7 +246,7 @@ export default function FolderView(props) {
                 <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }} style={{ padding: 80 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <IconButton style={{ padding: '35px', margin: '-25px' }} onClick={() => handleOpenModalAdd(false)}>
-                            <InputIcon style={{ color: 'silver', fontSize: '120px' }} />
+                            <InputIcon style={{ color: 'silver', fontSize: '120px', color: PRIMARY_COLOR }} />
                         </IconButton>
                         <h2>No contents</h2>
                         <p style={{ marginTop: '0px', textAlign: 'center', color: 'gray' }}>

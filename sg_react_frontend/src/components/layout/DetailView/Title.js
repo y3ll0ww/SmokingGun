@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Box, IconButton, TextField } from "@mui/material";
-import { PROJECT, KEY_, DATE } from '../../constants';
+import { PROJECT, KEY_, DATE, PRIMARY_COLOR } from '../../constants';
 import TagIcon from '@mui/icons-material/Tag';
 import EditIcon from '@mui/icons-material/Edit';
 import store from "../Redux/store";
@@ -82,7 +82,7 @@ export default function Title() {
                     <React.Fragment>
                         {object.name ? object.name : project.name}
                         <IconButton style={{ marginLeft: '5px' }} onClick={handleEditClick}>
-                            <EditIcon />
+                            <EditIcon style={{ color: PRIMARY_COLOR }}/>
                         </IconButton>
                     </React.Fragment>
                 </h1>

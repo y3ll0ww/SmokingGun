@@ -5,7 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import store from '../Redux/store';
 import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from '../Redux/actionTypes';
-import { PROJECT, FOLDER, TESTCASE, KEY_, TRUNCATE } from '../../constants';
+import { PROJECT, FOLDER, TESTCASE, KEY_, TRUNCATE, PRIMARY_COLOR } from '../../constants';
 
 export default function BreadcrumbsTrail(props) {
     const type = useSelector(state => state.type);
@@ -39,7 +39,7 @@ export default function BreadcrumbsTrail(props) {
                         color='inherit'
                         onClick={handleRootClick}
                         style={{ minWidth: '32px' }}>
-                            <HomeIcon />
+                            <HomeIcon style={{ color: PRIMARY_COLOR }}/>
                     </Button>
                 );
 
@@ -56,10 +56,10 @@ export default function BreadcrumbsTrail(props) {
             const trail = [];
             trail.unshift(
                 <Button
+                    disabled
                     underline='hover'
                     key='home'
                     color='inherit'
-                    onClick={handleRootClick}
                     style={{ minWidth: '32px' }}>
                         <HomeIcon />
                 </Button>

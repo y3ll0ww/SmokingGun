@@ -8,7 +8,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { STEP_ACTION, STEP_RESULT } from '../../../constants';
+import { PRIMARY_COLOR, STEP_ACTION, STEP_RESULT } from '../../../constants';
 import useRequestResource from '../../../../hooks/useRequestResource';
 import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
@@ -113,10 +113,10 @@ export default function TestCaseView() {
       <DragDropContext onDragEnd={onDragEnd}>
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
           <IconButton>
-            <AddLinkIcon />
+            <AddLinkIcon style={{ color: PRIMARY_COLOR }}/>
           </IconButton>
           <IconButton>
-            <AddIcon />
+            <AddIcon style={{ color: PRIMARY_COLOR }}/>
           </IconButton>
         </div>
         {steps.length > 0 ? (
@@ -189,7 +189,7 @@ export default function TestCaseView() {
                   <TableCell colSpan={4}>
                     <Box display="flex" justifyContent="center" alignItems="center" height="100%">
                       <IconButton style={{ margin: 10 }}>
-                        <AddIcon style={{ fontSize: 36 }} />
+                        <AddIcon style={{ fontSize: 36, color: PRIMARY_COLOR }} />
                       </IconButton>
                     </Box>
                   </TableCell>

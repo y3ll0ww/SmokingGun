@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import store from "../Redux/store";
 import * as actions from "../Redux/actionTypes";
 import useRequestResource from "../../../hooks/useRequestResource";
+import { PRIMARY_COLOR } from "../../constants";
 
 export default function Description() {
     const type = useSelector(state => state.type);
@@ -83,7 +84,7 @@ export default function Description() {
                     <IconButton 
                       style={{ marginLeft: 5 }}
                       onClick={handleClick}>
-                        <EditIcon style={{ fontSize: 14 }}/>
+                        <EditIcon style={{ fontSize: 14, color: PRIMARY_COLOR }}/>
                     </IconButton>
                 </Card>
             :

@@ -58,12 +58,10 @@ function App() {
   );
 }
 
-export default function storeProvider() {
+export default function StoreProvider() {
   return (
   <Provider store={store}>
     <App />
   </Provider>
   );
 }
-
-ReactDOM.render(<storeProvider />, document.getElementById("root"))

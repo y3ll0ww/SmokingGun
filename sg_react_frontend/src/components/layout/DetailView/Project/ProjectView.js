@@ -104,7 +104,6 @@ export default function ProjectView() {
               >
                 <div>
                   <p>
-                    <TagIcon style={{ fontSize: 14, color: 'gray', marginRight: 3 }} />
                     <span style={{ color: 'gray', fontSize: '12px' }}>{project.key}</span> {project.name} <span style={{ fontSize: 12, color: 'gray' }}>| last edited {DATE(project.edited_on)}</span>
                   </p>
                 </div>

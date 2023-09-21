@@ -1,7 +1,7 @@
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, ListItem } from "@mui/material";
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { PROJECT } from "../../constants";
+import { PRIMARY_COLOR, PROJECT } from "../../constants";
 
 
 export default function NodeMenu(props) {
@@ -19,16 +19,16 @@ export default function NodeMenu(props) {
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={props.handleCloseOptions}>
+        <ListItem>
           {props.item.type !== PROJECT ? (
             <IconButton onClick={props.handleOpenModalMove}>
-              <DriveFileMoveIcon />
+              <DriveFileMoveIcon style={{ color: PRIMARY_COLOR }}/>
             </IconButton>
           ):''}
           <IconButton onClick={props.handleOpenModalDelete}>
-            <DeleteForeverIcon/>
+            <DeleteForeverIcon style={{ color: PRIMARY_COLOR }}/>
           </IconButton>
-        </MenuItem>
+        </ListItem>
       </Menu>
     )
 }

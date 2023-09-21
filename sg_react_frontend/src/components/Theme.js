@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import "typeface-nunito";
+import { PRIMARY_COLOR, SECONDARY_COLOR } from './constants';
 
 // Install: npm install --save typeface-arial
 // Uninstall: npm uninstall --save typeface-arial
@@ -11,10 +12,10 @@ export const themeDark = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#C02328',
+      main: PRIMARY_COLOR,
     },
     secondary: {
-      main: '#D9D454',
+      main: SECONDARY_COLOR,
     },
   },
 });
@@ -26,10 +27,10 @@ export const themeLight = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#C02328',
+      main: PRIMARY_COLOR,
     },
     secondary: {
-      main: '#D9D454',
+      main: SECONDARY_COLOR,
     },
   },
 });
