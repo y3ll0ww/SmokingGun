@@ -103,7 +103,7 @@ export default function FolderView(props) {
     }
 
     const modal = (
-      <Modal open={modalAdd || modalDeleteBulk || modalMoveBulk} onClose={handleCloseModalAdd}>
+      <Modal open={modalAdd || modalDeleteBulk || modalMoveBulk} onClose={modalAdd ? handleCloseModalAdd : modalDeleteBulk ? handleCloseModalDeleteBulk : handleCloseModalMoveBulk}>
         <Paper
           sx={MODALSTYLE}
           style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}

@@ -109,7 +109,7 @@ export default function ModalDeleteBulk(props) {
                     </div>
                 </div>
             ) : (
-                <div>You don't have anything selected</div>
+                <div style={{ textAlign: 'center' }}>You don't have anything selected.<br/>Select <b>folders</b> or <b>testcases</b> first.</div>
             )}
         </Box>
     );
