@@ -4,6 +4,7 @@ import { Box, TextField } from '@mui/material';
 import useRequestResource from "../../../../hooks/useRequestResource";
 import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
+import { STEP_ACTION, STEP_RESULT } from "../../../constants";
 
 export default function TestStepText(props) {
     const [text, setText] = useState(props.text || "");
@@ -11,12 +12,33 @@ export default function TestStepText(props) {
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState(false);
     const newStepIds = useSelector(state => state.steps.newStepIds);
+    const storeSteps = useSelector(state => state.object.test_steps);
+    const storeEditing = useSelector(state => state.steps.editing);
     const inputRef = useRef(null);
     const resourceLabel = "Teststep";
     const { updateResource } = useRequestResource({ endpoint: `/suite/teststep/update`, resourceLabel: resourceLabel });
     const { addResource } = useRequestResource({ endpoint: "/suite/teststep/create", resourceLabel: resourceLabel });
 
     const handleKeyDown = (event) => {
+        if (event.key === "Tab") {
+            event.stopPropagation();
+            if (props.step === STEP_ACTION) {
+                store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: props.id, step: STEP_RESULT }});
+            } else {
+                for (const step of storeSteps) {
+                    if (props.id === step.id) {
+                        const index = storeSteps.indexOf(step);
+                        try {
+                            
+                            const newId = storeSteps[index+1].id;
+                            store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: newId, step: STEP_ACTION }});
+                        } catch(e) {
+                            props.addStep();
+                        }
+                    }
+                }
+            }
+        }
         if (event.key === "Enter") {
             if (text.length > 500) {
                 event.preventDefault();
@@ -56,6 +78,11 @@ export default function TestStepText(props) {
         handleKeyDown({ key: "Enter" });
     }
 
+    const handleEditing = () => {
+        setIsEditing(true);
+        store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: props.id, step: props.step }});
+    }
+
     useEffect(() => {
         if (isEditing && inputRef.current) {
           inputRef.current.selectionStart = inputRef.current.value.length;
@@ -63,6 +90,12 @@ export default function TestStepText(props) {
           inputRef.current.focus();
         }
     }, [isEditing]);
+
+    useEffect(() => {
+        if (storeEditing.id === props.id && storeEditing.step === props.step) {
+            setIsEditing(true);
+        }
+    }, [storeEditing])
 
     return (
         <Box>
@@ -94,7 +127,7 @@ export default function TestStepText(props) {
                   }}
                 />
             ) : (
-            <Box onClick={() => setIsEditing(true)}>
+            <Box onClick={handleEditing}>
                 {text !== "" && text !== undefined ? (
                   text
                 ) : (

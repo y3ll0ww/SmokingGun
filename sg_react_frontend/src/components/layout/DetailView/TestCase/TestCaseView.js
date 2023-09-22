@@ -16,6 +16,7 @@ import * as actions from '../../Redux/actionTypes';
 export default function TestCaseView() {
   const object = useSelector(state => state.object);
   const [steps, setSteps] = useState([]);
+  const [makeActive, setMakeActive] = useState(false);
   const storeSteps = useSelector(state => state.object.test_steps);
   const newStepIds = useSelector(state => state.steps.newStepIds);
   const { updateOrder } = useRequestResource({ endpoint: '/suite/teststeps/update-order/', resourceLabel: 'teststeps' });
@@ -87,7 +88,18 @@ export default function TestCaseView() {
     const order = storeSteps.length;
     store.dispatch({ type: actions.TESTSTEPS_CREATE_NEW_LINE, payload: { action: '\u200B', result: '\u200B', order: order } });
     setSteps([...storeSteps]);
+    setMakeActive(true);
   };
+
+  useEffect(() => {
+    if (makeActive) {
+      setMakeActive(false);
+      try {
+        const newId = steps[steps.length-1].id;
+        store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: newId, step: STEP_ACTION }});
+      } catch(ignore) {}
+    }
+  }, [steps])
 
   const handleDelete = (id) => {
     if (!newStepIds.includes(id)) {
@@ -153,14 +165,14 @@ export default function TestCaseView() {
                             >
                               <TableCell>{index + 1}.</TableCell>
                               <TableCell>
-                                <TestStepText tc={object.id} id={step.id} text={step.action} step={STEP_ACTION} />
+                                <TestStepText tc={object.id} id={step.id} text={step.action} step={STEP_ACTION} addStep={handleAddNewLine}/>
                               </TableCell>
                               <TableCell>
-                                <TestStepText tc={object.id} id={step.id} text={step.result} step={STEP_RESULT} />
+                                <TestStepText tc={object.id} id={step.id} text={step.result} step={STEP_RESULT} addStep={handleAddNewLine}/>
                               </TableCell>
                               <TableCell>
-                                <IconButton style={{ padding: 0, margin: 2, marginRight: 10 }}>{!step.file ? <UploadIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/> : <AttachFileIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/>}</IconButton>
-                                <IconButton style={{ padding: 0, margin: 2 }} onClick={() => handleDelete(step.id)}><DeleteForeverIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/></IconButton>
+                                {!step.file ? <UploadIcon style={{ padding: 0, margin: 2, fontSize: 20, cursor: 'pointer', color: PRIMARY_COLOR }}/> : <AttachFileIcon style={{ fontSize: 20, cursor: 'pointer', color: PRIMARY_COLOR }}/>}
+                                <DeleteForeverIcon onClick={() => handleDelete(step.id)} style={{ padding: 0, margin: 2, marginLeft: 10, fontSize: 20, cursor: 'pointer', color: PRIMARY_COLOR }}/>
                               </TableCell>
                             </TableRow>
                           )}

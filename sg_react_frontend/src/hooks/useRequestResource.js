@@ -96,8 +96,6 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         const folderIdsParam = data.folders.join(',');
         const testcaseIdsParam = data.testcases.join(',');
         const url = `/api/${endpoint}?folders=[${folderIdsParam}]&testcases=[${testcaseIdsParam}]`;
-
-        console.log(url)
     
         axios.delete(url, getCommonOptions())
             .then(() => {

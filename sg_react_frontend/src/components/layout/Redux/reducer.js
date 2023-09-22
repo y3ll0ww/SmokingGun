@@ -18,6 +18,7 @@ const initialState = {
     selection: [],
     steps: {
         newStepIds: [],
+        editing: {},
         stepUpdate: '',
     }
 };
@@ -127,7 +128,11 @@ export default function reducer (state = initialState, action) {
         case actions.SELECTION: {
             return {
                 ...state,
-                selection: action.payload
+                selection: action.payload,
+                steps: {
+                    ...state.steps,
+                    editing: {}
+                }
             }
         }
         case actions.TREE_SET_FOLDERS: {
@@ -218,6 +223,18 @@ export default function reducer (state = initialState, action) {
                 }
             }
 
+        }
+        case actions.TESTSTEPS_CHANGE_EDITING: {
+            return {
+                ...state,
+                steps: {
+                    ...state.steps,
+                    editing: {
+                        id: action.payload.id,
+                        step: action.payload.step
+                    }
+                }
+            }
         }
         case actions.TESTSTEPS_REORDER_STEPS: {
             return {
