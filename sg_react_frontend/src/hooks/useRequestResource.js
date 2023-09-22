@@ -89,6 +89,27 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
             }).catch(handleRequestResourceError)
     }, [endpoint, resourceList, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading])
 
+    const deleteResources = useCallback((data, successCallback) => {
+        setLoading(true);
+    
+        // Construct the URL with query parameters
+        const folderIdsParam = data.folders.join(',');
+        const testcaseIdsParam = data.testcases.join(',');
+        const url = `/api/${endpoint}?folders=[${folderIdsParam}]&testcases=[${testcaseIdsParam}]`;
+
+        console.log(url)
+    
+        axios.delete(url, getCommonOptions())
+            .then(() => {
+                setLoading(false);
+                enqueueSnackbar(`${resourceLabel} deleted`);
+                if (successCallback) {
+                    successCallback();
+                }
+            })
+            .catch(handleRequestResourceError);
+    }, [endpoint, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading]);
+
     const updateOrder = useCallback((ids, orders, successCallback) => {
         setLoading(true);
         const data = {
@@ -98,7 +119,6 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         axios.put(`/api/${endpoint}`, data, getCommonOptions())
           .then(() => {
             setLoading(false);
-            //enqueueSnackbar(`Order of ${resourceLabel} updated`);
             if (successCallback) {
               successCallback();
             }
@@ -114,6 +134,7 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         getResource,
         updateResource,
         deleteResource,
+        deleteResources,
         updateOrder,
         error
     }

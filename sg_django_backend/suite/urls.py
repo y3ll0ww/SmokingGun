@@ -38,9 +38,10 @@ urlpatterns = [
 
     # Delete
     path('project/delete/<int:pk>/', pro.ProjectDeleteView.as_view(), name='project-delete'),
+    path('bulk/delete/', nav.DeleteFoldersAndTestCasesView.as_view(), name='bulk-delete'),
     path('folder/delete/<int:pk>/', nav.FolderDeleteView.as_view(), name='folder-delete'),
     path('testcase/delete/<int:pk>/', tst.TestCaseDeleteView.as_view(), name='testcase-delete'),
-    path('teststep/delete/<int:pk>/', tst.TestStepDetailView.as_view(), name='teststep-delete')
+    path('teststep/delete/<int:pk>/', tst.TestStepDetailView.as_view(), name='teststep-delete'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

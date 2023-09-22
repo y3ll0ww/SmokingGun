@@ -12,7 +12,7 @@ export default function ModalDeleteBulk(props) {
     const testcases = props.items.filter(item => item.split('_')[0] === TESTCASE);
     const resourceLabel = `${folders.length} folders and ${testcases.length} testcases`;
 
-    const { deleteResource, resource } = useRequestResource({ endpoint: `/suite/${props.type}/delete`, resourceLabel: resourceLabel });
+    const { deleteResources } = useRequestResource({ endpoint: '/suite/bulk/delete/', resourceLabel: resourceLabel });
 
     const handleKeyDown = (event) => {
         if (event.key === "Escape") {
@@ -20,10 +20,17 @@ export default function ModalDeleteBulk(props) {
         }
     };
 
-    const handleClick = (id) => {
+    const handleClick = () => {
         props.handleCloseModal();
-        deleteResource(id);
-        store.dispatch({ type: actions.TREE_UPDATE, payload: { name: props.name } })
+        props.setSelectionMode();
+
+        const selectedFolders = folders.map(folder => parseInt(folder.split('_')[1])) || [];
+        const selectedTestcases = testcases.map(testcase => parseInt(testcase.split('_')[1])) || [];
+
+        const payload = { folders: selectedFolders, testcases: selectedTestcases };
+        
+        deleteResources(payload);
+        store.dispatch({ type: actions.TREE_UPDATE, payload: payload });
     }
 
     const itemList = (items) => {

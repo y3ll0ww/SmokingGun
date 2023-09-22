@@ -96,7 +96,7 @@ export default function FolderView(props) {
         }
         return <ModalAddAny handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} projectId={projectId} />
       } else if (modalDeleteBulk) {
-        return <ModalDeleteBulk handleCloseModal={handleCloseModalDeleteBulk} items={selection} />
+        return <ModalDeleteBulk handleCloseModal={handleCloseModalDeleteBulk} setSelectionMode={handleSelectionMode} items={selection} />
       } else if (modalMoveBulk) {
         return <div></div>
       }

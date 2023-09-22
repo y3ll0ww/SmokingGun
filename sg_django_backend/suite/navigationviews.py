@@ -1,3 +1,5 @@
+import json
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from rest_framework import generics, status
@@ -310,3 +312,30 @@ class TestCaseChangeParentView(generics.UpdateAPIView):
                 sibling.save()
 
         return Response({'success': 'Test case parent changed and order updated.'}, status=status.HTTP_200_OK)
+
+
+class DeleteFoldersAndTestCasesView(generics.DestroyAPIView):
+    def perform_destroy(self, instance):
+        instance.delete()
+
+    def delete(self, request, *args, **kwargs):
+        folder_ids_to_delete = json.loads(request.query_params.get('folders', '[]'))
+        testcase_ids_to_delete = json.loads(request.query_params.get('testcases', '[]'))
+
+        # Delete folders with the specified IDs
+        for folder_id in folder_ids_to_delete:
+            try:
+                folder = Folder.objects.get(id=folder_id)
+                self.perform_destroy(folder)
+            except Folder.DoesNotExist:
+                return Response({'error': f'Folder with ID {folder_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Delete test cases with the specified IDs
+        for testcase_id in testcase_ids_to_delete:
+            try:
+                testcase = TestCase.objects.get(id=testcase_id)
+                self.perform_destroy(testcase)
+            except TestCase.DoesNotExist:
+                return Response({'error': f'Test case with ID {testcase_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({'message': 'Folders and test cases deleted successfully.'}, status=status.HTTP_200_OK)

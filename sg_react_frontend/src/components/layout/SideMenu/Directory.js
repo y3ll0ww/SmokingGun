@@ -89,7 +89,7 @@ export default function Directory() {
     return (
       <Box>
         {addModal}
-        <Alert severity="info" style={{ margin: 10, marginTop: 0 }}>
+        <Alert severity="warning" style={{ margin: 10, marginTop: 0 }}>
           <AlertTitle>Empty project</AlertTitle>
           It looks like this project is empty. You might want to add some <b>folders</b> and <b>testcases</b>.
         </Alert>
@@ -107,7 +107,7 @@ export default function Directory() {
     return (
       <Box>
         {addModal}
-        <Alert severity="warning" style={{ margin: 10, marginTop: 0 }}>
+        <Alert severity="info" style={{ margin: 10, marginTop: 0 }}>
           <AlertTitle>No project selected</AlertTitle>
           There can only exsist <b>folders</b> and <b>testcases</b> within a project. Select a project first, or create a new one.
         </Alert>
