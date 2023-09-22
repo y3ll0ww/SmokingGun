@@ -13,13 +13,14 @@ import ModalMove from "../DetailView/Modal/ModalMove";
 import store from "../Redux/store";
 import useRequestResource from "../../../hooks/useRequestResource";
 import * as actions from "../Redux/actionTypes";
-import { FOLDER, KEY_, TESTCASE, PROJECT, MODALSTYLE } from "../../constants";
+import { FOLDER, KEY_, TESTCASE, PROJECT, MODALSTYLE, PRIMARY_COLOR, SECONDARY_COLOR, SELECTION_COLOR } from "../../constants";
 import { useSelector } from "react-redux";
 import NodeMenu from "./NodeMenu";
 
 
 export default function DirectoryNode(props) {
   const projectKey = useSelector((state) => state.projects.currentProject.key);
+  const currentObjectId = useSelector((state) => state.object.id);
   const padding = props.padding + 'px';
   const type = props.item.type != null ? props.item.type : props.type != null ? props.type : 'typeless';
   const display = props.display != null ? props.display : true; // Prevents weird padding in FolderView
@@ -143,7 +144,7 @@ export default function DirectoryNode(props) {
 
   return (
     <div>
-      <ListItem button onClick={handleClick} style={{ paddingLeft: padding, fontSize: "8px" }}>
+      <ListItem button onClick={handleClick} style={{ paddingLeft: padding, fontSize: "8px", backgroundColor: currentObjectId === item.id ? SELECTION_COLOR : '' }}>
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
         <ListItemText primary={<span><span style={{ color: 'gray', fontSize: '12px' }}>{item.key} </span>{item.name}</span>} />
         {((item.child_folders && item.child_folders.length > 0) || (item.testcases && item.testcases.length > 0)) && (

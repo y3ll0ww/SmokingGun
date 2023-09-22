@@ -1,6 +1,7 @@
 export const DARK = "darkTheme";
 export const LIGHT = "lightTheme";
 export const PRIMARY_COLOR = "#C02328";
+export const SELECTION_COLOR = "rgb(192, 35, 40, 0.25)"
 export const SECONDARY_COLOR = "#D9D454";
 export const PROJECT = "project";
 export const FOLDER = "folder";
