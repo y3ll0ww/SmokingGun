@@ -144,7 +144,7 @@ export default function DirectoryNode(props) {
 
   return (
     <div>
-      <ListItem button onClick={handleClick} style={{ paddingLeft: padding, fontSize: "8px", backgroundColor: currentObjectId === item.id ? SELECTION_COLOR : '' }}>
+      <ListItem button onClick={handleClick} style={{ paddingLeft: padding, fontSize: "8px", backgroundColor: currentObjectId === item.id ? SELECTION_COLOR : '', borderRadius: 5 }}>
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
         <ListItemText primary={<span><span style={{ color: 'gray', fontSize: '12px' }}>{item.key} </span>{item.name}</span>} />
         {((item.child_folders && item.child_folders.length > 0) || (item.testcases && item.testcases.length > 0)) && (
