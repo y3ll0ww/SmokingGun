@@ -159,8 +159,8 @@ export default function TestCaseView() {
                                 <TestStepText tc={object.id} id={step.id} text={step.result} step={STEP_RESULT} />
                               </TableCell>
                               <TableCell>
-                                <IconButton style={{ padding: 0, margin: 2 }}>{!step.file ? <UploadIcon style={{ fontSize: 20 }}/> : <AttachFileIcon style={{ fontSize: 20 }}/>}</IconButton>
-                                <IconButton style={{ padding: 0, margin: 2 }} onClick={() => handleDelete(step.id)}><DeleteForeverIcon style={{ fontSize: 20 }}/></IconButton>
+                                <IconButton style={{ padding: 0, margin: 2, marginRight: 10 }}>{!step.file ? <UploadIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/> : <AttachFileIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/>}</IconButton>
+                                <IconButton style={{ padding: 0, margin: 2 }} onClick={() => handleDelete(step.id)}><DeleteForeverIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/></IconButton>
                               </TableCell>
                             </TableRow>
                           )}
@@ -171,7 +171,7 @@ export default function TestCaseView() {
                   </Table>
                   <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <IconButton style={{ margin: 10 }}>
-                      <AddIcon style={{ fontSize: 36 }} onClick={handleAddNewLine} />
+                      <AddIcon style={{ fontSize: 36, color: PRIMARY_COLOR }} onClick={handleAddNewLine} />
                     </IconButton>
                   </Box>
                 </TableContainer>
@@ -189,7 +189,7 @@ export default function TestCaseView() {
                   <TableCell colSpan={4}>
                     <Box display="flex" justifyContent="center" alignItems="center" height="100%">
                       <IconButton style={{ margin: 10 }}>
-                        <AddIcon style={{ fontSize: 36, color: PRIMARY_COLOR }} />
+                        <AddIcon style={{ fontSize: 36, color: PRIMARY_COLOR }} onClick={handleAddNewLine} />
                       </IconButton>
                     </Box>
                   </TableCell>
