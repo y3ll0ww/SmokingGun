@@ -19,49 +19,63 @@ export default function TestStepText(props) {
     const { updateResource } = useRequestResource({ endpoint: `/suite/teststep/update`, resourceLabel: resourceLabel });
     const { addResource } = useRequestResource({ endpoint: "/suite/teststep/create", resourceLabel: resourceLabel });
 
+
     const handleKeyDown = (event) => {
         if (event.key === "Tab") {
-            event.stopPropagation();
-            if (props.step === STEP_ACTION) {
-                store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: props.id, step: STEP_RESULT }});
-            } else {
-                for (const step of storeSteps) {
-                    if (props.id === step.id) {
-                        const index = storeSteps.indexOf(step);
-                        try {
-                            
-                            const newId = storeSteps[index+1].id;
-                            store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: newId, step: STEP_ACTION }});
-                        } catch(e) {
-                            props.addStep();
-                        }
-                    }
-                }
-            }
+            event.preventDefault();
+            handleNewLine(true);
+            handleNewFocus(props.id);            
         }
         if (event.key === "Enter") {
-            if (text.length > 500) {
-                event.preventDefault();
-                setError("Use at least 5 to 500 characters.");
-            } else if (text === originalText) {
-                handleCancel();
-            }
-            else {
-                if (!newStepIds.includes(props.id)) {
-                    updateResource(props.id, { [props.step]: text });
-                    setOriginalText(text);
-                } else {
-                    store.dispatch({ type: actions.TESTSTEPS_ADD_NEW_LINE, payload: props.id });
-                    addResource({ testcase: props.tc, [props.step]: text });
-                }
-                setIsEditing(false);
-                setError("");
-            }
+            event.preventDefault();
+            handleNewLine();
         }
         if (event.key === "Escape") {
             handleCancel();
         }
     };
+
+    const handleNewLine = (tab=false) => {
+        if (text.length > 500) {
+            setError("Use at least 5 to 500 characters.");
+        } else if (text === originalText) {
+            handleCancel();
+        } else {
+            if (!newStepIds.includes(props.id)) {
+                updateResource(props.id, { [props.step]: text });
+                setOriginalText(text);
+            } else {
+                // When STEP_RESULT => No new line and focus
+                store.dispatch({ type: actions.TESTSTEPS_ADD_NEW_LINE, payload: props.id });
+                addResource({ testcase: props.tc, [props.step]: text }, (response) => {
+                    if (tab) {
+                        handleNewFocus(response.id);
+                    }
+                });
+            }
+            setIsEditing(false);
+            setError("");
+        }
+    }
+
+    const handleNewFocus = (stepId) => {
+        if (props.step === STEP_ACTION) {
+            store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: stepId, step: STEP_RESULT }});
+        } else {
+            for (const step of storeSteps) {
+                if (stepId === step.id) {
+                    const index = storeSteps.indexOf(step);
+                    try {
+                        
+                        const newId = storeSteps[index+1].id;
+                        store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: newId, step: STEP_ACTION }});
+                    } catch(e) {
+                        props.addStep();
+                    }
+                }
+            }
+        }
+    }
 
     const handleChange = (event) => {
         const updatedText = event.target.value;
@@ -75,7 +89,7 @@ export default function TestStepText(props) {
     };
 
     const handleClick = () => {
-        handleKeyDown({ key: "Enter" });
+        handleNewLine();
     }
 
     const handleEditing = () => {
@@ -92,9 +106,12 @@ export default function TestStepText(props) {
     }, [isEditing]);
 
     useEffect(() => {
-        if (storeEditing.id === props.id && storeEditing.step === props.step) {
-            setIsEditing(true);
-        }
+        try {
+            if (storeEditing.id === props.id && storeEditing.step === props.step) {
+                setIsEditing(true);
+            }
+        } catch (TypeError) {}
+        
     }, [storeEditing])
 
     return (

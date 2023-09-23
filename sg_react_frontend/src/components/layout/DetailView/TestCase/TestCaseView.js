@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Card, IconButton, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import { Box, Card, IconButton, TableContainer, Table, TableBody, TableRow, TableCell } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TestStepText from './TestStepText';
 import AddIcon from '@mui/icons-material/Add';
@@ -107,6 +107,7 @@ export default function TestCaseView() {
     }
     const stepsMinusDeleted = steps.filter(step => step.id !== id);
     store.dispatch({ type: actions.TESTSTEPS_DELETE_STEP, payload: { steps: stepsMinusDeleted, id: id } });
+    setSteps(stepsMinusDeleted);
   }
 
   const TableHead = () => {
@@ -171,8 +172,12 @@ export default function TestCaseView() {
                                 <TestStepText tc={object.id} id={step.id} text={step.result} step={STEP_RESULT} addStep={handleAddNewLine}/>
                               </TableCell>
                               <TableCell>
-                                {!step.file ? <UploadIcon style={{ padding: 0, margin: 2, fontSize: 20, cursor: 'pointer', color: PRIMARY_COLOR }}/> : <AttachFileIcon style={{ fontSize: 20, cursor: 'pointer', color: PRIMARY_COLOR }}/>}
-                                <DeleteForeverIcon onClick={() => handleDelete(step.id)} style={{ padding: 0, margin: 2, marginLeft: 10, fontSize: 20, cursor: 'pointer', color: PRIMARY_COLOR }}/>
+                                <IconButton style={{ padding: 0, margin: 2 }}>
+                                  {!step.file ? <UploadIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/> : <AttachFileIcon style={{ fontSize: 20, color: PRIMARY_COLOR }}/>}
+                                </IconButton>
+                                <IconButton style={{ padding: 0, margin: 2, marginLeft: 10 }}>
+                                  <DeleteForeverIcon onClick={() => handleDelete(step.id)} style={{ fontSize: 20, color: PRIMARY_COLOR }}/>
+                                </IconButton>
                               </TableCell>
                             </TableRow>
                           )}
