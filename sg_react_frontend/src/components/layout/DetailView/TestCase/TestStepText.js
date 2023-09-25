@@ -45,11 +45,13 @@ export default function TestStepText(props) {
                 updateResource(props.id, { [props.step]: text });
                 setOriginalText(text);
             } else {
-                // When STEP_RESULT => No new line and focus
                 store.dispatch({ type: actions.TESTSTEPS_ADD_NEW_LINE, payload: props.id });
                 addResource({ testcase: props.tc, [props.step]: text }, (response) => {
                     if (tab) {
                         handleNewFocus(response.id);
+                        if (props.step === STEP_RESULT) {
+                            props.tabEnd();
+                        }
                     }
                 });
             }
@@ -66,7 +68,6 @@ export default function TestStepText(props) {
                 if (stepId === step.id) {
                     const index = storeSteps.indexOf(step);
                     try {
-                        
                         const newId = storeSteps[index+1].id;
                         store.dispatch({ type: actions.TESTSTEPS_CHANGE_EDITING, payload: { id: newId, step: STEP_ACTION }});
                     } catch(e) {

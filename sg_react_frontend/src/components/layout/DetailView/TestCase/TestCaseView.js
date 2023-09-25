@@ -17,6 +17,7 @@ export default function TestCaseView() {
   const object = useSelector(state => state.object);
   const [steps, setSteps] = useState([]);
   const [makeActive, setMakeActive] = useState(false);
+  const [tabEnd, setTabEnd] = useState(false);
   const storeSteps = useSelector(state => state.object.test_steps);
   const newStepIds = useSelector(state => state.steps.newStepIds);
   const { updateOrder } = useRequestResource({ endpoint: '/suite/teststeps/update-order/', resourceLabel: 'teststeps' });
@@ -27,6 +28,10 @@ export default function TestCaseView() {
 
   useEffect(() => {
     setSteps(storeSteps);
+    if (tabEnd) {
+      setTabEnd(false);
+      handleAddNewLine();
+    }
   }, [storeSteps]);
 
   function reOrderSteps(result, currentSteps) {
@@ -169,7 +174,7 @@ export default function TestCaseView() {
                                 <TestStepText tc={object.id} id={step.id} text={step.action} step={STEP_ACTION} addStep={handleAddNewLine}/>
                               </TableCell>
                               <TableCell>
-                                <TestStepText tc={object.id} id={step.id} text={step.result} step={STEP_RESULT} addStep={handleAddNewLine}/>
+                                <TestStepText tc={object.id} id={step.id} text={step.result} step={STEP_RESULT} addStep={handleAddNewLine} tabEnd={() => setTabEnd(true)}/>
                               </TableCell>
                               <TableCell>
                                 <IconButton style={{ padding: 0, margin: 2 }}>
