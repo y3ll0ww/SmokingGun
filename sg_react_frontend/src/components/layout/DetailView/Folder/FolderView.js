@@ -220,14 +220,14 @@ export default function FolderView(props) {
                   {(provided, snapshot) => (
                     <Box {...provided.droppableProps} ref={provided.innerRef}>
                       {nodes.map((node, index) => (
-                        <Draggable draggableId={`${node.id}-${node.type}`} index={index} key={`${node.id}-${node.type}`}>
+                        <Draggable draggableId={`${node.id}_${node.type}`} index={index} key={`${node.id}_${node.type}`}>
                           {(provided, snapshot) => (
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <DirectoryNode key={`${node.id}-${node.type}`} item={{ ...node }} padding={20} type={node.type} display={false} />
+                              <DirectoryNode key={`${node.id}_${node.type}`} item={{ ...node }} padding={20} type={node.type} display={false} />
                             </div>
                           )}
                         </Draggable>
