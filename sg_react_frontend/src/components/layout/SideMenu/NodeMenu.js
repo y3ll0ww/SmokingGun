@@ -5,6 +5,24 @@ import { PRIMARY_COLOR, PROJECT } from "../../constants";
 
 
 export default function NodeMenu(props) {
+    const MOVE = 'move';
+    const DELETE = 'delete';
+
+    const handleOptionClick = (action) => {
+      props.handleCloseOptions();
+      
+      switch (action) {
+        case MOVE: {
+          props.handleOpenModalMove();
+          break;
+        }
+        case DELETE: {
+          props.handleOpenModalDelete();
+          break;
+        }
+      }
+    };
+
     return (
         <Menu
         anchorEl={props.anchorEl}
@@ -21,11 +39,11 @@ export default function NodeMenu(props) {
       >
         <ListItem>
           {props.item.type !== PROJECT ? (
-            <IconButton onClick={props.handleOpenModalMove}>
+            <IconButton onClick={() => handleOptionClick(MOVE)}>
               <DriveFileMoveIcon style={{ color: PRIMARY_COLOR }}/>
             </IconButton>
           ):''}
-          <IconButton onClick={(event) => { event.stopPropagation(); props.handleOpenModalDelete(); }}>
+          <IconButton onClick={(event) => { event.stopPropagation(); handleOptionClick(DELETE); }}>
             <DeleteForeverIcon style={{ color: PRIMARY_COLOR }}/>
           </IconButton>
         </ListItem>
