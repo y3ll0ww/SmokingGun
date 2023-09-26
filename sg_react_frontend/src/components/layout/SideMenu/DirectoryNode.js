@@ -21,6 +21,7 @@ import NodeMenu from "./NodeMenu";
 export default function DirectoryNode(props) {
   const projectKey = useSelector((state) => state.projects.currentProject.key);
   const currentObjectId = useSelector((state) => state.object.id);
+  const currentObjectType = useSelector((state) => state.object.type);
   const padding = props.padding + 'px';
   const type = props.item.type != null ? props.item.type : props.type != null ? props.type : 'typeless';
   const display = props.display != null ? props.display : true; // Prevents weird padding in FolderView
@@ -141,10 +142,14 @@ export default function DirectoryNode(props) {
           }
       }
   }, [resource])
-
+  
   return (
     <div>
-      <ListItem button onClick={handleClick} style={{ paddingLeft: padding, fontSize: "8px", backgroundColor: currentObjectId === item.id ? SELECTION_COLOR : '', borderRadius: 5 }}>
+      <ListItem button onClick={handleClick} style={{ 
+              paddingLeft: padding, 
+              fontSize: "8px", 
+              backgroundColor: currentObjectId === item.id && currentObjectType === item.type ? SELECTION_COLOR : '', 
+              borderRadius: 5 }}>
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
         <ListItemText primary={<span><span style={{ color: 'gray', fontSize: '12px' }}>{item.key} </span>{item.name}</span>} />
         {((item.child_folders && item.child_folders.length > 0) || (item.testcases && item.testcases.length > 0)) && (
