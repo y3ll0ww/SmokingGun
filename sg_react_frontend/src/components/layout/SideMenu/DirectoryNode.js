@@ -155,7 +155,7 @@ export default function DirectoryNode(props) {
       <ListItem button onClick={handleClick} style={{ 
               paddingLeft: padding, 
               fontSize: "8px", 
-              backgroundColor: currentObjectId === item.id && currentObjectType === item.type ? SELECTION_COLOR : '', 
+              backgroundColor: currentObjectId === item.id && currentObjectType === item.type && item.type !== PROJECT ? SELECTION_COLOR : '', 
               borderRadius: 5 }}>
         {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
         <ListItemText primary={<span><span style={{ color: 'gray', fontSize: '12px' }}>{item.key} </span>{item.name}</span>} />

@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Box, List, Alert, AlertTitle, ListItem, ListItemIcon, ListItemText, Modal, Paper } from "@mui/material";
 import DirectoryNode from "./DirectoryNode";
 import { useSelector } from "react-redux";
+import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import useRequestResource from '../../../hooks/useRequestResource';
-import { PROJECT, FOLDER, TESTCASE, MODALSTYLE } from "../../constants";
+import { PROJECT, FOLDER, TESTCASE, MODALSTYLE, PRIMARY_COLOR } from "../../constants";
 import ModalAdd from "../DetailView/Modal/ModalAdd";
 import ModalAddProject from "../DetailView/Modal/ModalAddProject";
 import store from "../Redux/store";
@@ -17,12 +18,19 @@ export default function Directory() {
   const [treeItems, setTreeItems] = useState([]);
   const treeUpdate = useSelector((state) => state.tree.treeUpdate);
   const projectId = useSelector((state) => state.projects.currentProject.id);
+  const projectName = useSelector((state) => state.projects.currentProject.name);
+  const currentObjectType = useSelector((state) => state.object.type);
   const availableProjects = useSelector((state => state.projects.availableProjects));
   const [nodeProjects, setNodeProjects] = useState([]);
   const [modalAdd, setModalAdd] = useState(false);
   const [addType, setAddType] = useState();
   const { getResource: getRootResource, resource: rootResource } = useRequestResource({ endpoint: `/suite/root/tree/${projectId}` });
   const { getResource: getProjectsResource, resource: projectsResource } = useRequestResource({ endpoint: '/suite/projects/' });
+
+  const handleClickRoot = () => {
+    store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
+    store.dispatch({ type: actions.TREE_UPDATE, payload: projectName });
+  }
 
   useEffect(() => {
     if (projectId > 0) {
@@ -78,6 +86,17 @@ export default function Directory() {
   if (treeItems.length > 0) {
     return (
       <List style={{ fontSize: "8px" }}>
+        <ListItem button onClick={handleClickRoot} style={{ 
+              paddingLeft: 10, 
+              fontSize: 8,
+              borderRadius: 5 
+            }}>
+                <ListItemIcon><HomeIcon style={{ color: currentObjectType === PROJECT ? PRIMARY_COLOR : '',  }}/></ListItemIcon>
+                <ListItemText>
+                  <b>{projectName}</b>
+                </ListItemText>
+
+        </ListItem>
         {treeItems.map((item) => (
           <div key={item.key}>
             <DirectoryNode key={item.id} item={item} padding={10} />
