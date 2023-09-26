@@ -7,10 +7,13 @@ import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { NavLink } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import { FOLDER, TESTCASE } from "../../constants";
+import store from "../Redux/store";
+import * as actions from "../Redux/actionTypes";
 
 
 export default function Tools(props) {
     const projectId = useSelector(state => state.projects.currentProject.id);
+    const openNodes = useSelector(state => state.tree.openNodes);
     const [isDisabled, setIsDisabled] = useState(true);
 
     useEffect(() => {
@@ -21,6 +24,15 @@ export default function Tools(props) {
         }
     }, [projectId])
 
+    const handleExpandCollapseAll = () => {
+      const hasRootNodes = openNodes.some(node => node.root);
+
+      if (!hasRootNodes) {
+        store.dispatch({ type: actions.TREE_EXPAND_ALL });
+      } else {
+        store.dispatch({ type: actions.TREE_COLLAPSE_ALL });
+      }
+    }
 
     return (
         <NavLink
@@ -45,7 +57,7 @@ export default function Tools(props) {
               </IconButton>
             </ListItem>
             <ListItem style={{ marginRight: -10, padding: 1, cursor: isDisabled ? 'default' : '' }}>
-              <IconButton disabled={isDisabled}>
+              <IconButton disabled={isDisabled} onClick={handleExpandCollapseAll}>
                 <UnfoldMoreIcon style={{ color: isDisabled ? 'gray' : '' }} />
               </IconButton>
             </ListItem>

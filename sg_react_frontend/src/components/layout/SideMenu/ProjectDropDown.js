@@ -43,6 +43,7 @@ export default function ProjectDropDown() {
   useEffect(() => {
     if (projectId > 0) {
         store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
+        store.dispatch({ type: actions.TREE_COLLAPSE_ALL })
     } else {
         store.dispatch({ type: actions.DESELECT_PROJECT });
     }

@@ -49,11 +49,10 @@ export default function DirectoryNode(props) {
   const handleExpandCollapse = (event) => {
     event.stopPropagation();
     if (open) {
-      store.dispatch({ type: actions.TREE_COLLAPSE_NODE, payload: { nodeId: props.item.id } })
+      store.dispatch({ type: actions.TREE_COLLAPSE_NODE, payload: props.item })
     } else {
-      store.dispatch({ type: actions.TREE_EXPAND_NODE, payload: { nodeId: props.item.id } })
+      store.dispatch({ type: actions.TREE_EXPAND_NODE, payload: props.item })
     }
-    setOpen(!open);
   };
 
   const handleOpenOptions = (event) => {
@@ -64,6 +63,14 @@ export default function DirectoryNode(props) {
   const handleCloseOptions = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    if (openNodes.some(node => node.id === props.item.id)) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [openNodes])
 
   // Handling modal options
   const [modalDelete, setModalDelete] = React.useState(false);

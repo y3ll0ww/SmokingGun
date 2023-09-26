@@ -44,7 +44,24 @@ const createFolderTree = (data, parentId = null) => {
     }
   
     return folderTree;
-  };
+};
+
+const getAllExpandableNodes = (data) => {
+    const expandableFolders = [];
+
+    function processFolders(folders, isRoot) {
+        for (const folder of folders) {
+            if (folder.child_folders && folder.child_folders.length > 0) {
+                folder.root = isRoot;
+                expandableFolders.push(folder);
+                processFolders(folder.child_folders, false);
+            }
+        }
+    }
+
+    processFolders(data, true);
+    return expandableFolders;
+}
 
 export default function reducer (state = initialState, action) {
     console.log(action.payload);
@@ -146,9 +163,29 @@ export default function reducer (state = initialState, action) {
                 }
             }
         }
+        case actions.TREE_EXPAND_ALL: {
+            const allFolderIds = getAllExpandableNodes(state.tree.folders);
+            
+            return {
+                ...state,
+                tree: {
+                    ...state.tree,
+                    openNodes: allFolderIds
+                }
+            }
+        }
+        case actions.TREE_COLLAPSE_ALL: {
+            return {
+                ...state,
+                tree: {
+                    ...state.tree,
+                    openNodes: []
+                }
+            }
+        }
         case actions.TREE_EXPAND_NODE: {
-            const { nodeId } = action.payload;
-            const updatedOpenNodes = [...state.tree.openNodes, nodeId];
+            const updatedOpenNodes = [...state.tree.openNodes, action.payload];
+
             return {
                 ...state,
                 tree: {
@@ -158,10 +195,10 @@ export default function reducer (state = initialState, action) {
             }
         }
         case actions.TREE_COLLAPSE_NODE: {
-            const { nodeId } = action.payload;
             const updatedOpenNodes = state.tree.openNodes.filter(
-                (node) => node !== nodeId
+                (node) => node !== action.payload
             );
+            
             return {
                 ...state,
                 tree: {
