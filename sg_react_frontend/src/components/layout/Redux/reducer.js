@@ -51,10 +51,12 @@ const getAllExpandableNodes = (data) => {
 
     function processFolders(folders, isRoot) {
         for (const folder of folders) {
+            folder.root = isRoot;
             if (folder.child_folders && folder.child_folders.length > 0) {
-                folder.root = isRoot;
                 expandableFolders.push(folder);
                 processFolders(folder.child_folders, false);
+            } else if (folder.testcases && folder.testcases.length > 0) {
+                expandableFolders.push(folder);
             }
         }
     }
@@ -196,9 +198,9 @@ export default function reducer (state = initialState, action) {
         }
         case actions.TREE_COLLAPSE_NODE: {
             const updatedOpenNodes = state.tree.openNodes.filter(
-                (node) => node !== action.payload
+                (node) => node.id !== action.payload.id
             );
-            
+
             return {
                 ...state,
                 tree: {

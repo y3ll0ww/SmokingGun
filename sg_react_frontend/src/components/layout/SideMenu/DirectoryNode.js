@@ -174,7 +174,7 @@ export default function DirectoryNode(props) {
         </IconButton>
       </ListItem>
       {open && display && (
-        <List>
+        <List style={{ paddingTop: 0, paddingBottom: 0 }}>
           {item.child_folders &&
             item.child_folders.map((child) => (
               <DirectoryNode key={child.id} item={child} padding={props.padding + 30} />
