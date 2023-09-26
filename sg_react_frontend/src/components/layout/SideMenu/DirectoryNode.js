@@ -38,7 +38,8 @@ export default function DirectoryNode(props) {
             <PestControlIcon />,
       item_number: props.item.item_number,
       child_folders: props.item.child_folders,
-      testcases: props.item.testcases
+      testcases: props.item.testcases,
+      parent_folder: type === FOLDER ? props.item.parent_folder : props.item.folder
     };
 
   // Handling the opening and closing of the folders
@@ -115,7 +116,7 @@ export default function DirectoryNode(props) {
                     display: none;
                 }`}
             </style>
-            <ModalMove handleCloseModal={handleCloseModalMove} name={item.name} type={type} id={item.id} item_number={item.item_number} />
+            <ModalMove handleCloseModal={handleCloseModalMove} item={item} />
       </Paper>
     </Modal>
   )

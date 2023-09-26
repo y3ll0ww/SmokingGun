@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, List, Alert, AlertTitle, ListItem, ListItemIcon, ListItemText, Modal, Paper } from "@mui/material";
 import DirectoryNode from "./DirectoryNode";
 import { useSelector } from "react-redux";
-import HomeIcon from '@mui/icons-material/Home';
+import TagIcon from '@mui/icons-material/Tag';
 import AddIcon from '@mui/icons-material/Add';
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
@@ -91,7 +91,7 @@ export default function Directory() {
               fontSize: 8,
               borderRadius: 5 
             }}>
-                <ListItemIcon><HomeIcon style={{ color: currentObjectType === PROJECT ? PRIMARY_COLOR : '',  }}/></ListItemIcon>
+                <ListItemIcon><TagIcon style={{ color: currentObjectType === PROJECT ? PRIMARY_COLOR : '',  }}/></ListItemIcon>
                 <ListItemText>
                   <b>{projectName}</b>
                 </ListItemText>
