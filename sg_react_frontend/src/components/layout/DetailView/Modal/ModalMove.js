@@ -92,7 +92,9 @@ export default function ModalMove(props) {
             }}>
                 <ListItem button onClick={() => handleClick(0)} style={{ paddingLeft: padding, fontSize: "8px" }}>
                     <ListItemIcon><TagIcon /></ListItemIcon>
-                    <ListItemText><span style={{ color: 'gray', fontSize: '12px' }}>{projectKey} </span><span style={{ fontWeight: 550 }}>{projectName}</span> <span style={{ color: 'gray' }}>(root)</span></ListItemText>
+                    <ListItemText><span style={{ color: 'gray', fontSize: '12px' }}>
+                        {projectKey} </span><span style={{ fontWeight: 550 }}>{projectName}</span> <span style={{ color: 'gray' }}>{props.item.parent_folder === null ? '(parent)' : '(root)'}</span>
+                    </ListItemText>
                 </ListItem>
                 {treeFolders.map((folder) => (folderNode(folder)))}
             </Paper>
