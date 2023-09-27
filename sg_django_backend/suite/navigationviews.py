@@ -240,9 +240,6 @@ class FolderChangeParentView(generics.UpdateAPIView):
         folder_id = kwargs.get('pk')
         new_parent_folder_id = request.data.get('parent_folder')
 
-        print("QWERTYYY" + str(folder_id))
-        print("QWERTYYY" + str(new_parent_folder_id))
-
         try:
             folder = Folder.objects.get(id=folder_id)
         except Folder.DoesNotExist:
@@ -339,3 +336,60 @@ class DeleteFoldersAndTestCasesView(generics.DestroyAPIView):
                 return Response({'error': f'Test case with ID {testcase_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({'message': 'Folders and test cases deleted successfully.'}, status=status.HTTP_200_OK)
+
+
+class ChangeParentFoldersAndTestCasesView(generics.UpdateAPIView):
+    def update(self, request, *args, **kwargs):
+        new_parent_folder_id = request.data.get('parent_folder')
+        folder_ids_to_update = request.data.get('folders', [])
+        testcase_ids_to_update = request.data.get('testcases', [])
+
+        if new_parent_folder_id != 0:
+            try:
+                new_parent_folder = Folder.objects.get(id=new_parent_folder_id)
+            except Folder.DoesNotExist:
+                return Response({'error': 'New parent folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            new_parent_folder = None
+
+        # Update folders with the specified IDs
+        folder_order = 0
+        for folder_id in folder_ids_to_update:
+            try:
+                folder = Folder.objects.get(id=folder_id)
+                with transaction.atomic():
+                    folder.parent_folder = new_parent_folder
+                    folder.order = folder_order
+                    folder.save()
+                folder_order += 1
+            except Folder.DoesNotExist:
+                return Response({'error': f'Folder with ID {folder_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Increment the order for other folders with the same parent folder
+        folder_siblings = Folder.objects.filter(parent_folder=new_parent_folder).exclude(id__in=folder_ids_to_update).order_by('order')
+        for index, sibling in enumerate(folder_siblings, start=len(folder_ids_to_update)):
+            print('folder: ' + str(sibling.id))
+            sibling.order = index
+            sibling.save()
+
+        # Update test cases with the specified IDs
+        testcase_order = 0
+        for testcase_id in testcase_ids_to_update:
+            try:
+                testcase = TestCase.objects.get(id=testcase_id)
+                with transaction.atomic():
+                    testcase.folder = new_parent_folder
+                    testcase.order = testcase_order
+                    testcase.save()
+                testcase_order += 1
+            except TestCase.DoesNotExist:
+                return Response({'error': f'Test case with ID {testcase_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Increment the order for other testcases with the same parent folder
+        testcase_siblings = TestCase.objects.filter(folder=new_parent_folder).exclude(id__in=testcase_ids_to_update).order_by('order')
+        for index, sibling in enumerate(testcase_siblings, start=len(testcase_ids_to_update)):
+            print('testcase: ' + str(sibling.id))
+            sibling.order = index
+            sibling.save()
+
+        return Response({'message': 'Folders and test cases moved successfully.'}, status=status.HTTP_200_OK)

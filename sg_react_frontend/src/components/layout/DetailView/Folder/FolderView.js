@@ -19,6 +19,7 @@ import useRequestResource from '../../../../hooks/useRequestResource';
 import store from '../../Redux/store';
 import * as actions from "../../Redux/actionTypes";
 import ModalDeleteBulk from '../Modal/ModalDeleteBulk';
+import ModalMoveBulk from '../Modal/ModalMoveBulk';
 
 
 export default function FolderView(props) {
@@ -90,15 +91,16 @@ export default function FolderView(props) {
     }
 
     const decideModal = () => {
+      const parent = object.type === PROJECT ? null : object.id;
       if (modalAdd) {
         if (direct) {
-          return <ModalAdd handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} type={type} projectId={projectId} />
+          return <ModalAdd handleCloseModal={handleCloseModalAdd} parent_folder={parent} type={type} projectId={projectId} />
         }
-        return <ModalAddAny handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} projectId={projectId} />
+        return <ModalAddAny handleCloseModal={handleCloseModalAdd} parent_folder={parent} projectId={projectId} />
       } else if (modalDeleteBulk) {
         return <ModalDeleteBulk handleCloseModal={handleCloseModalDeleteBulk} setSelectionMode={handleSelectionMode} items={selection} />
       } else if (modalMoveBulk) {
-        return <div></div>
+        return <ModalMoveBulk handleCloseModal={handleCloseModalMoveBulk} setSelectionMode={handleSelectionMode} items={selection} parent_folder={parent} />
       }
     }
 
@@ -189,7 +191,7 @@ export default function FolderView(props) {
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end', marginRight: '10px' }}>
                 {selectionMode ? (
                   <div>
-                    <IconButton>
+                    <IconButton onClick={handleOpenModalMoveBulk}>
                       <DriveFileMoveIcon style={{ color: PRIMARY_COLOR }}/>
                     </IconButton>
                     <IconButton onClick={handleOpenModalDeleteBulk} >

@@ -74,6 +74,19 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
             }).catch(handleRequestResourceError)
     }, [endpoint, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading])
 
+    const updateResources = useCallback((data, successCallback) => {
+        setLoading(true);
+        axios.put(`/api/${endpoint}/`, data, getCommonOptions())
+            .then(() => {
+                setLoading(false);
+                enqueueSnackbar(`${resourceLabel} updated`)
+                if (successCallback) {
+                    successCallback();
+                }
+            })
+            .catch(handleRequestResourceError);
+    }, [endpoint, handleRequestResourceError, setLoading]);
+
     const deleteResource = useCallback((id) => {
         setLoading(true);
         axios.delete(`/api/${endpoint}/${id}/`, getCommonOptions())
@@ -131,6 +144,7 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         resource,
         getResource,
         updateResource,
+        updateResources,
         deleteResource,
         deleteResources,
         updateOrder,

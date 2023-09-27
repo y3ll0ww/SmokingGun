@@ -28,6 +28,7 @@ export default function Directory() {
   const { getResource: getProjectsResource, resource: projectsResource } = useRequestResource({ endpoint: '/suite/projects/' });
 
   const handleClickRoot = () => {
+    store.dispatch({ type: actions.SELECTION, payload: [] })
     store.dispatch({ type: actions.SET_PROJECT, payload: projectId });
     store.dispatch({ type: actions.TREE_UPDATE, payload: projectName });
   }
