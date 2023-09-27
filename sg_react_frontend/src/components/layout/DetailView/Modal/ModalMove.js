@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, IconButton, Alert, Paper, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { KEY_, FOLDER } from "../../../constants";
+import { KEY_, FOLDER, PRIMARY_COLOR } from "../../../constants";
 import { useSelector } from "react-redux";
 import  TagIcon from '@mui/icons-material/Tag';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -50,7 +50,7 @@ export default function ModalMove(props) {
                         primary={
                             <span>
                                 <span style={{ color: 'gray', fontSize: '12px' }}>{KEY_(projectKey, folder.item_number)} </span>
-                                {folder.name} {props.item.id === folder.id && props.item.type === FOLDER ? (<span style={{ color: 'gray' }}>(selected)</span>
+                                {folder.name} {props.item.id === folder.id && props.item.type === FOLDER ? (<span style={{ color: PRIMARY_COLOR }}>(selected)</span>
                                 ) : props.item.parent_folder === folder.id ? (<span style={{ color: 'gray' }}>(parent)</span>
                                 ) : null}
                             </span>} />
@@ -87,8 +87,8 @@ export default function ModalMove(props) {
                 </Alert>
             )}
             <Paper variant="outlined" style={{
-                maxHeight: 300, // Set your desired height
-                overflow: 'auto', // Add a scrollbar when content overflows
+                maxHeight: 300,
+                overflow: 'auto',
             }}>
                 <ListItem button onClick={() => handleClick(0)} style={{ paddingLeft: padding, fontSize: "8px" }}>
                     <ListItemIcon><TagIcon /></ListItemIcon>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Box, Drawer, Toolbar, List, Divider, GlobalStyles, useTheme, Paper, Modal } from "@mui/material";
+import { Box, Drawer, Toolbar, Divider, GlobalStyles, useTheme, Paper, Modal } from "@mui/material";
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import ProjectDropDown from "./ProjectDropDown";
 import Tools from "./Tools";
@@ -134,9 +134,12 @@ export function SideMenu(props) {
             color: 'lightgray',  
             cursor: 'col-resize' }}/>
       </Box>
-      <List>
+      <Box style={{ overflowY: "auto" }}>
+        <style>{`::-webkit-scrollbar {
+          display: none;
+        }`}</style>
         <Directory />
-      </List>
+      </Box>
     </Box>
   );
 

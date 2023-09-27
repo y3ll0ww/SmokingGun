@@ -86,10 +86,7 @@ export default function Directory() {
   
   if (treeItems.length > 0) {
     return (
-      <List style={{ fontSize: "8px", overflowY: "auto" }}>
-        <style>{`::-webkit-scrollbar {
-          display: none;
-        }`}</style>
+      <List style={{ fontSize: "8px" }}>
         <ListItem button onClick={handleClickRoot} style={{ 
               paddingLeft: 10, 
               fontSize: 8,
@@ -128,10 +125,7 @@ export default function Directory() {
     );
   } else {
     return (
-      <Box style={{ overflowY: "auto" }}>
-        <style>{`::-webkit-scrollbar {
-          display: none;
-        }`}</style>
+      <Box>
         {addModal}
         <Alert severity="info" style={{ margin: 10, marginTop: 0 }}>
           <AlertTitle>No project selected</AlertTitle>

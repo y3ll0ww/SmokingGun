@@ -4,7 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FolderIcon from "@mui/icons-material/Folder";
 import TurnLeftIcon from "@mui/icons-material/TurnLeft";
 import TagIcon from "@mui/icons-material/Tag";
-import { KEY_, FOLDER, TESTCASE } from "../../../constants";
+import { KEY_, FOLDER, TESTCASE, PRIMARY_COLOR } from "../../../constants";
 import useRequestResource from "../../../../hooks/useRequestResource";
 import store from "../../Redux/store";
 import * as actions from "../../Redux/actionTypes";
@@ -60,8 +60,8 @@ export default function ModalMoveBulk(props) {
                         primary={
                             <span>
                                 <span style={{ color: 'gray', fontSize: '12px' }}>{KEY_(projectKey, folder.item_number)} </span>
-                                {folder.name} {selectedFolders.includes(folder.id) ? (<span style={{ color: 'gray' }}>(selected)</span>
-                                ) : folder.id === currentObjectId ? (<span style={{ color: 'gray' }}>(parent)</span>
+                                {folder.name} {selectedFolders.includes(folder.id) ? (<span style={{ color: PRIMARY_COLOR }}>(selected)</span>
+                                ) : folder.id === currentObjectId ? (<span style={{ color: PRIMARY_COLOR }}>(parent)</span>
                                 ) : null}
                             </span>} />
                 </ListItem>              
@@ -97,13 +97,13 @@ export default function ModalMoveBulk(props) {
                 </Alert>
             )}
             <Paper variant="outlined" style={{
-                maxHeight: 300, // Set your desired height
-                overflow: 'auto', // Add a scrollbar when content overflows
+                maxHeight: 300,
+                overflow: 'auto',
             }}>
                 <ListItem button onClick={() => handleClick(0)} style={{ paddingLeft: padding, fontSize: "8px" }}>
                     <ListItemIcon><TagIcon /></ListItemIcon>
                     <ListItemText><span style={{ color: 'gray', fontSize: '12px' }}>
-                        {projectKey} </span><span style={{ fontWeight: 550 }}>{projectName}</span> <span style={{ color: 'gray' }}>{props.parent_folder === null ? '(parent)' : '(root)'}</span>
+                        {projectKey} </span><span style={{ fontWeight: 550 }}>{projectName}</span> {props.parent_folder === null ? <span style={{ color: PRIMARY_COLOR }}>(parent)</span> : <span style={{ color: 'gray' }}>(root)</span>}
                     </ListItemText>
                 </ListItem>
                 {treeFolders.map((folder) => (folderNode(folder)))}

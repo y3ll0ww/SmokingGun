@@ -108,7 +108,7 @@ export default function FolderView(props) {
       <Modal open={modalAdd || modalDeleteBulk || modalMoveBulk} onClose={modalAdd ? handleCloseModalAdd : modalDeleteBulk ? handleCloseModalDeleteBulk : handleCloseModalMoveBulk}>
         <Paper
           sx={MODALSTYLE}
-          style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px" }}
+          style={{ borderRadius: 10, overflowY: "auto", maxHeight: "500px", width: modalMoveBulk ? 500 : '' }}
         >
           <style>{`::-webkit-scrollbar {
             display: none;
