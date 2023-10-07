@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { List, ListItem } from "@mui/material";
-import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { NavLink } from "react-router-dom";
 import { IconButton } from "@mui/material";
@@ -15,6 +15,8 @@ export default function Tools(props) {
     const projectId = useSelector(state => state.projects.currentProject.id);
     const openNodes = useSelector(state => state.tree.openNodes);
     const [isDisabled, setIsDisabled] = useState(true);
+
+    const [directoryView, setDirectoryView] = useState(true);
 
     useEffect(() => {
         if (projectId > 0) {
@@ -34,6 +36,10 @@ export default function Tools(props) {
       }
     }
 
+    const handleSwitchView = () => {
+      setDirectoryView(!directoryView);
+    }
+
     return (
         <NavLink
           className={(props) => {
@@ -47,15 +53,15 @@ export default function Tools(props) {
             style={{ paddingRight: 8, cursor: 'default' }}
           >
             <ListItem style={{ padding: 1, cursor: isDisabled ? 'default' : '' }}>
-              <IconButton onClick={() => props.handleOpenModal(FOLDER)} disabled={isDisabled}>
-                <CreateNewFolderIcon style={{ color: isDisabled ? 'gray' : '' }} />
+              <IconButton onClick={handleSwitchView} disabled={isDisabled}>
+                {directoryView ?
+                  <LeaderboardIcon style={{ color: isDisabled ? 'gray' : '' }} />
+                :
+                <LocationSearchingIcon style={{ color: isDisabled ? 'gray' : '' }} /> 
+                }
               </IconButton>
             </ListItem>
-            <ListItem style={{ padding: 1, cursor: isDisabled ? 'default' : '' }}>
-              <IconButton onClick={() => props.handleOpenModal(TESTCASE)} disabled={isDisabled}>
-                <PlaylistAddIcon style={{ color: isDisabled ? 'gray' : '' }} />
-              </IconButton>
-            </ListItem>
+
             <ListItem style={{ marginRight: -10, padding: 1, cursor: isDisabled ? 'default' : '' }}>
               <IconButton disabled={isDisabled} onClick={handleExpandCollapseAll}>
                 <UnfoldMoreIcon style={{ color: isDisabled ? 'gray' : '' }} />
