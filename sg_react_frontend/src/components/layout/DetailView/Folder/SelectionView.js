@@ -84,6 +84,7 @@ export default function SelectionView(props) {
           columnHeaderHeight={0}
           rowSelectionModel={selectedRows}
           onRowSelectionModelChange={(newSelection) => {
+            props.setRunAlert(null);
             store.dispatch({ type: actions.SELECTION, payload: newSelection });
           }}
           className="no-pagination"

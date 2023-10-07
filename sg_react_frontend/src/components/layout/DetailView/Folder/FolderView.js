@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Card, List, IconButton, Modal, Paper, Button } from '@mui/material';
+import { Box, Card, List, IconButton, Modal, Paper, Button, Alert } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, MODALSTYLE, PROJECT, KEY_, PRIMARY_COLOR, DIRECTORY, DETAILVIEW, TESTRUNS } from '../../../constants';
+import { FOLDER, TESTCASE, MODALSTYLE, PROJECT, KEY_, PRIMARY_COLOR, DETAILVIEW, TESTRUNS } from '../../../constants';
 import ModalAddAny from '../Modal/ModalAddAny';
 import SelectionView from './SelectionView';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
@@ -13,6 +13,8 @@ import InputIcon from '@mui/icons-material/Input';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ModalAdd from '../Modal/ModalAdd';
@@ -37,6 +39,7 @@ export default function FolderView(props) {
     const [modalMoveBulk, setModalMoveBulk] = useState(false);
     const [direct, setDirect] = useState(false);
     const [type, setType] = useState(undefined);
+    const [runAlert, setRunAlert] = useState(null);
 
     const { updateOrder: updateFolderOrder } = useRequestResource({ endpoint: '/suite/folders/update-order/', resourceLabel: 'updateFolders' });
     const { updateOrder: updateTestCaseOrder } = useRequestResource({ endpoint: '/suite/testcases/update-order/', resourceLabel: 'updateTestcases' });
@@ -68,6 +71,7 @@ export default function FolderView(props) {
     }
 
     const handleSelectionMode = () => {
+      setRunAlert(null);
       setSelectionMode(selectionMode ? false : true);
       if (selection.length > 0) {
         store.dispatch({ type: actions.SELECTION, payload: [] })
@@ -75,6 +79,7 @@ export default function FolderView(props) {
     }
 
     function handleSelection() {
+      setRunAlert(null);
       const payload = [];
       if (selection.length === 0) {
         for (const node of nodes) {
@@ -84,11 +89,20 @@ export default function FolderView(props) {
       store.dispatch({ type: actions.SELECTION, payload: payload });
     }
 
-    const modalDetail = () => {
-        if (direct) {
-            return <ModalAdd handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} type={type} projectId={projectId} />
+    function handleRunTestCases() {
+      const testcasesToRun = [];
+      if (selection.length > 0) {
+        for (const item of selection) {
+          if (item.split('_')[0] === TESTCASE) {
+            testcasesToRun.push(item);
+          }
         }
-        return <ModalAddAny handleCloseModal={handleCloseModalAdd} parent_folder={object.type === PROJECT ? null : object.id} projectId={projectId} />
+        if (testcasesToRun.length > 0) {
+          console.log(testcasesToRun);
+          return;
+        }
+      }
+      setRunAlert("No testcases selected");
     }
 
     const decideModal = () => {
@@ -189,9 +203,18 @@ export default function FolderView(props) {
                   {selectionMode ? (<LibraryAddCheckIcon style={{ color: PRIMARY_COLOR }}/>) : (<LibraryAddCheckOutlinedIcon style={{ color: PRIMARY_COLOR }}/>)}
                 </IconButton>
                 {selectionMode ? (
-                  <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9, color: PRIMARY_COLOR }} onClick={handleSelection}>
-                    {selection.length > 0 ? "Deselect all" : "Select all"}
-                  </Button>) : (
+                  <div>
+                    <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9, color: PRIMARY_COLOR }} onClick={handleSelection}>
+                      <ChecklistIcon style={{ marginRight: 5 }}/> {selection.length > 0 ? "Deselect all" : "Select all"}
+                    </Button>
+                    <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9, color: PRIMARY_COLOR }} onClick={handleRunTestCases}>
+                      <PlayArrowIcon style={{ marginRight: 3 }}/> Run testcases
+                    </Button>
+                    <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9, color: PRIMARY_COLOR }} disabled>
+                      {runAlert ? <Alert severity="error" style={{ marginTop: -6, marginBottom: -6, paddingTop: 0, paddingBottom: 0, marginRight: -100 }}>{runAlert}</Alert> : ''}
+                    </Button>
+                  </div>
+                  ) : (
                   <IconButton onClick={handleSwitchView}>
                     <FlakyIcon style={{ color: PRIMARY_COLOR }}/>
                   </IconButton>
@@ -224,7 +247,7 @@ export default function FolderView(props) {
             </div>
             <Card>
               {selectionMode ? (
-                <SelectionView nodes={nodes} />
+                <SelectionView nodes={nodes} setRunAlert={setRunAlert} />
               ) : (
               <List>
                 <Droppable droppableId={`${FOLDER}-${object.id}`}>
