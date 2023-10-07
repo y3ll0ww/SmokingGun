@@ -111,7 +111,7 @@ export default function ProjectView() {
                 <IconButton onClick={(event) => { event.stopPropagation(); handleOpenOptions(event); setSelectedProject(project); }} sx={{ padding: "3px", margin: "-2px" }}>
                   <MoreVertIcon sx={{ fontSize: "18px" }} />
                 </IconButton>
-                <NodeMenu item={project} anchorEl={anchorEl} handleCloseOptions={(event) => { event.stopPropagation(); handleCloseOptions(); }} handleOpenModalDelete={handleOpenModalDelete} />
+                <NodeMenu item={project} anchorEl={anchorEl} handleCloseOptions={handleCloseOptions} handleOpenModalDelete={handleOpenModalDelete} />
               </ListItem>
             ))}
             <ListItem button onClick={handleOpenModalAdd}>
