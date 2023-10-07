@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, List, Alert, AlertTitle, ListItem, ListItemIcon, ListItemText, Modal, Paper } from "@mui/material";
+import { Box, List, Alert, AlertTitle, ListItem, ListItemIcon, ListItemText, Modal, Paper, IconButton } from "@mui/material";
 import DirectoryNode from "./DirectoryNode";
 import { useSelector } from "react-redux";
 import TagIcon from '@mui/icons-material/Tag';
@@ -87,16 +87,20 @@ export default function Directory() {
   if (treeItems.length > 0) {
     return (
       <List style={{ fontSize: "8px" }}>
+        {addModal}
         <ListItem button onClick={handleClickRoot} style={{ 
               paddingLeft: 10, 
               fontSize: 8,
               borderRadius: 5 
             }}>
                 <ListItemIcon><TagIcon style={{ color: currentObjectType === PROJECT ? PRIMARY_COLOR : '',  }}/></ListItemIcon>
-                <ListItemText>
-                  <b>{projectName}</b>
-                </ListItemText>
-
+                <ListItemText><b>{projectName}</b></ListItemText>
+                <IconButton onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleOpenModal(FOLDER) }} sx={{ padding: "5px", margin: "-2px" }}>
+                  <CreateNewFolderIcon sx={{ fontSize: 18 }} />
+                </IconButton>
+                <IconButton onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleOpenModal(TESTCASE) }} sx={{ padding: "5px", margin: "-2px" }}>
+                  <PlaylistAddIcon sx={{ fontSize: 18 }} />
+                </IconButton>
         </ListItem>
         {treeItems.map((item) => (
           <div key={item.key}>
