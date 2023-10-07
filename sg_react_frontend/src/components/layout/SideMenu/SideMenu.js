@@ -6,8 +6,9 @@ import ProjectDropDown from "./ProjectDropDown";
 import Tools from "./Tools";
 import Directory from "./Directory";
 import ModalAdd from "../DetailView/Modal/ModalAdd";
-import { MODALSTYLE } from "../../constants";
+import { DIRECTORY, MODALSTYLE } from "../../constants";
 import store from "../Redux/store";
+import { useSelector } from "react-redux";
 
 const SidebarGlobalStyles = () => {
   const theme = useTheme();
@@ -38,6 +39,7 @@ const SidebarGlobalStylesMemo = React.memo(SidebarGlobalStyles);
 
 export function SideMenu(props) {
   const { mobileOpen, setMobileOpen } = props;
+  const viewState = useSelector((state) => state.view.sideMenu);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -138,7 +140,7 @@ export function SideMenu(props) {
         <style>{`::-webkit-scrollbar {
           display: none;
         }`}</style>
-        <Directory />
+        {viewState === DIRECTORY ? <Directory /> : <div>TESTRUNS</div>}
       </Box>
     </Box>
   );

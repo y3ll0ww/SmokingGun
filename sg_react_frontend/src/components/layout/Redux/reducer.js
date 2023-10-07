@@ -1,10 +1,14 @@
-import { PROJECT, FOLDER, TESTCASE, DARK, LIGHT } from "../../constants";
+import { PROJECT, FOLDER, TESTCASE, DARK, LIGHT, DIRECTORY, SIDEMENU, DETAILVIEW } from "../../constants";
 import * as actions from "./actionTypes";
 
 
 const initialState = {
     theme: DARK,
     type: PROJECT,
+    view: {
+        sideMenu: DIRECTORY,
+        detailView: DIRECTORY
+    },
     projects: {
         availableProjects: [],
         currentProject: {}
@@ -80,6 +84,29 @@ export default function reducer (state = initialState, action) {
                     theme: DARK
                 }
             }
+        }
+        case actions.SET_VIEW: {
+            const location = action.payload.location;
+            const newView = action.payload.view;
+            console.log(newView);
+
+            if (location === SIDEMENU) {
+                return {
+                    ...state,
+                    view: {
+                        ...state.view,
+                        sideMenu: newView
+                    }
+                }
+            } else if (location === DETAILVIEW) {
+                return {
+                    ...state,
+                    view: {
+                        ...state.view,
+                        detailView: newView
+                    }
+                }
+            } else { return state }            
         }
         case actions.GET_PROJECTS: {
             return {

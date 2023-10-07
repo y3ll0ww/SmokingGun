@@ -3,12 +3,14 @@ import { useSelector } from 'react-redux';
 import { Box, Card, IconButton, TableContainer, Table, TableBody, TableRow, TableCell } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TestStepText from './TestStepText';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import FlakyIcon from '@mui/icons-material/Flaky';
 import AddIcon from '@mui/icons-material/Add';
 import UploadIcon from '@mui/icons-material/Upload';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { PRIMARY_COLOR, STEP_ACTION, STEP_RESULT } from '../../../constants';
+import { DETAILVIEW, PRIMARY_COLOR, STEP_ACTION, STEP_RESULT, TESTRUNS } from '../../../constants';
 import useRequestResource from '../../../../hooks/useRequestResource';
 import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
@@ -126,16 +128,30 @@ export default function TestCaseView() {
     );
   }
 
+  const handleSwitchView = () => {
+    store.dispatch({ type: actions.SET_VIEW, payload: { location: DETAILVIEW, view: TESTRUNS } });
+  }
+
   return (
     <Box>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'end', marginRight: '10px' }}>
-          <IconButton>
-            <AddLinkIcon style={{ color: PRIMARY_COLOR }}/>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginLeft: '3px' }}>
+            <IconButton>
+              <PlayArrowIcon style={{ color: PRIMARY_COLOR }}/>
+            </IconButton>
+            <IconButton onClick={handleSwitchView}>
+              <FlakyIcon style={{ color: PRIMARY_COLOR }}/>
+            </IconButton>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end', marginRight: '10px' }}>
+            <IconButton>
+              <AddLinkIcon style={{ color: PRIMARY_COLOR }}/>
+            </IconButton>
+            <IconButton>
+              <AddIcon style={{ color: PRIMARY_COLOR }}/>
           </IconButton>
-          <IconButton>
-            <AddIcon style={{ color: PRIMARY_COLOR }}/>
-          </IconButton>
+          </div>
         </div>
         {steps.length > 0 ? (
           <Box>

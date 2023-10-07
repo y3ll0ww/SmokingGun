@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux';
 import { Box, Card, List, IconButton, Modal, Paper, Button } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DirectoryNode from '../../SideMenu/DirectoryNode';
-import { FOLDER, TESTCASE, MODALSTYLE, PROJECT, KEY_, PRIMARY_COLOR } from '../../../constants';
+import { FOLDER, TESTCASE, MODALSTYLE, PROJECT, KEY_, PRIMARY_COLOR, DIRECTORY, DETAILVIEW, TESTRUNS } from '../../../constants';
 import ModalAddAny from '../Modal/ModalAddAny';
 import SelectionView from './SelectionView';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
+import FlakyIcon from '@mui/icons-material/Flaky';
 import InputIcon from '@mui/icons-material/Input';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
@@ -173,6 +174,10 @@ export default function FolderView(props) {
       }));
     }
 
+    const handleSwitchView = () => {
+      store.dispatch({ type: actions.SET_VIEW, payload: { location: DETAILVIEW, view: TESTRUNS } });
+    }
+
     return (
       <DragDropContext onDragEnd={onDragEnd}>
         {nodes.length > 0 ? (
@@ -186,7 +191,11 @@ export default function FolderView(props) {
                 {selectionMode ? (
                   <Button style={{ textTransform: 'none', color: 'gray', marginLeft: 9, color: PRIMARY_COLOR }} onClick={handleSelection}>
                     {selection.length > 0 ? "Deselect all" : "Select all"}
-                  </Button>) : ('')}
+                  </Button>) : (
+                  <IconButton onClick={handleSwitchView}>
+                    <FlakyIcon style={{ color: PRIMARY_COLOR }}/>
+                  </IconButton>
+                  )}
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end', marginRight: '10px' }}>
                 {selectionMode ? (

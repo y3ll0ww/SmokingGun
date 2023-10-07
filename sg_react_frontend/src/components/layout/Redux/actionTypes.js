@@ -1,4 +1,5 @@
 export const SET_THEME = "themeSet";
+export const SET_VIEW = "viewSet";
 export const GET_PROJECTS = "projectFound";
 export const SET_PROJECT = "projectSet";
 export const GET_PROJECT = "rootFound";

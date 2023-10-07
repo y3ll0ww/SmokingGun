@@ -5,29 +5,31 @@ import FolderView from './Folder/FolderView';
 import TestCaseView from './TestCase/TestCaseView';
 import { useSelector } from 'react-redux';
 import store from '../Redux/store';
-import { FOLDER, TESTCASE, PROJECT } from '../../constants';
+import { FOLDER, TESTCASE, PROJECT, DIRECTORY } from '../../constants';
 import BreadcrumbsTrail from './BreadcrumbsTrail';
 import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from "../Redux/actionTypes";
 import Title from './Title';
 import Description from './Description';
+import TestRunView from './TestRuns/TestRunView';
 
 
 export default function DetailView() {
   const type = useSelector(state => state.type);
   const object = useSelector(state => state.object);
   const project = useSelector(state => state.projects.currentProject);
+  const viewState = useSelector(state => state.view.detailView);
   const padX = '30px';
   const padY = '25px';
 
   const viewType = () => {
     if (type === FOLDER) {
-      return <FolderView type={type} object={object} />;
+      return viewState === DIRECTORY ? <FolderView type={type} object={object} /> : <TestRunView />
     } else if (type === TESTCASE) {
-      return <TestCaseView type={type} object={object} />;
+      return viewState === DIRECTORY ? <TestCaseView type={type} object={object} /> : <TestRunView />
     } else if (type === PROJECT) {
       if (project.id) {
-        return <FolderView type={type} />;
+        return viewState === DIRECTORY ? <FolderView type={type} /> : <TestRunView />
       }
       return <ProjectView />;
     } else {
