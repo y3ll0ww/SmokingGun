@@ -1,8 +1,9 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .serializers import ProjectSerializer, TestCaseSerializer, TestRunSerializer, TestStepSerializer
-from .models import Project, Folder, TestCase, TestRun, TestStep
+from .serializers import ProjectSerializer, TestCaseSerializer, TestStepSerializer, TestRunDetailSerializer, \
+    TestStepRunSerializer, TestRunListSerializer
+from .models import Project, Folder, TestCase, TestStep, TestRun, TestStepRun
 
 
 class ProjectsAllView(generics.RetrieveAPIView):
@@ -121,13 +122,6 @@ class TestCaseDeleteView(generics.DestroyAPIView):
     serializer_class = TestCaseSerializer
 
 
-class TestRunDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = TestRunSerializer
-
-    def get_queryset(self):
-        return TestRun.objects.all()
-
-
 class TestStepDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TestStepSerializer
 
@@ -204,3 +198,101 @@ class TestStepOrderUpdateView(generics.UpdateAPIView):
                 return Response({"error": f"Test step with ID {id} does not exist."}, status=400)
 
         return Response({"success": "Test step orders updated."})
+
+
+class TestRunDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TestRunDetailSerializer
+
+    def get_queryset(self):
+        return TestRun.objects.all()
+
+
+class TestRunListView(generics.ListAPIView):
+    serializer_class = TestRunListSerializer
+
+    def get_queryset(self):
+        queryset = TestRun.objects.all()
+
+        # Retrieve parameters from the request
+        testcase_id = self.request.query_params.get('testcase')
+        project_id = self.request.query_params.get('project')
+        parent_folder_id = self.request.query_params.get('parent_folder')
+
+        if not (testcase_id or project_id or parent_folder_id):
+            # Return an empty queryset or handle the error as per your requirement
+            return queryset
+
+        if testcase_id:
+            # Filter by the provided testcase ID
+            queryset = queryset.filter(testcase=testcase_id)
+        elif project_id:
+            # Filter by the provided project ID
+            queryset = queryset.filter(project=project_id)
+        elif parent_folder_id:
+            try:
+                # Get all test cases within the specified parent_folder
+                folder_testcases = TestCase.objects.filter(folder=parent_folder_id).values_list('id', flat=True)
+
+                # Filter test runs associated with these test cases
+                queryset = queryset.filter(testcase__in=folder_testcases)
+            except TestCase.DoesNotExist:
+                # Return an empty queryset or handle the error as per your requirement
+                return queryset
+
+        return queryset
+
+
+class TestRunCreateView(generics.CreateAPIView):
+    serializer_class = TestRunDetailSerializer
+
+    def create(self, request, *args, **kwargs):
+        testcase_id = request.data.get('testcase')
+        project_id = request.data.get('project')
+
+        try:
+            # Create a new TestRun
+            testrun_data = {
+                'project': project_id,
+                'testcase': testcase_id,
+            }
+            testrun_serializer = TestRunDetailSerializer(data=testrun_data)
+            testrun_serializer.is_valid(raise_exception=True)
+            testrun = testrun_serializer.save()
+
+            # Get the associated Test Case
+            testcase = TestCase.objects.get(id=testcase_id, project=project_id)
+
+            # Retrieve the Test Steps associated with the Test Case
+            teststeps = TestStep.objects.filter(testcase=testcase).order_by("order")
+
+            # Create TestStepRuns for each TestStep
+            for teststep in teststeps:
+                teststeprun_data = {
+                    'testrun': testrun.id,
+                    'teststep': teststep.id,
+                    #'passed': False
+                }
+                teststeprun_serializer = TestStepRunSerializer(data=teststeprun_data)
+                teststeprun_serializer.is_valid(raise_exception=True)
+                teststeprun_serializer.save()
+
+            return Response({
+                'Project': project_id,
+                'Testcase': testcase_id,
+                'message': 'TestRun and associated TestStepRuns created successfully.'
+            }, status=status.HTTP_201_CREATED)
+        except TestCase.DoesNotExist:
+            return Response({'error': 'Testcase does not exist or is not associated with the specified project.'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': f'Internal server error: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class TestStepRunListView(generics.ListAPIView):
+    serializer_class = TestStepRunSerializer
+
+    def get_queryset(self):
+        # Retrieve the test run ID from the URL parameter
+        testrun_id = self.kwargs.get('testrun_id')
+
+        # Get the test steps associated with the specified test run
+        return TestStepRun.objects.filter(testrun=testrun_id)

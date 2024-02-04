@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Folder, TestCase, TestRun, TestStep
+from .models import Project, Folder, TestCase, TestStep, TestRun, TestStepRun
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -32,16 +32,32 @@ class TestCaseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TestRunSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TestRun
-        fields = '__all__'
-
-
 class TestStepSerializer(serializers.ModelSerializer):
     action = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     result = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = TestStep
+        fields = '__all__'
+
+
+class TestStepRunSerializer(serializers.ModelSerializer):
+    teststepdetails = TestStepSerializer(source='teststep', read_only=True)
+
+    class Meta:
+        model = TestStepRun
+        fields = '__all__'
+
+
+class TestRunDetailSerializer(serializers.ModelSerializer):
+    teststepruns = TestStepRunSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = TestRun
+        fields = '__all__'
+
+
+class TestRunListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestRun
         fields = '__all__'

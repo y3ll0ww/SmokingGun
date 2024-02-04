@@ -4,7 +4,7 @@ from . import projectviews as pro, navigationviews as nav, testingviews as tst
 
 urlpatterns = [
     path('folders/tree/<int:pk>/', nav.TreeView.as_view(), name='folder-tree-id'),
-    path('testruns/<int:pk>/', tst.TestRunDetailView.as_view(), name='testrun-detail'),
+    path('testruns/', tst.TestRunListView.as_view(), name='testruns-list'),
     path('teststeps/<int:pk>/', tst.TestStepDetailView.as_view(), name='teststep-detail'),
 
     # Get
@@ -13,6 +13,7 @@ urlpatterns = [
     path('project/<int:id>/', pro.RootFolderDetailView.as_view(), name='root'),
     path('folder/<int:id>/', nav.FolderDetailView.as_view(), name='folder-detail'),
     path('testcase/<int:id>/', tst.TestCaseDetailView.as_view(), name='testcase-detail'),
+    path('testrun/<int:pk>/', tst.TestRunDetailView.as_view(), name="testrun-detail"),
 
     # Create
     path('projects/', pro.ProjectsAllView.as_view(), name='projects-all'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('folder/create/', nav.FolderCreateView.as_view(), name='folder-create'),
     path('testcase/create/', tst.TestCaseCreateView.as_view(), name='testcase-create'),
     path('teststep/create/', tst.TestStepCreateView.as_view(), name='create-teststep'),
+    path('testrun/create/', tst.TestRunCreateView.as_view(), name='create-testrun'),
 
     # Update
     path('project/update/<int:pk>/', pro.ProjectDetailView.as_view(), name='project-update'),

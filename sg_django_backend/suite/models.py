@@ -82,6 +82,7 @@ class TestStepRun(models.Model):
     testrun = models.ForeignKey(TestRun, on_delete=models.CASCADE, related_name='teststepruns')
     teststep = models.ForeignKey(TestStep, on_delete=models.CASCADE, related_name='teststepruns')
     passed = models.BooleanField(default=False)
+    executed = models.BooleanField(default=False)
     comment = models.TextField(blank=True)
     picture = models.ImageField(upload_to='uploads/', blank=True)
 
