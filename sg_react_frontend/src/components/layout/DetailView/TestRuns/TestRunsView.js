@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Button, Card, List, ListItem, ListItemIcon, ListItemText, Modal, Paper, IconButton } from '@mui/material';
-import TagIcon from '@mui/icons-material/Tag';
-import AddIcon from '@mui/icons-material/Add';
+import { Box, Button, Card, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import FlakyIcon from '@mui/icons-material/Flaky';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
 import { DETAILVIEW, DIRECTORY, TESTCASE, KEY_TESTCASE, FOLDER, SELECTION_COLOR, PRIMARY_COLOR, SECONDARY_COLOR, PASSED_COLOR, DATE } from '../../../constants';
 import useRequestResource from '../../../../hooks/useRequestResource';
+import { CircularProgress } from '@mui/material'
 
 
 export default function TestRunsView() {
   const object = useSelector((state) => state.object);
-  const state = useSelector((state) => state);
   const projectId = useSelector((state) => state.projects.currentProject.id);
   const [testruns, setTestRuns] = useState();
+  const [loading, setLoading] = useState(true);
 
 
   const { getResourceWithParams, resource } = useRequestResource({ endpoint: `/suite/testruns` });
 
   useEffect(() => {
     let values = {};
+    setLoading(true);
 
     switch (object.type) {
       case TESTCASE:
@@ -49,6 +51,7 @@ export default function TestRunsView() {
 
   useEffect(() => {
     console.log(testruns);
+    setLoading(false);
   }, [testruns]);
 
   const handleSwitchView = () => {
@@ -57,36 +60,58 @@ export default function TestRunsView() {
   
   return (
     <Box>
-      <Button onClick={handleSwitchView}>Switch Back</Button>
-      <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {testruns && testruns.length > 0 ? (
-          testruns.map((testrun, index) => (
-            <ListItem button onClick={handleSwitchView} style={{ paddingLeft: 15 }}>
-              <ListItemIcon style={{ padding: 5 }}>
-                {testrun.passed ? <CheckCircleIcon style={{color: PASSED_COLOR}}/> : <CancelIcon style={{color: PRIMARY_COLOR}}/>}
-              </ListItemIcon>
-              <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <ListItemText 
-                  primary={
-                    <span>
-                      <span style={{ color: 'gray', fontSize: '12px' }}>{KEY_TESTCASE(testrun.project_key, testrun.testcase_number)} </span>
-                      {testrun.testcase_name} {testrun.id}
-                    </span>
-                  } 
-                />
-                <ListItemText style={{ marginLeft: 'auto', textAlign: 'right', marginRight: 15 }}
-                  primary={
-                    <span style={{ color: 'gray', fontWeight: 'bold' }}>
-                      {DATE(testrun.timestamp, true)}
-                    </span>
-                  }
-                />
-              </div>
-            </ListItem>
-          ))
+      <IconButton onClick={handleSwitchView}><KeyboardReturnIcon style={{ fontSize: 20, margin: 5, color: PRIMARY_COLOR }}/></IconButton>
+      <List sx={{ width: '100%', bgcolor: 'background.paper', borderRadius: 2 }}>
+        {loading ? (
+          <ListItem style={{ justifyContent: 'center' }}>
+            <CircularProgress style={{ margin: 30 }}/>
+          </ListItem>
         ) : (
-          <p>No testruns</p>
+          testruns && testruns.length > 0 ? (
+            testruns.map((testrun, index) => (
+              <ListItem button onClick={handleSwitchView} style={{ paddingLeft: 15 }}>
+                <ListItemIcon style={{ padding: 5 }}>
+                  {testrun.passed ? <CheckCircleIcon style={{color: PASSED_COLOR}}/> : <CancelIcon style={{color: PRIMARY_COLOR}}/>}
+                </ListItemIcon>
+                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <ListItemText 
+                    primary={
+                      <span>
+                        <span style={{ color: 'gray', fontSize: '12px' }}>{KEY_TESTCASE(testrun.project_key, testrun.testcase_number)} </span>
+                        {testrun.testcase_name} {testrun.id}
+                      </span>
+                    } 
+                  />
+                  <ListItemText style={{ marginLeft: 'auto', textAlign: 'right', marginRight: 15 }}
+                    primary={
+                      <span style={{ color: 'gray', fontWeight: 'bold' }}>
+                        {DATE(testrun.timestamp, true)}
+                      </span>
+                    }
+                  />
+                </div>
+              </ListItem>
+            ))
+          ) : (
+            <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundImage: 'none' }} style={{ padding: 80 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <FlakyIcon style={{ color: 'silver', fontSize: '120px', color: PRIMARY_COLOR }} />
+                    <h2>No contents</h2>
+                    <p style={{ marginTop: '0px', textAlign: 'center', color: 'gray' }}>
+                        This {object.type} doesn't contain any {object.type === TESTCASE ? ('') : (<span>testcases with </span>)}<b>testruns</b>.<br />
+                        <b>Testruns</b> will be shown here whenever they've been executed.
+                    </p>
+                    <Button 
+                      variant="outlined"
+                      style={{ marginTop: 15, marginBottom: 10, textTransform: 'none' }}
+                      onClick={handleSwitchView}>
+                        Return
+                    </Button>
+                </div>
+            </Card>
+          )
         )}
+
       </List>
 
     

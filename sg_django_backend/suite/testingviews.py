@@ -240,7 +240,7 @@ class TestRunListView(generics.ListAPIView):
                 return queryset
 
         queryset = queryset.order_by('-timestamp')
-        return queryset
+        return queryset[:10]
 
 
 class TestRunCreateView(generics.CreateAPIView):
