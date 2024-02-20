@@ -72,7 +72,6 @@ class TestRun(models.Model):
     passed = models.BooleanField(default=False)
     comment = models.TextField(blank=True)
     picture = models.ImageField(upload_to='uploads/', blank=True)
-    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.timestamp} - {self.testcase.name}'
