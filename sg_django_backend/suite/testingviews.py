@@ -239,6 +239,7 @@ class TestRunListView(generics.ListAPIView):
                 # Return an empty queryset or handle the error as per your requirement
                 return queryset
 
+        queryset = queryset.order_by('-timestamp')
         return queryset
 
 
