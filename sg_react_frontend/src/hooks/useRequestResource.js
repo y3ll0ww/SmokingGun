@@ -49,7 +49,7 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
             }).catch(handleRequestResourceError)
     }, [endpoint, enqueueSnackbar, resourceLabel, handleRequestResourceError, setLoading])
 
-      const getResource = useCallback((id = '') => {
+    const getResource = useCallback((id = '') => {
         setLoading(true);
         const url = id ? `/api/${endpoint}/${id}/` : `/api/${endpoint}/`;
     
@@ -61,6 +61,38 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
             })
             .catch(handleRequestResourceError);
     }, [endpoint, handleRequestResourceError, setLoading]);
+
+    const getResourceWithParams = useCallback((params = {}) => {
+        setLoading(true);
+        const url = `/api/${endpoint}/`;
+    
+        axios.get(url, {
+            params: params,
+            ...getCommonOptions()
+        })
+        .then((res) => {
+            setLoading(false);
+            const { data } = res;
+            setResource(data);
+        })
+        .catch(handleRequestResourceError);
+    }, [endpoint, handleRequestResourceError, setLoading]);
+
+    //const getResourceWithBody = useCallback((values) => {
+    //    setLoading(true);
+    //    axios.request({
+    //        method: 'GET',
+    //        url: `/api/${endpoint}/`,
+    //        data: values,
+    //        ...getCommonOptions()
+    //    })
+    //    .then((res) => {
+    //        setLoading(false);
+    //        const { data } = res;
+    //        setResource(data);
+    //    })
+    //    .catch(handleRequestResourceError);
+    //}, [endpoint, handleRequestResourceError, setLoading]);
 
     const updateResource = useCallback((id, values, successCallback) => {
         setLoading(true);
@@ -143,6 +175,8 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         addResource,
         resource,
         getResource,
+        //getResourceWithBody,
+        getResourceWithParams,
         updateResource,
         updateResources,
         deleteResource,

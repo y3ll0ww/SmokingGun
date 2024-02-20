@@ -11,7 +11,7 @@ import useRequestResource from '../../../hooks/useRequestResource';
 import * as actions from "../Redux/actionTypes";
 import Title from './Title';
 import Description from './Description';
-import TestRunView from './TestRuns/TestRunView';
+import TestRunView from './TestRuns/TestRunsView';
 
 
 export default function DetailView() {

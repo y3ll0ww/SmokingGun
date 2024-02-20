@@ -79,7 +79,7 @@ class TestRun(models.Model):
 
 
 class TestStepRun(models.Model):
-    testrun = models.ForeignKey(TestRun, on_delete=models.CASCADE, related_name='teststepruns')
+    testrun = models.ForeignKey(TestRun, on_delete=models.CASCADE, related_name='steps')
     teststep = models.ForeignKey(TestStep, on_delete=models.CASCADE, related_name='teststepruns')
     passed = models.BooleanField(default=False)
     executed = models.BooleanField(default=False)

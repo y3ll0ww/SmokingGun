@@ -42,7 +42,7 @@ class TestStepSerializer(serializers.ModelSerializer):
 
 
 class TestStepRunSerializer(serializers.ModelSerializer):
-    teststepdetails = TestStepSerializer(source='teststep', read_only=True)
+    details = TestStepSerializer(source='teststep', read_only=True)
 
     class Meta:
         model = TestStepRun
@@ -50,7 +50,7 @@ class TestStepRunSerializer(serializers.ModelSerializer):
 
 
 class TestRunDetailSerializer(serializers.ModelSerializer):
-    teststepruns = TestStepRunSerializer(many=True, read_only=True)
+    steps = TestStepRunSerializer(many=True, read_only=True)
 
     class Meta:
         model = TestRun
@@ -58,6 +58,10 @@ class TestRunDetailSerializer(serializers.ModelSerializer):
 
 
 class TestRunListSerializer(serializers.ModelSerializer):
+    testcase_name = serializers.CharField(source='testcase.name', read_only=True)
+    testcase_number = serializers.IntegerField(source='testcase.item_number', read_only=True)
+    project_key = serializers.CharField(source='project.key', read_only=True)
+
     class Meta:
         model = TestRun
         fields = '__all__'

@@ -220,7 +220,7 @@ class TestRunListView(generics.ListAPIView):
 
         if not (testcase_id or project_id or parent_folder_id):
             # Return an empty queryset or handle the error as per your requirement
-            return queryset
+            return queryset.none()
 
         if testcase_id:
             # Filter by the provided testcase ID
