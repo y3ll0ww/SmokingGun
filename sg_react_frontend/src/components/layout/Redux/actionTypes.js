@@ -6,6 +6,7 @@ export const GET_PROJECT = "rootFound";
 export const DESELECT_PROJECT = "projectDeselected";
 export const GET_FOLDER = "folderFound";
 export const GET_TESTCASE = "testcaseFound";
+export const GET_TESTRUN = "testrunFound";
 export const SELECTION = "selectionUpdated";
 export const TREE_SET_FOLDERS = "treeFoldersFound";
 export const TREE_EXPAND_ALL = "wholeTreeExpaned";

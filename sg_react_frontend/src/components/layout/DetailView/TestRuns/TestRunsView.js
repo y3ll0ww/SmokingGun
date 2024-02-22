@@ -7,7 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import store from '../../Redux/store';
 import * as actions from '../../Redux/actionTypes';
-import { DETAILVIEW, DIRECTORY, TESTCASE, KEY_TESTCASE, FOLDER, SELECTION_COLOR, PRIMARY_COLOR, SECONDARY_COLOR, PASSED_COLOR, DATE } from '../../../constants';
+import { DETAILVIEW, DIRECTORY, TESTCASE, KEY_TESTCASE, FOLDER, SELECTION_COLOR, PRIMARY_COLOR, SECONDARY_COLOR, PASSED_COLOR, DATE, TESTRUNDETAILS } from '../../../constants';
 import useRequestResource from '../../../../hooks/useRequestResource';
 import { CircularProgress } from '@mui/material'
 
@@ -18,8 +18,8 @@ export default function TestRunsView() {
   const [testruns, setTestRuns] = useState();
   const [loading, setLoading] = useState(true);
 
-
-  const { getResourceWithParams, resource } = useRequestResource({ endpoint: `/suite/testruns` });
+  const { getResourceWithParams, resource: runs } = useRequestResource({ endpoint: `/suite/testruns` });
+  const { getResource, resource: details } = useRequestResource({ endpoint: `/suite/testrun` });
 
   useEffect(() => {
     let values = {};
@@ -46,17 +46,30 @@ export default function TestRunsView() {
   }, [object]);
 
   useEffect(() => {
-    setTestRuns(resource);
-  }, [resource]);
+    setTestRuns(runs);
+  }, [runs]);
 
   useEffect(() => {
-    console.log(testruns);
-    setLoading(false);
+    if (testruns) {
+      setLoading(false);
+    }
   }, [testruns]);
 
   const handleSwitchView = () => {
-      store.dispatch({ type: actions.SET_VIEW, payload: { location: DETAILVIEW, view: DIRECTORY } })
+    store.dispatch({ type: actions.SET_VIEW, payload: { location: DETAILVIEW, view: DIRECTORY } })
   }
+
+  const handleClick = (id) => {
+    getResource(id);
+  }
+
+  useEffect(() => {
+    if (details) {
+      console.log(details);
+      store.dispatch({ type: actions.GET_TESTRUN, payload: details });
+      store.dispatch({ type: actions.SET_VIEW, payload: { location: DETAILVIEW, view: TESTRUNDETAILS } });
+    }
+  }, [details])
   
   return (
     <Box>
@@ -69,7 +82,7 @@ export default function TestRunsView() {
         ) : (
           testruns && testruns.length > 0 ? (
             testruns.map((testrun, index) => (
-              <ListItem button onClick={handleSwitchView} style={{ paddingLeft: 15 }}>
+              <ListItem button onClick={() => handleClick(testrun.id)} style={{ paddingLeft: 15 }}>
                 <ListItemIcon style={{ padding: 5 }}>
                   {testrun.passed ? <CheckCircleIcon style={{color: PASSED_COLOR}}/> : <CancelIcon style={{color: PRIMARY_COLOR}}/>}
                 </ListItemIcon>
@@ -78,7 +91,7 @@ export default function TestRunsView() {
                     primary={
                       <span>
                         <span style={{ color: 'gray', fontSize: '12px' }}>{KEY_TESTCASE(testrun.project_key, testrun.testcase_number)} </span>
-                        {testrun.testcase_name} {testrun.id}
+                        {testrun.testcase_name}
                       </span>
                     } 
                   />

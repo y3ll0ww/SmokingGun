@@ -50,6 +50,9 @@ class TestStepRunSerializer(serializers.ModelSerializer):
 
 
 class TestRunDetailSerializer(serializers.ModelSerializer):
+    testcase_name = serializers.CharField(source='testcase.name', read_only=True)
+    testcase_number = serializers.IntegerField(source='testcase.item_number', read_only=True)
+    project_key = serializers.CharField(source='project.key', read_only=True)
     steps = TestStepRunSerializer(many=True, read_only=True)
 
     class Meta:

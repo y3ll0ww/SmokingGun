@@ -6,6 +6,7 @@ export const SECONDARY_COLOR = "#D9D454";
 export const PASSED_COLOR = "#48A360";
 export const DIRECTORY = "directory";
 export const TESTRUNS = "testruns";
+export const TESTRUNDETAILS = "testrundetails";
 export const SIDEMENU = "sidemenu";
 export const DETAILVIEW = "detailview";
 export const PROJECT = "project";

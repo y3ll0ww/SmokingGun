@@ -24,7 +24,8 @@ const initialState = {
         newStepIds: [],
         editing: {},
         stepUpdate: '',
-    }
+    },
+    testrun: {}
 };
 
 const createFolderTree = (data, parentId = null) => {
@@ -88,7 +89,7 @@ export default function reducer (state = initialState, action) {
         case actions.SET_VIEW: {
             const location = action.payload.location;
             const newView = action.payload.view;
-            console.log(newView);
+            console.log(state);
 
             if (location === SIDEMENU) {
                 return {
@@ -323,6 +324,12 @@ export default function reducer (state = initialState, action) {
                     ...state.steps,
                     newStepIds: newStepIds
                 }
+            }
+        }
+        case actions.GET_TESTRUN: {
+            return {
+                ...state,
+                testrun: action.payload
             }
         }
         default:

@@ -78,22 +78,6 @@ export default function useRequestResource({ endpoint, resourceLabel }) {
         .catch(handleRequestResourceError);
     }, [endpoint, handleRequestResourceError, setLoading]);
 
-    //const getResourceWithBody = useCallback((values) => {
-    //    setLoading(true);
-    //    axios.request({
-    //        method: 'GET',
-    //        url: `/api/${endpoint}/`,
-    //        data: values,
-    //        ...getCommonOptions()
-    //    })
-    //    .then((res) => {
-    //        setLoading(false);
-    //        const { data } = res;
-    //        setResource(data);
-    //    })
-    //    .catch(handleRequestResourceError);
-    //}, [endpoint, handleRequestResourceError, setLoading]);
-
     const updateResource = useCallback((id, values, successCallback) => {
         setLoading(true);
         axios.patch(`/api/${endpoint}/${id}/`, values, getCommonOptions())
