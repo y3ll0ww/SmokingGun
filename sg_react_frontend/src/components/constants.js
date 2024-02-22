@@ -4,6 +4,7 @@ export const PRIMARY_COLOR = "#C02328";
 export const SELECTION_COLOR = "rgb(192, 35, 40, 0.25)"
 export const SECONDARY_COLOR = "#D9D454";
 export const PASSED_COLOR = "#48A360";
+export const SKIPPED_COLOR = "#C38F35";
 export const DIRECTORY = "directory";
 export const TESTRUNS = "testruns";
 export const TESTRUNDETAILS = "testrundetails";
